@@ -4,7 +4,6 @@ import sqlite3
 from datetime import date, datetime
 
 from portfolio_manager.db.connection import DatabaseConnection
-from portfolio_manager.exceptions import NotFoundError
 from portfolio_manager.models.review import WeeklyReview
 from portfolio_manager.repositories.base import BaseRepository
 
@@ -115,7 +114,5 @@ class ReviewRepository(BaseRepository):
 
         :rtype: list[WeeklyReview]
         """
-        rows = self._db.fetchall(
-            "SELECT * FROM weekly_review ORDER BY week_key DESC"
-        )
+        rows = self._db.fetchall("SELECT * FROM weekly_review ORDER BY week_key DESC")
         return [_row_to_review(r) for r in rows]

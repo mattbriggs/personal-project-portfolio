@@ -7,7 +7,6 @@ Fixtures provided:
 - ``sample_sessions`` — planned / completed / cancelled sessions for the sample project
 """
 
-import sqlite3
 from datetime import date
 from pathlib import Path
 

@@ -137,9 +137,7 @@ def load_settings(config_path: Path | None = None) -> Settings:
             theme=str(app_raw.get("theme", "light")),
         ),
         session=SessionConfig(
-            default_duration_minutes=int(
-                ses_raw.get("default_duration_minutes", 90)
-            ),
+            default_duration_minutes=int(ses_raw.get("default_duration_minutes", 90)),
             weekly_budget_hours=int(ses_raw.get("weekly_budget_hours", 12)),
         ),
         database=DatabaseConfig(

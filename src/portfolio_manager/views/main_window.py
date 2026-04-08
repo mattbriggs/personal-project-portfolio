@@ -14,12 +14,12 @@ _MIN_HEIGHT = 768
 
 # Tab definitions: (tab_label, view_class_attr)
 _TABS = [
-    ("Dashboard",       "_dashboard_view"),
-    ("Sessions",        "_session_view"),
-    ("Projects",        "_project_view"),
-    ("Milestones",      "_milestone_view"),
-    ("Weekly Review",   "_review_view"),
-    ("Settings",        "_settings_view"),
+    ("Dashboard", "_dashboard_view"),
+    ("Sessions", "_session_view"),
+    ("Projects", "_project_view"),
+    ("Milestones", "_milestone_view"),
+    ("Weekly Review", "_review_view"),
+    ("Settings", "_settings_view"),
 ]
 
 
@@ -74,7 +74,9 @@ class MainWindow(tk.Tk):
         )
 
         self._project_listbox = tk.Listbox(left, selectmode="single", width=22)
-        scroll = ttk.Scrollbar(left, orient="vertical", command=self._project_listbox.yview)
+        scroll = ttk.Scrollbar(
+            left, orient="vertical", command=self._project_listbox.yview
+        )
         self._project_listbox.configure(yscrollcommand=scroll.set)
         scroll.grid(row=1, column=1, sticky="ns")
         self._project_listbox.grid(row=1, column=0, sticky="nswe")
@@ -95,16 +97,14 @@ class MainWindow(tk.Tk):
         c = self._controllers
 
         from portfolio_manager.views.dashboard_view import DashboardView
-        from portfolio_manager.views.session_view import SessionView
-        from portfolio_manager.views.project_view import ProjectView
         from portfolio_manager.views.milestone_view import MilestoneView
+        from portfolio_manager.views.project_view import ProjectView
         from portfolio_manager.views.review_view import ReviewView
+        from portfolio_manager.views.session_view import SessionView
         from portfolio_manager.views.settings_view import SettingsView
 
         self._dashboard_view = DashboardView(self._notebook, c["dashboard"])
-        self._session_view = SessionView(
-            self._notebook, c["session"], c["project"]
-        )
+        self._session_view = SessionView(self._notebook, c["session"], c["project"])
         self._project_view = ProjectView(self._notebook, c["project"])
         self._milestone_view = MilestoneView(
             self._notebook, c["milestone"], c["project"]

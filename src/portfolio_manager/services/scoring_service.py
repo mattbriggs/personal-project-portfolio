@@ -159,7 +159,8 @@ class ScoringService:
         if existing and existing.is_manual_override:
             logger.debug(
                 "Skipping recompute for project %d week %s — manual override active.",
-                project_id, week_key,
+                project_id,
+                week_key,
             )
             return existing
 

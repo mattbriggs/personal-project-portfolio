@@ -23,9 +23,8 @@ dev = [
     "ruff>=0.4",
     "black>=24.0",
     "mypy>=1.9",
-    "mkdocs>=1.5",
-    "mkdocs-material>=9.5",
-    "mkdocs-mermaid2-plugin>=1.1",
+    "mkdocs>=1.5,<2.0",
+    "mkdocs-material>=9.5,<10.0",
 ]
 
 [project.scripts]

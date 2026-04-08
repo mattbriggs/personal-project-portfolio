@@ -52,12 +52,12 @@ class DashboardView(ttk.Frame):
             height=10,
         )
         for col, heading, width in [
-            ("project",   "Project",   200),
-            ("status",    "Status",     80),
-            ("planned",   "Planned",    60),
-            ("done",      "Done",       60),
-            ("remaining", "Remaining",  80),
-            ("score",     "Score",      60),
+            ("project", "Project", 200),
+            ("status", "Status", 80),
+            ("planned", "Planned", 60),
+            ("done", "Done", 60),
+            ("remaining", "Remaining", 80),
+            ("score", "Score", 60),
         ]:
             self._tree.heading(col, text=heading)
             self._tree.column(col, width=width, anchor="center")
@@ -82,9 +82,7 @@ class DashboardView(ttk.Frame):
         notes_frame = ttk.LabelFrame(self, text="Status Notes")
         notes_frame.pack(fill="x", padx=8, pady=(0, 8))
 
-        self._notes_text = tk.Text(
-            notes_frame, height=4, state="disabled", wrap="word"
-        )
+        self._notes_text = tk.Text(notes_frame, height=4, state="disabled", wrap="word")
         self._notes_text.pack(fill="x", padx=4, pady=4)
 
     # ------------------------------------------------------------------

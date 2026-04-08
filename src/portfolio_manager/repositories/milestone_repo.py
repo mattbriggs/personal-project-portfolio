@@ -58,7 +58,11 @@ class MilestoneRepository(BaseRepository):
                     milestone.project_id,
                     milestone.description,
                     int(milestone.is_complete),
-                    milestone.completed_date.isoformat() if milestone.completed_date else None,
+                    (
+                        milestone.completed_date.isoformat()
+                        if milestone.completed_date
+                        else None
+                    ),
                     milestone.sort_order,
                 ),
             )
@@ -73,9 +77,7 @@ class MilestoneRepository(BaseRepository):
         :raises NotFoundError: If no milestone with *milestone_id* exists.
         :rtype: Milestone
         """
-        row = self._db.fetchone(
-            "SELECT * FROM milestone WHERE id = ?", (milestone_id,)
-        )
+        row = self._db.fetchone("SELECT * FROM milestone WHERE id = ?", (milestone_id,))
         if row is None:
             raise NotFoundError("Milestone", milestone_id)
         return _row_to_milestone(row)
@@ -111,7 +113,11 @@ class MilestoneRepository(BaseRepository):
                 (
                     milestone.description,
                     int(milestone.is_complete),
-                    milestone.completed_date.isoformat() if milestone.completed_date else None,
+                    (
+                        milestone.completed_date.isoformat()
+                        if milestone.completed_date
+                        else None
+                    ),
                     milestone.sort_order,
                     milestone.id,
                 ),
@@ -127,9 +133,7 @@ class MilestoneRepository(BaseRepository):
         """
         self.get(milestone_id)
         with self.transaction():
-            self._db.execute(
-                "DELETE FROM milestone WHERE id = ?", (milestone_id,)
-            )
+            self._db.execute("DELETE FROM milestone WHERE id = ?", (milestone_id,))
 
     def count(self, project_id: int) -> tuple[int, int]:
         """Return ``(total, completed)`` milestone counts for a project.

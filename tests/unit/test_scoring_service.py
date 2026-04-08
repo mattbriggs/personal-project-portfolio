@@ -1,8 +1,5 @@
 """Unit tests for the scoring service and strategy."""
 
-import pytest
-
-from portfolio_manager.models.score import ProjectScore
 from portfolio_manager.services.scoring_service import (
     DefaultScoringStrategy,
     ScoringStrategy,
@@ -72,7 +69,9 @@ class TestScoringStrategyIsReplaceable:
 
     def test_custom_strategy(self):
         class AlwaysMaxStrategy(ScoringStrategy):
-            def compute_score(self, planned, completed, total_milestones, completed_milestones):
+            def compute_score(
+                self, planned, completed, total_milestones, completed_milestones
+            ):
                 return 100
 
         s = AlwaysMaxStrategy()

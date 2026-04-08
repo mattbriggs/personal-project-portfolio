@@ -37,7 +37,9 @@ class ProjectView(ttk.Frame):
         btn_row = ttk.Frame(left)
         btn_row.pack(fill="x", padx=4, pady=4)
         ttk.Button(btn_row, text="New Project", command=self._on_new).pack(side="left")
-        ttk.Button(btn_row, text="Archive", command=self._on_archive).pack(side="left", padx=4)
+        ttk.Button(btn_row, text="Archive", command=self._on_archive).pack(
+            side="left", padx=4
+        )
         ttk.Button(btn_row, text="Delete", command=self._on_delete).pack(side="left")
 
         # Status filter
@@ -46,8 +48,10 @@ class ProjectView(ttk.Frame):
         filter_row.pack(fill="x", padx=4)
         for status in ("active", "backlog", "archive", "all"):
             ttk.Radiobutton(
-                filter_row, text=status.capitalize(),
-                variable=self._filter_var, value=status,
+                filter_row,
+                text=status.capitalize(),
+                variable=self._filter_var,
+                value=status,
                 command=self.refresh,
             ).pack(side="left")
 
@@ -65,12 +69,14 @@ class ProjectView(ttk.Frame):
         detail = ttk.LabelFrame(right, text="Project Details")
         detail.pack(fill="x", padx=4, pady=4)
 
-        for row_idx, (label_text, attr) in enumerate([
-            ("Name:", "_name_var"),
-            ("Status:", "_status_var"),
-            ("Priority:", "_priority_var"),
-            ("Description:", "_desc_var"),
-        ]):
+        for row_idx, (label_text, attr) in enumerate(
+            [
+                ("Name:", "_name_var"),
+                ("Status:", "_status_var"),
+                ("Priority:", "_priority_var"),
+                ("Description:", "_desc_var"),
+            ]
+        ):
             ttk.Label(detail, text=label_text).grid(
                 row=row_idx, column=0, sticky="e", padx=4, pady=2
             )

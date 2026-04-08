@@ -4,7 +4,6 @@ from datetime import date
 
 import pytest
 
-from portfolio_manager.db.connection import DatabaseConnection
 from portfolio_manager.exceptions import NotFoundError
 from portfolio_manager.models.project import Project
 from portfolio_manager.repositories.project_repo import ProjectRepository

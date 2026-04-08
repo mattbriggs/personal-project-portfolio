@@ -1,10 +1,8 @@
 """Controller for the project management view."""
 
 import logging
-from datetime import date
 from typing import Any
 
-from portfolio_manager.exceptions import ValidationError
 from portfolio_manager.models.project import Project, ProjectStatus
 from portfolio_manager.services.plan_service import PlanService
 from portfolio_manager.services.project_service import ProjectService

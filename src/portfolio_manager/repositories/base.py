@@ -6,8 +6,8 @@ and exposes the :meth:`transaction` helper.
 """
 
 import sqlite3
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Generator
 
 from portfolio_manager.db.connection import DatabaseConnection
 

@@ -2,7 +2,7 @@
 
 import logging
 import tkinter as tk
-from datetime import date, timedelta
+from datetime import date
 from tkinter import messagebox, ttk
 from typing import Any
 
@@ -58,9 +58,13 @@ class SessionView(ttk.Frame):
 
         ttk.Label(toolbar, text="Date (YYYY-MM-DD):").pack(side="left", padx=(8, 0))
         self._date_var = tk.StringVar(value=date.today().isoformat())
-        ttk.Entry(toolbar, textvariable=self._date_var, width=12).pack(side="left", padx=4)
+        ttk.Entry(toolbar, textvariable=self._date_var, width=12).pack(
+            side="left", padx=4
+        )
 
-        ttk.Button(toolbar, text="Add Session", command=self._on_add).pack(side="left", padx=4)
+        ttk.Button(toolbar, text="Add Session", command=self._on_add).pack(
+            side="left", padx=4
+        )
 
         # Session table
         columns = ("project", "date", "week", "duration", "status", "focus")
@@ -72,12 +76,12 @@ class SessionView(ttk.Frame):
             height=15,
         )
         for col, heading, width in [
-            ("project",  "Project",  160),
-            ("date",     "Date",      90),
-            ("week",     "Week",      70),
-            ("duration", "Min",       50),
-            ("status",   "Status",    80),
-            ("focus",    "Focus",    200),
+            ("project", "Project", 160),
+            ("date", "Date", 90),
+            ("week", "Week", 70),
+            ("duration", "Min", 50),
+            ("status", "Status", 80),
+            ("focus", "Focus", 200),
         ]:
             self._tree.heading(col, text=heading)
             self._tree.column(col, width=width, anchor="center")
@@ -92,9 +96,15 @@ class SessionView(ttk.Frame):
         # Action buttons
         action_row = ttk.Frame(self)
         action_row.pack(fill="x", padx=8, pady=(0, 8))
-        ttk.Button(action_row, text="Mark Complete", command=self._on_complete).pack(side="left", padx=4)
-        ttk.Button(action_row, text="Cancel Session", command=self._on_cancel).pack(side="left", padx=4)
-        ttk.Button(action_row, text="Delete", command=self._on_delete).pack(side="left", padx=4)
+        ttk.Button(action_row, text="Mark Complete", command=self._on_complete).pack(
+            side="left", padx=4
+        )
+        ttk.Button(action_row, text="Cancel Session", command=self._on_cancel).pack(
+            side="left", padx=4
+        )
+        ttk.Button(action_row, text="Delete", command=self._on_delete).pack(
+            side="left", padx=4
+        )
 
         self._session_ids: list[int] = []
 
@@ -110,7 +120,9 @@ class SessionView(ttk.Frame):
 
         week_key = self._week_var.get().strip()
         sessions = self._sessions.get_week_sessions(week_key)
-        all_projects_map = {p.id: p.name for p in self._projects.list_projects(status=None)}
+        all_projects_map = {
+            p.id: p.name for p in self._projects.list_projects(status=None)
+        }
 
         for item in self._tree.get_children():
             self._tree.delete(item)

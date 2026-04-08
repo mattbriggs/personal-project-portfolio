@@ -1,9 +1,14 @@
 """Application bootstrap — wires all layers together and starts the GUI."""
 
 import logging
-from pathlib import Path
 
 from portfolio_manager.config.settings import Settings, load_settings
+from portfolio_manager.controllers.dashboard_controller import DashboardController
+from portfolio_manager.controllers.milestone_controller import MilestoneController
+from portfolio_manager.controllers.project_controller import ProjectController
+from portfolio_manager.controllers.review_controller import ReviewController
+from portfolio_manager.controllers.session_controller import SessionController
+from portfolio_manager.controllers.settings_controller import SettingsController
 from portfolio_manager.db.connection import DatabaseConnection
 from portfolio_manager.db.migrations import run_migrations
 from portfolio_manager.events.event_bus import EventBus
@@ -17,12 +22,6 @@ from portfolio_manager.services.project_service import ProjectService
 from portfolio_manager.services.scoring_service import ScoringService
 from portfolio_manager.services.session_service import SessionService
 from portfolio_manager.services.week_service import WeekService
-from portfolio_manager.controllers.dashboard_controller import DashboardController
-from portfolio_manager.controllers.milestone_controller import MilestoneController
-from portfolio_manager.controllers.project_controller import ProjectController
-from portfolio_manager.controllers.review_controller import ReviewController
-from portfolio_manager.controllers.session_controller import SessionController
-from portfolio_manager.controllers.settings_controller import SettingsController
 from portfolio_manager.utils.logging_config import configure_logging
 from portfolio_manager.views.main_window import MainWindow
 

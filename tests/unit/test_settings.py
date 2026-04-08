@@ -44,7 +44,7 @@ class TestLoadSettings:
         cfg_file = tmp_path / "config.toml"
         cfg_file.write_text(
             '[app]\nlog_level = "DEBUG"\ntheme = "dark"\n'
-            '[session]\ndefault_duration_minutes = 60\nweekly_budget_hours = 8\n'
+            "[session]\ndefault_duration_minutes = 60\nweekly_budget_hours = 8\n"
             '[database]\npath = "~/custom.db"\n',
             encoding="utf-8",
         )

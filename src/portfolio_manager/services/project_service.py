@@ -144,9 +144,7 @@ class ProjectService:
         """
         return self._projects.get(project_id)
 
-    def list_projects(
-        self, status: ProjectStatus | None = "active"
-    ) -> list[Project]:
+    def list_projects(self, status: ProjectStatus | None = "active") -> list[Project]:
         """Return projects filtered by lifecycle status.
 
         :param status: Filter value — pass ``None`` for all projects.

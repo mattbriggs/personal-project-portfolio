@@ -49,6 +49,7 @@ def _load_schema() -> str:
 # Add future migrations here with incrementing version strings.
 # ---------------------------------------------------------------------------
 
+
 def _build_migrations() -> list[tuple[str, str, str]]:
     """Return the ordered list of migrations.
 
@@ -120,7 +121,9 @@ def run_migrations(db: DatabaseConnection) -> None:
         logger.debug("No pending migrations.")
         return
 
-    logger.info("%d migration(s) to apply: %s", len(pending), [v for v, _, _ in pending])
+    logger.info(
+        "%d migration(s) to apply: %s", len(pending), [v for v, _, _ in pending]
+    )
     _backup_database(db)
 
     for version, description, sql in pending:
@@ -135,6 +138,4 @@ def run_migrations(db: DatabaseConnection) -> None:
             db.conn.commit()
             logger.info("Migration %s applied.", version)
         except Exception as exc:
-            raise MigrationError(
-                f"Migration {version!r} failed: {exc}"
-            ) from exc
+            raise MigrationError(f"Migration {version!r} failed: {exc}") from exc

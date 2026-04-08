@@ -45,9 +45,15 @@ class MilestoneView(ttk.Frame):
         self._project_combo.pack(side="left", padx=4)
         self._project_combo.bind("<<ComboboxSelected>>", self._on_project_change)
 
-        ttk.Button(toolbar, text="Add Milestone", command=self._on_add).pack(side="left", padx=8)
-        ttk.Button(toolbar, text="Toggle Complete", command=self._on_toggle).pack(side="left")
-        ttk.Button(toolbar, text="Delete", command=self._on_delete).pack(side="left", padx=4)
+        ttk.Button(toolbar, text="Add Milestone", command=self._on_add).pack(
+            side="left", padx=8
+        )
+        ttk.Button(toolbar, text="Toggle Complete", command=self._on_toggle).pack(
+            side="left"
+        )
+        ttk.Button(toolbar, text="Delete", command=self._on_delete).pack(
+            side="left", padx=4
+        )
 
         columns = ("done", "description", "completed_date")
         self._tree = ttk.Treeview(

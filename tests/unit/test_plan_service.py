@@ -10,7 +10,10 @@ class _FakeProjectRepo:
 
     def __init__(self, plan_content=""):
         from portfolio_manager.models.project import Project
-        self._project = Project(id=1, name="Test", slug="test", plan_content=plan_content)
+
+        self._project = Project(
+            id=1, name="Test", slug="test", plan_content=plan_content
+        )
         self.saved_content: str | None = None
 
     def get(self, project_id):

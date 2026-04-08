@@ -2,7 +2,6 @@
 
 import logging
 from datetime import date
-from typing import Any
 
 from portfolio_manager.models.session import Session
 from portfolio_manager.services.session_service import SessionService

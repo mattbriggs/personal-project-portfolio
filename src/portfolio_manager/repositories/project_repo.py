@@ -83,9 +83,7 @@ class ProjectRepository(BaseRepository):
         :rtype: Project
         :raises NotFoundError: If no project with *project_id* exists.
         """
-        row = self._db.fetchone(
-            "SELECT * FROM project WHERE id = ?", (project_id,)
-        )
+        row = self._db.fetchone("SELECT * FROM project WHERE id = ?", (project_id,))
         if row is None:
             raise NotFoundError("Project", project_id)
         return _row_to_project(row)
@@ -110,9 +108,7 @@ class ProjectRepository(BaseRepository):
                 (status,),
             )
         else:
-            rows = self._db.fetchall(
-                "SELECT * FROM project ORDER BY priority, name"
-            )
+            rows = self._db.fetchall("SELECT * FROM project ORDER BY priority, name")
         return [_row_to_project(r) for r in rows]
 
     def update(self, project: Project) -> Project:

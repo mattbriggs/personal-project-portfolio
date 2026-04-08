@@ -76,8 +76,8 @@ ruff check src/ tests/
 black src/ tests/
 
 # Build docs
-mkdocs build --config-file docs/mkdocs.yml
-mkdocs serve --config-file docs/mkdocs.yml   # live preview at http://127.0.0.1:8000
+mkdocs build --config-file site/mkdocs.yml       # output → docs/ (GitHub Pages)
+mkdocs serve --config-file site/mkdocs.yml       # live preview at http://127.0.0.1:8000
 ```
 
 ## Configuration

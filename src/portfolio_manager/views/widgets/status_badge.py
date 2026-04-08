@@ -5,10 +5,10 @@ from tkinter import ttk
 
 # Status → colour + label text (REQ-UI-007: colour + text for accessibility)
 _STATUS_CONFIG: dict[str, tuple[str, str]] = {
-    "green":  ("#2e7d32", "● Green"),
+    "green": ("#2e7d32", "● Green"),
     "yellow": ("#f9a825", "● Yellow"),
-    "red":    ("#c62828", "● Red"),
-    "":       ("#9e9e9e", "● —"),
+    "red": ("#c62828", "● Red"),
+    "": ("#9e9e9e", "● —"),
 }
 
 

@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from typing import Any
 
-from portfolio_manager.config.settings import Settings, AppConfig, SessionConfig
+from portfolio_manager.config.settings import AppConfig, SessionConfig, Settings
 
 logger = logging.getLogger(__name__)
 
@@ -47,8 +47,12 @@ class SettingsView(ttk.Frame):
         )
         self._duration_var = tk.IntVar()
         ttk.Spinbox(
-            form, from_=60, to=180, increment=15,
-            textvariable=self._duration_var, width=6
+            form,
+            from_=60,
+            to=180,
+            increment=15,
+            textvariable=self._duration_var,
+            width=6,
         ).grid(row=row, column=1, sticky="w", padx=8)
         row += 1
 

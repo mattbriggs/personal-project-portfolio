@@ -1,11 +1,8 @@
 """Unit tests for DatabaseConnection."""
 
-from pathlib import Path
-
 import pytest
 
 from portfolio_manager.db.connection import DatabaseConnection
-from portfolio_manager.exceptions import DatabaseLockedError
 
 
 @pytest.fixture

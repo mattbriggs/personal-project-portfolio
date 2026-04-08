@@ -29,7 +29,7 @@ class TestAppStartup:
         try:
             window = build_app(settings=headless_settings)
             window.withdraw()  # hide the window — no display needed
-            window.update()    # process any pending Tk events
+            window.update()  # process any pending Tk events
             window.destroy()
         except tk.TclError as exc:
             pytest.skip(f"No display available for Tk: {exc}")
@@ -48,6 +48,7 @@ class TestAppStartup:
     def test_migrations_applied(self, headless_settings):
         """schema_migration table should have at least one record after startup."""
         from portfolio_manager.db.connection import DatabaseConnection
+
         try:
             window = build_app(settings=headless_settings)
             window.withdraw()

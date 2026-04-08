@@ -72,7 +72,9 @@ class SessionService:
         self._bus.emit(SESSION_CREATED, session_id=session.id, project_id=project_id)
         logger.info(
             "Created session %d for project %d on %s",
-            session.id, project_id, scheduled_date,
+            session.id,
+            project_id,
+            scheduled_date,
         )
         return session
 
@@ -135,7 +137,9 @@ class SessionService:
         session.scheduled_date = new_date
         session.week_key = to_week_key(new_date)
         updated = self._sessions.update(session)
-        self._bus.emit(SESSION_UPDATED, session_id=session_id, project_id=session.project_id)
+        self._bus.emit(
+            SESSION_UPDATED, session_id=session_id, project_id=session.project_id
+        )
         logger.info("Rescheduled session %d to %s", session_id, new_date)
         return updated
 
@@ -155,7 +159,9 @@ class SessionService:
             )
         session.status = "cancelled"
         updated = self._sessions.update(session)
-        self._bus.emit(SESSION_UPDATED, session_id=session_id, project_id=session.project_id)
+        self._bus.emit(
+            SESSION_UPDATED, session_id=session_id, project_id=session.project_id
+        )
         logger.info("Cancelled session %d", session_id)
         return updated
 
@@ -171,7 +177,9 @@ class SessionService:
         session.status = "planned"
         session.completed_at = None
         updated = self._sessions.update(session)
-        self._bus.emit(SESSION_UPDATED, session_id=session_id, project_id=session.project_id)
+        self._bus.emit(
+            SESSION_UPDATED, session_id=session_id, project_id=session.project_id
+        )
         logger.info("Reopened session %d", session_id)
         return updated
 
@@ -183,7 +191,9 @@ class SessionService:
         """
         session = self._sessions.get(session_id)
         self._sessions.delete(session_id)
-        self._bus.emit(SESSION_DELETED, session_id=session_id, project_id=session.project_id)
+        self._bus.emit(
+            SESSION_DELETED, session_id=session_id, project_id=session.project_id
+        )
         logger.info("Deleted session %d", session_id)
 
     def get_sessions_for_week(self, week_key: str) -> list[Session]:
