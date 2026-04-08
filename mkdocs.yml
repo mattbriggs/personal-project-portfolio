@@ -2,8 +2,8 @@ site_name: Portfolio Manager
 site_description: Personal Portfolio Work Orchestrator — documentation
 site_author: Matt Briggs
 
-docs_dir: src
-site_dir: ../site
+docs_dir: site/src
+site_dir: docs
 
 theme:
   name: material
@@ -27,23 +27,24 @@ theme:
 
 plugins:
   - search
-  - mermaid2:
-      arguments:
-        theme: default
 
 markdown_extensions:
   - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.details
-  - pymdownx.tabbed:
-      alternate_style: true
-  - tables
-  - toc:
-      permalink: true
+
+# Mermaid.js loaded via CDN so diagrams render inline without the mermaid2 plugin.
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
 
 nav:
   - Home: index.md

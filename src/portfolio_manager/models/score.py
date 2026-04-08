@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal
 
-
 ScoreStatus = Literal["green", "yellow", "red"]
 
 

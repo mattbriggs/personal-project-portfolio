@@ -44,8 +44,13 @@ class DashboardController:
 
         # Subscribe to events that require a dashboard refresh.
         for event in (
-            PROJECT_CREATED, PROJECT_UPDATED, PROJECT_DELETED,
-            SESSION_CREATED, SESSION_UPDATED, SESSION_COMPLETED, SESSION_DELETED,
+            PROJECT_CREATED,
+            PROJECT_UPDATED,
+            PROJECT_DELETED,
+            SESSION_CREATED,
+            SESSION_UPDATED,
+            SESSION_COMPLETED,
+            SESSION_DELETED,
         ):
             self._bus.subscribe(event, self._on_data_changed)
 
@@ -78,22 +83,26 @@ class DashboardController:
         rows = []
         for project in projects:
             score = self._scoring.compute_and_save(project.id, week_key)
-            from portfolio_manager.repositories.session_repo import SessionRepository
             from portfolio_manager.db.connection import DatabaseConnection
+            from portfolio_manager.repositories.session_repo import SessionRepository
+
             sr = SessionRepository(DatabaseConnection.get())
             counts = sr.count_by_status(project.id, week_key)
             planned = counts.get("planned", 0) + counts.get("completed", 0)
             completed = counts.get("completed", 0)
-            rows.append({
-                "project": project,
-                "score": score,
-                "planned": planned,
-                "completed": completed,
-                "remaining": planned - completed,
-            })
+            rows.append(
+                {
+                    "project": project,
+                    "score": score,
+                    "planned": planned,
+                    "completed": completed,
+                    "remaining": planned - completed,
+                }
+            )
 
         portfolio_score = self._scoring.portfolio_score(week_key)
         from portfolio_manager.services.scoring_service import score_to_status
+
         portfolio_status = score_to_status(portfolio_score)
 
         return {

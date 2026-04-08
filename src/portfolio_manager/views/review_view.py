@@ -9,14 +9,14 @@ logger = logging.getLogger(__name__)
 
 # Fields in the weekly review form: (attribute_name, label_text, multiline)
 _FIELDS = [
-    ("what_moved",             "What moved:",              True),
-    ("what_stalled",           "What stalled:",            True),
-    ("signals",                "Signals:",                 True),
-    ("decision_next_week",     "Decision for next week:",  True),
-    ("primary_focus",          "Primary focus:",           False),
-    ("project_to_deprioritize","Project to deprioritize:", False),
-    ("risk_to_watch",          "Risk to watch:",           False),
-    ("first_session_target",   "First session target:",    False),
+    ("what_moved", "What moved:", True),
+    ("what_stalled", "What stalled:", True),
+    ("signals", "Signals:", True),
+    ("decision_next_week", "Decision for next week:", True),
+    ("primary_focus", "Primary focus:", False),
+    ("project_to_deprioritize", "Project to deprioritize:", False),
+    ("risk_to_watch", "Risk to watch:", False),
+    ("first_session_target", "First session target:", False),
 ]
 
 
@@ -43,12 +43,12 @@ class ReviewView(ttk.Frame):
         top.pack(fill="x", padx=8, pady=4)
 
         ttk.Label(top, text="Week:").pack(side="left")
-        self._week_var = tk.StringVar(
-            value=self._controller._weeks.current_week_key()
-        )
+        self._week_var = tk.StringVar(value=self._controller._weeks.current_week_key())
         ttk.Entry(top, textvariable=self._week_var, width=10).pack(side="left", padx=4)
         ttk.Button(top, text="Load", command=self._load_review).pack(side="left")
-        ttk.Button(top, text="Save Review", command=self._save_review).pack(side="right", padx=4)
+        ttk.Button(top, text="Save Review", command=self._save_review).pack(
+            side="right", padx=4
+        )
 
         ttk.Separator(self, orient="horizontal").pack(fill="x", padx=8)
 

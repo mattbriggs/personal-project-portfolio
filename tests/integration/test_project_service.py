@@ -2,9 +2,12 @@
 
 import pytest
 
-from portfolio_manager.db.connection import DatabaseConnection
 from portfolio_manager.events.event_bus import EventBus
-from portfolio_manager.exceptions import NotFoundError, ProjectStateError, ValidationError
+from portfolio_manager.exceptions import (
+    NotFoundError,
+    ProjectStateError,
+    ValidationError,
+)
 from portfolio_manager.repositories.project_repo import ProjectRepository
 from portfolio_manager.services.project_service import ProjectService
 
@@ -81,6 +84,6 @@ class TestProjectServiceList:
 
     def test_list_all_returns_all(self, svc):
         svc.create_project("Active")
-        p = svc.create_project("Backlog", status="backlog")
+        svc.create_project("Backlog", status="backlog")
         all_projects = svc.list_projects(status=None)
         assert len(all_projects) >= 2

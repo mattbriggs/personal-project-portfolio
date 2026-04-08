@@ -32,7 +32,9 @@ class MilestoneController:
         """
         return self._milestones.list_for_project(project_id)
 
-    def add_milestone(self, project_id: int, description: str, sort_order: int = 0) -> Milestone:
+    def add_milestone(
+        self, project_id: int, description: str, sort_order: int = 0
+    ) -> Milestone:
         """Create a new milestone for a project.
 
         :param project_id: Parent project.

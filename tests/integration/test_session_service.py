@@ -123,10 +123,11 @@ class TestSessionServiceReopen:
 class TestSessionServiceDelete:
     def test_delete_removes_session(self, svc, sample_project, today):
         from portfolio_manager.exceptions import NotFoundError
+
         s = svc.create_session(sample_project.id, today)
         svc.delete_session(s.id)
         from portfolio_manager.repositories.session_repo import SessionRepository
-        from portfolio_manager.db.connection import DatabaseConnection
+
         repo = SessionRepository(DatabaseConnection.get())
         with pytest.raises(NotFoundError):
             repo.get(s.id)

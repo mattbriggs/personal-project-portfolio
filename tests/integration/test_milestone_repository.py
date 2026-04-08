@@ -27,9 +27,7 @@ def a_milestone(repo, sample_project):
 
 class TestMilestoneRepositoryCreate:
     def test_create_assigns_id(self, repo, sample_project):
-        ms = repo.create(
-            Milestone(project_id=sample_project.id, description="Ship v1")
-        )
+        ms = repo.create(Milestone(project_id=sample_project.id, description="Ship v1"))
         assert ms.id > 0
 
     def test_create_persists_description(self, repo, a_milestone):
@@ -61,7 +59,7 @@ class TestMilestoneRepositoryCount:
 
     def test_count_with_milestones(self, repo, sample_project):
         ms1 = repo.create(Milestone(project_id=sample_project.id, description="M1"))
-        ms2 = repo.create(Milestone(project_id=sample_project.id, description="M2"))
+        repo.create(Milestone(project_id=sample_project.id, description="M2"))
         ms1.is_complete = True
         ms1.completed_date = date.today()
         repo.update(ms1)

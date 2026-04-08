@@ -32,6 +32,44 @@ bash launch.sh
 
 ---
 
+## macOS App Icon
+
+The `create_shortcut.sh` script creates a `.app` bundle for Dock placement. You can give it a custom icon two ways.
+
+### Option 1 — Drag-and-drop (quickest)
+
+1. Find an image you want to use (PNG, ideally 512×512 or 1024×1024).
+2. Open it in Preview, then **Edit → Copy** (`⌘C`).
+3. Right-click the `.app` → **Get Info** (`⌘I`).
+4. Click the small icon in the top-left of the Get Info window (it highlights blue).
+5. Paste (`⌘V`).
+
+!!! note
+    This change lives on the `.app` bundle only. If you regenerate the bundle by running `create_shortcut.sh` again, you will need to repeat these steps.
+
+### Option 2 — Bake it into the bundle permanently
+
+Convert your image to `.icns` format (macOS native icon format) and place it in the repo root:
+
+```bash
+# From a 1024×1024 PNG called icon.png:
+mkdir icon.iconset
+sips -z 512 512 icon.png --out icon.iconset/icon_512x512.png
+iconutil -c icns icon.iconset -o portfolio_manager.icns
+rm -r icon.iconset
+```
+
+Then update `create_shortcut.sh` to copy the file into the bundle:
+
+```bash
+# Add this line inside create_shortcut.sh, after the .app directory is created:
+cp "$SCRIPT_DIR/portfolio_manager.icns" "$APP/Contents/Resources/AppIcon.icns"
+```
+
+Re-run `bash create_shortcut.sh` — the Dock icon will update on next launch.
+
+---
+
 ## Code Style
 
 | Tool | Purpose | Config location |
@@ -136,8 +174,8 @@ On each commit, `black` and `ruff` run automatically. The configuration lives in
 
 ```bash
 # Live preview
-mkdocs serve --config-file docs/mkdocs.yml
+mkdocs serve
 
-# Static build (output in site/)
-mkdocs build --config-file docs/mkdocs.yml --strict
+# Static build — output goes to docs/ (GitHub Pages root)
+mkdocs build --strict
 ```

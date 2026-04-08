@@ -1,8 +1,6 @@
 """Unit tests for domain model dataclasses."""
 
-from datetime import date, datetime
-
-import pytest
+from datetime import date
 
 from portfolio_manager.models.milestone import Milestone
 from portfolio_manager.models.project import Project

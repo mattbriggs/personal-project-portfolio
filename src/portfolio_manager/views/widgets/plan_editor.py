@@ -2,8 +2,8 @@
 
 import logging
 import tkinter as tk
+from collections.abc import Callable
 from tkinter import ttk
-from typing import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +68,7 @@ class PlanEditor(ttk.PanedWindow):
 
             frame = HtmlFrame(parent, messages_enabled=False)
             frame.pack(fill="both", expand=True, padx=4, pady=4)
-            self._html_frame: "HtmlFrame | None" = frame
+            self._html_frame: HtmlFrame | None = frame
             return frame
         except ImportError:
             logger.warning(

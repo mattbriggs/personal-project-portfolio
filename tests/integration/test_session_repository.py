@@ -78,6 +78,7 @@ class TestSessionRepositoryList:
 class TestSessionRepositoryUpdate:
     def test_update_status(self, repo, a_session):
         from datetime import datetime
+
         a_session.status = "completed"
         a_session.completed_at = datetime.utcnow()
         updated = repo.update(a_session)

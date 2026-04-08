@@ -1,7 +1,5 @@
 """Unit tests for the EventBus."""
 
-import pytest
-
 from portfolio_manager.events.event_bus import EventBus
 
 

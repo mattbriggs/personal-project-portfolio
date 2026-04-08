@@ -26,9 +26,7 @@ def _row_to_session(row: sqlite3.Row) -> Session:
         notes=row["notes"],
         created_at=datetime.fromisoformat(row["created_at"]),
         completed_at=(
-            datetime.fromisoformat(row["completed_at"])
-            if row["completed_at"]
-            else None
+            datetime.fromisoformat(row["completed_at"]) if row["completed_at"] else None
         ),
     )
 
@@ -81,9 +79,7 @@ class SessionRepository(BaseRepository):
         :rtype: Session
         :raises NotFoundError: If no session with *session_id* exists.
         """
-        row = self._db.fetchone(
-            "SELECT * FROM session WHERE id = ?", (session_id,)
-        )
+        row = self._db.fetchone("SELECT * FROM session WHERE id = ?", (session_id,))
         if row is None:
             raise NotFoundError("Session", session_id)
         return _row_to_session(row)
@@ -174,9 +170,7 @@ class SessionRepository(BaseRepository):
         with self.transaction():
             self._db.execute("DELETE FROM session WHERE id = ?", (session_id,))
 
-    def count_by_status(
-        self, project_id: int, week_key: str
-    ) -> dict[str, int]:
+    def count_by_status(self, project_id: int, week_key: str) -> dict[str, int]:
         """Return a dict of ``{status: count}`` for a project in a week.
 
         :param project_id: Target project.

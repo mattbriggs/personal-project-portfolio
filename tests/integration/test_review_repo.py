@@ -35,7 +35,7 @@ class TestReviewRepositoryUpsert:
         repo.upsert(_make_review("2026.15"))
         updated = _make_review("2026.15")
         updated.what_moved = "Shipped chapter 1."
-        saved = repo.upsert(updated)
+        repo.upsert(updated)
         fetched = repo.get_for_week("2026.15")
         assert fetched is not None
         assert fetched.what_moved == "Shipped chapter 1."

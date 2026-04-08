@@ -4,8 +4,7 @@ import sqlite3
 from datetime import datetime
 
 from portfolio_manager.db.connection import DatabaseConnection
-from portfolio_manager.exceptions import NotFoundError
-from portfolio_manager.models.score import ProjectScore, ScoreStatus
+from portfolio_manager.models.score import ProjectScore
 from portfolio_manager.repositories.base import BaseRepository
 
 
