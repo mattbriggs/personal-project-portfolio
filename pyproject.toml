@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "portfolio-manager"
+version = "2.0.0"
+description = "Personal Portfolio Work Orchestrator — desktop app for managing creative and technical projects"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "Matt Briggs" }]
+
+dependencies = [
+    "markdown>=3.5",
+    "tkinterweb>=3.20",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4",
+    "black>=24.0",
+    "mypy>=1.9",
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.5",
+    "mkdocs-mermaid2-plugin>=1.1",
+]
+
+[project.scripts]
+portfolio-manager = "portfolio_manager.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/integration"]
+addopts = "--cov=src/portfolio_manager --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/portfolio_manager"]
+omit = ["*/views/*", "*/controllers/*", "*/__main__.py", "*/app.py", "*/logging_config.py"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

@@ -1,0 +1,114 @@
+# Portfolio Manager
+
+A personal desktop application for managing, scheduling, and executing work across a portfolio of creative and technical projects using time-boxed sessions.
+
+## Features
+
+- **Portfolio dashboard** — traffic-light status indicators, scores, and weekly summary at a glance
+- **Project management** — active / backlog / archive lifecycle with priority ordering
+- **Session scheduling** — time-boxed work units (60–180 min) linked to projects and weeks
+- **Milestone tracking** — outcome-based milestones with completion toggling
+- **Plan documents** — per-project Markdown editor with live Mermaid diagram preview
+- **Weekly review** — structured reflection form stored in the database
+- **Scoring** — configurable algorithm (session completion + milestone ratio)
+- **Auto-save** — all changes commit immediately; no explicit save required
+- **macOS Dock shortcut** — one-click launch via a native `.app` bundle
+
+## Requirements
+
+- Python 3.11 or later
+- macOS (primary) — core logic runs on Linux too
+
+## Quick Start
+
+### Option 1 — Dock shortcut (recommended for daily use)
+
+```bash
+git clone <repo-url> portfolio-manager
+cd portfolio-manager
+bash create_shortcut.sh
+```
+
+The script creates `.venv`, installs dependencies, and writes
+`~/Applications/Portfolio Manager.app`. Drag it to the Dock.
+
+### Option 2 — Shell script
+
+```bash
+git clone <repo-url> portfolio-manager
+cd portfolio-manager
+bash launch.sh
+```
+
+`launch.sh` creates the venv on first run and launches the app every time.
+
+### Option 3 — Command line (development)
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
+python -m portfolio_manager
+```
+
+## Updating
+
+```bash
+git pull origin main
+.venv/bin/pip install -e .[dev] --quiet
+```
+
+No rebuild of the `.app` bundle is required — it calls `launch.sh` which always uses the current source.
+
+## Development
+
+```bash
+# Install with dev dependencies
+pip install -e .[dev]
+
+# Run tests
+pytest
+
+# Lint
+ruff check src/ tests/
+
+# Format
+black src/ tests/
+
+# Build docs
+mkdocs build --config-file docs/mkdocs.yml
+mkdocs serve --config-file docs/mkdocs.yml   # live preview at http://127.0.0.1:8000
+```
+
+## Configuration
+
+On first launch the application writes defaults to `~/.portfolio_manager/config.toml`.
+Edit that file to override settings:
+
+```toml
+[app]
+log_level = "INFO"
+theme = "light"
+
+[session]
+default_duration_minutes = 90
+weekly_budget_hours = 12
+
+[database]
+path = "~/.portfolio_manager/portfolio.db"
+```
+
+## Project Structure
+
+```
+src/portfolio_manager/   # Application source
+tests/                   # Unit, integration, and e2e tests
+docs/                    # MkDocs documentation site
+launch.sh                # Daily-use launcher
+create_shortcut.sh       # macOS .app bundle creator
+pyproject.toml           # Build config and dependencies
+```
+
+## License
+
+See [LICENSE](LICENSE).
