@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_milestone_paradigm" xml:lang="en-US">
+  <title>Milestones</title>
+  <shortdesc>Milestones mark meaningful outcomes within a project. They represent achievements
+    rather than tasks, and together they form a project's progress roadmap.</shortdesc>
+
+  <conbody>
+
+    <section id="what_is_milestone">
+      <title>What Is a Milestone?</title>
+      <p>A milestone describes a completed outcome: something that will be true when a significant
+        phase of work is finished. Write milestones as past-tense statements or noun phrases that
+        unambiguously define what done means:</p>
+      <ul>
+        <li>"First draft complete"</li>
+        <li>"Recording tracks mixed and mastered"</li>
+        <li>"Beta version deployed to staging"</li>
+        <li>"Study guide reviewed and annotated"</li>
+      </ul>
+      <p>Avoid defining milestones as task steps ("write chapter 3"). Tasks belong in sessions or
+        your project plan document. Milestones describe the meaningful threshold you are working
+        toward.</p>
+    </section>
+
+    <section id="milestone_lifecycle">
+      <title>Milestone Lifecycle</title>
+      <image href="images/milestone-lifecycle.png"
+             alt="State diagram showing the five milestone states: Backlog, Planned, Doing, Done, and Cancelled"
+             placement="break">
+        <alt>Milestone lifecycle matches the session lifecycle: five states progressing from
+          Backlog through Done, with Cancelled as an exit state.</alt>
+      </image>
+      <p>Milestones share the same five-state lifecycle as sessions. You advance a milestone
+        manually when the outcome is achieved; completing sessions linked to a milestone does
+        <b>not</b> automatically mark the milestone done.</p>
+      <dl>
+        <dlentry>
+          <dt>Backlog</dt>
+          <dd>The milestone is identified but not yet active.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Planned</dt>
+          <dd>The milestone is on the active roadmap with an optional target date.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Doing</dt>
+          <dd>Work toward this milestone is in progress.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Done</dt>
+          <dd>The outcome has been achieved. Portfolio Manager records the completion date
+            automatically.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Cancelled</dt>
+          <dd>The milestone was removed from scope.</dd>
+        </dlentry>
+      </dl>
+    </section>
+
+    <section id="session_milestone_link">
+      <title>Linking Sessions to Milestones</title>
+      <p>When you create or edit a session, you can optionally link it to one of the project's
+        milestones. This link is informational—it lets you see which sessions are contributing to
+        a specific outcome. One session can link to one milestone; multiple sessions can link to
+        the same milestone.</p>
+      <p>To mark a milestone done, change its status directly in the Milestones tab. Review all
+        linked sessions to confirm the outcome is achieved before marking it done.</p>
+    </section>
+
+    <section id="milestone_scoring">
+      <title>How Milestones Affect Scoring</title>
+      <p>Milestones contribute 40 percent of a project's weekly health score:</p>
+      <codeblock>(completed milestones ÷ total milestones) × 40</codeblock>
+      <p>A project with five milestones and two marked done earns 16 of a possible 40 milestone
+        points. See <xref href="c_scoring_model.dita"/> for the full model.</p>
+      <note type="tip">Even if a project has no milestones defined, its score still reflects
+        session completion. Add milestones when you want the score to track long-term
+        outcomes.</note>
+    </section>
+
+  </conbody>
+</concept>

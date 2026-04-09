@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE troubleshooting PUBLIC "-//OASIS//DTD DITA Troubleshooting//EN" "troubleshooting.dtd">
+<troubleshooting id="ts_tk_not_found" xml:lang="en-US">
+  <title>Tkinter Not Found</title>
+  <shortdesc>Portfolio Manager requires Tkinter (Python's standard GUI library). This error occurs
+    most often when Python is installed via Homebrew on macOS.</shortdesc>
+
+  <troublebody>
+
+    <condition>
+      <p>Launching Portfolio Manager produces one of the following errors:</p>
+      <codeblock>ModuleNotFoundError: No module named '_tkinter'
+ModuleNotFoundError: No module named 'tkinter'</codeblock>
+    </condition>
+
+    <troubleSolution>
+      <cause>
+        <p><b>Python was installed via Homebrew</b>, which does not include Tkinter by
+          default.</p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Download and install the official Python 3.11 (or later) package for macOS from
+              <xref href="https://python.org" format="html"
+              scope="external">python.org</xref>.</cmd>
+            <info><p>The python.org installer includes Tkinter. Do not use the Homebrew
+              formula.</p></info>
+          </step>
+          <step>
+            <cmd>Confirm that the new Python is the active version:</cmd>
+            <info><codeblock>which python3
+python3 --version</codeblock>
+              <p>The output should show the python.org installation path (typically
+                <filepath>/Library/Frameworks/Python.framework/…</filepath>).</p></info>
+          </step>
+          <step>
+            <cmd>Verify Tkinter is available:</cmd>
+            <info><codeblock>python3 -c "import tkinter; print('Tkinter OK')"</codeblock></info>
+          </step>
+          <step>
+            <cmd>Delete the existing virtual environment and relaunch:</cmd>
+            <info><codeblock>rm -rf .venv
+bash launch.sh</codeblock></info>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>On Linux</b>, Tkinter is a separate package not always installed with Python.</p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Install the Tkinter package for your distribution:</cmd>
+            <info>
+              <p>Debian/Ubuntu:</p>
+              <codeblock>sudo apt install python3-tk</codeblock>
+              <p>Fedora/RHEL:</p>
+              <codeblock>sudo dnf install python3-tkinter</codeblock>
+              <p>Arch Linux:</p>
+              <codeblock>sudo pacman -S tk</codeblock>
+            </info>
+          </step>
+          <step>
+            <cmd>Relaunch Portfolio Manager:</cmd>
+            <info><codeblock>bash launch.sh</codeblock></info>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+  </troublebody>
+</troubleshooting>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_create_project" xml:lang="en-US">
+  <title>Create a Project</title>
+  <shortdesc>Add a new project to your portfolio and configure its metadata.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Create a project for each distinct commitment in your portfolio. A commitment qualifies
+        as a project if it has a meaningful end state, benefits from regular sessions, and would
+        suffer from being deprioritized indefinitely.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Projects</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>New Project</uicontrol>.</cmd>
+        <stepresult>The Project dialog opens.</stepresult>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Project</uicontrol> field, enter a short, recognizable name.</cmd>
+        <info><p>Use a name you will recognize at a glance on the Dashboard. For example: "Novel
+          Draft," "Home Studio Album," or "AWS Certification."</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Description</uicontrol> field, enter a one- or two-sentence
+          summary of the project's purpose and desired outcome.</cmd>
+      </step>
+      <step>
+        <cmd>Set the <uicontrol>Status</uicontrol> field.</cmd>
+        <choices>
+          <choice>Select <uicontrol>Active</uicontrol> if you intend to schedule sessions for this
+            project this week.</choice>
+          <choice>Select <uicontrol>Backlog</uicontrol> if you are capturing the project but are
+            not ready to start yet.</choice>
+        </choices>
+      </step>
+      <step>
+        <cmd>Set the <uicontrol>Priority</uicontrol> field to a value from 1 (highest) to
+          5 (lowest).</cmd>
+        <info><p>Priority is for your reference. It does not affect scoring or display
+          order.</p></info>
+      </step>
+      <step>
+        <cmd>(Optional) Enter a <uicontrol>Start</uicontrol> date and an <uicontrol>End</uicontrol>
+          date in YYYY-MM-DD format, or click <uicontrol>Today</uicontrol> to fill in
+          today's date.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+        <stepresult>The project appears in the Projects list. If status is Active, it also
+          appears on the Dashboard.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>After creating a project, add milestones to define its key outcomes. See
+        <xref href="t_create_milestone.dita"/>.</p>
+    </postreq>
+
+  </taskbody>
+</task>

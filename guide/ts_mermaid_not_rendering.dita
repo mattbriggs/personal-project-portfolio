@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE troubleshooting PUBLIC "-//OASIS//DTD DITA Troubleshooting//EN" "troubleshooting.dtd">
+<troubleshooting id="ts_mermaid_not_rendering" xml:lang="en-US">
+  <title>Mermaid Diagrams Not Rendering in Plan Documents</title>
+  <shortdesc>Mermaid diagram blocks in a project plan document display as raw text instead of
+    rendered diagrams.</shortdesc>
+
+  <troublebody>
+
+    <condition>
+      <p>In the plan document preview panel, a fenced code block tagged as
+        <codeph>mermaid</codeph> is displayed as plain text rather than as a visual diagram.</p>
+    </condition>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The <codeph>tkinterweb</codeph> library is not installed.</b> Without
+          <codeph>tkinterweb</codeph>, the plan document preview falls back to a plain-text
+          renderer that does not execute JavaScript or Mermaid.</p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Activate the virtual environment and install <codeph>tkinterweb</codeph>:</cmd>
+            <info><codeblock>source .venv/bin/activate
+pip install tkinterweb</codeblock></info>
+          </step>
+          <step>
+            <cmd>Restart Portfolio Manager.</cmd>
+          </step>
+          <step>
+            <cmd>Open the plan document and click <uicontrol>Preview</uicontrol>.</cmd>
+            <stepresult>Mermaid diagrams should now render in the preview panel.</stepresult>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>Internet access is unavailable.</b> Mermaid rendering uses the Mermaid.js library
+          loaded from a CDN. If the host machine has no internet access, the diagram cannot
+          render.</p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Verify internet connectivity from the machine running Portfolio Manager.</cmd>
+          </step>
+          <step>
+            <cmd>If the machine is offline intentionally, use the plan document in edit mode.
+              Diagrams are preserved as source text and render correctly when connectivity is
+              restored.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The Mermaid diagram contains a syntax error.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Click <uicontrol>Edit</uicontrol> to open the plan document editor.</cmd>
+          </step>
+          <step>
+            <cmd>Review the Mermaid code block for syntax errors. Common issues include:</cmd>
+            <info>
+              <ul>
+                <li>Missing opening keyword (<codeph>flowchart TD</codeph>,
+                  <codeph>sequenceDiagram</codeph>, and so on)</li>
+                <li>Arrows written as <codeph>-></codeph> instead of <codeph>--&gt;</codeph></li>
+                <li>Node labels containing unescaped special characters</li>
+              </ul>
+            </info>
+          </step>
+          <step>
+            <cmd>Correct the syntax, then click <uicontrol>Preview</uicontrol> to verify the
+              diagram renders.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+  </troublebody>
+</troubleshooting>

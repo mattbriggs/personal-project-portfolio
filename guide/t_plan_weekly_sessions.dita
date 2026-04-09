@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_plan_weekly_sessions" xml:lang="en-US">
+  <title>Plan Sessions for the Week</title>
+  <shortdesc>Allocate your weekly time budget across active projects by creating and scheduling
+    sessions at the start of each week.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Weekly session planning translates your portfolio priorities into concrete time blocks.
+        Do this at the start of each week—before the week's demands pull your attention
+        elsewhere.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Dashboard</uicontrol> tab.</cmd>
+        <stepresult>The Dashboard shows each active project's score from last week. Projects
+          showing Red or Yellow status need session attention first.</stepresult>
+      </step>
+      <step>
+        <cmd>Click the <uicontrol>Sessions</uicontrol> tab and confirm the week selector
+          shows the current week.</cmd>
+      </step>
+      <step>
+        <cmd>Check the weekly budget bar at the bottom of the Sessions tab.</cmd>
+        <info><p>Note how much time is available. This is your planning constraint.</p></info>
+      </step>
+      <step>
+        <cmd>Allocate sessions to red and yellow projects first.</cmd>
+        <info><p>Projects that stalled last week need at least one session this week to recover.
+          Create those sessions before allocating time to green projects.</p></info>
+      </step>
+      <step>
+        <cmd>Create or promote sessions for each active project until the weekly budget bar
+          reflects your intended allocation.</cmd>
+        <info>
+          <p>Guidelines for allocation:</p>
+          <ul>
+            <li>The project you named as primary focus in your weekly review deserves at least
+              two sessions.</li>
+            <li>Every active project deserves at least one session per week. If you cannot
+              schedule a session for a project, consider moving it to Backlog temporarily.</li>
+            <li>Do not over-schedule. If the planned time exceeds your budget, remove lower-priority
+              sessions or move them to a future week.</li>
+          </ul>
+        </info>
+      </step>
+      <step>
+        <cmd>Set all committed sessions to <uicontrol>Planned</uicontrol> status.</cmd>
+        <stepresult>The budget bar shows your total planned hours for the week.</stepresult>
+      </step>
+    </steps>
+
+    <result>
+      <p>Your week is planned. Each session represents a concrete commitment to a project. Return
+        to the Sessions tab after each session to mark it Done.</p>
+    </result>
+
+  </taskbody>
+</task>

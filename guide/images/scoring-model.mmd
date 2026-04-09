@@ -1,0 +1,28 @@
+%%{init: {'theme': 'base'}}%%
+flowchart TD
+    subgraph Sessions["Session Score (max 60 pts)"]
+        DS[Done sessions]
+        PS[Planned + Doing + Done sessions]
+        SS["(Done ÷ Planned) × 60"]
+        DS --> SS
+        PS --> SS
+    end
+
+    subgraph Milestones["Milestone Score (max 40 pts)"]
+        DM[Done milestones]
+        TM["Total milestones\n(excl. Cancelled)"]
+        MS["(Done ÷ Total) × 40"]
+        DM --> MS
+        TM --> MS
+    end
+
+    SS --> TOTAL["Project Score\n(0–100)"]
+    MS --> TOTAL
+
+    TOTAL --> GREEN["Green\n80–100"]
+    TOTAL --> YELLOW["Yellow\n60–79"]
+    TOTAL --> RED["Red\n0–59"]
+
+    style GREEN  fill:#4caf50,color:#fff
+    style YELLOW fill:#ff9800,color:#fff
+    style RED    fill:#f44336,color:#fff

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_update_session_status" xml:lang="en-US">
+  <title>Update a Session's Status</title>
+  <shortdesc>Mark a session as Done after you complete it, or Cancelled if you abandon it. Status
+    updates drive the project health score on the Dashboard.</shortdesc>
+
+  <taskbody>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Sessions</uicontrol> tab and navigate to the week containing
+          the session.</cmd>
+      </step>
+      <step>
+        <cmd>Select the session in the table.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Mark Done</uicontrol> to complete the session in one step.</cmd>
+        <info>
+          <p>Alternatively, click <uicontrol>Edit Session</uicontrol> to open the full dialog and
+            change the status field manually. Use the Edit dialog when you also want to add notes
+            about what you accomplished.</p>
+        </info>
+        <stepresult>The session status changes to Done. Portfolio Manager records the completion
+          timestamp. The Dashboard score for the project updates immediately.</stepresult>
+      </step>
+    </steps>
+
+    <result>
+      <p>The session is recorded as complete for the current week. Its duration counts toward the
+        Done total in the weekly budget bar.</p>
+    </result>
+
+    <section id="cancel_session">
+      <title>To Cancel a Session</title>
+      <p>If you decide not to complete a session, select it in the Sessions table, click
+        <uicontrol>Edit Session</uicontrol>, change the status to
+        <uicontrol>Cancelled</uicontrol>, and save. Cancelled sessions do not count toward the
+        weekly budget or the project score. You can delete cancelled sessions to keep the list
+        tidy.</p>
+      <note type="tip">If you cannot complete a session this week but still want to do the work,
+        edit the session date to move it to a future week rather than cancelling it. This preserves
+        the intent and keeps the session in your backlog.</note>
+    </section>
+
+  </taskbody>
+</task>

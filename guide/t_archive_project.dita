@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_archive_project" xml:lang="en-US">
+  <title>Archive a Project</title>
+  <shortdesc>Archive a project when it is complete, discontinued, or no longer active. Archiving
+    preserves the project's history while removing it from the active Dashboard.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Archive a project in two situations: when all milestones are achieved and the project
+        is complete, or when you have decided to discontinue the project. Archived projects are
+        read-only—you can review their history, but you cannot add sessions or milestones to
+        them.</p>
+      <p>If you want to pause a project temporarily without archiving it, move it to Backlog
+        status instead.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Projects</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>Select the project you want to archive.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Archive Project</uicontrol>.</cmd>
+        <stepresult>A confirmation prompt appears asking you to confirm the archive
+          action.</stepresult>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Confirm</uicontrol>.</cmd>
+        <stepresult>The project status changes to Archive. It disappears from the Dashboard and
+          from the active project filter. It remains visible when you set the Projects tab filter
+          to <uicontrol>Archive</uicontrol> or <uicontrol>All</uicontrol>.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>If you archived a project by mistake, you can restore it: open the Projects tab, set
+        the status filter to <uicontrol>Archive</uicontrol>, select the project, click
+        <uicontrol>Edit Project</uicontrol>, change the status back to
+        <uicontrol>Active</uicontrol> or <uicontrol>Backlog</uicontrol>, and save.</p>
+    </postreq>
+
+  </taskbody>
+</task>

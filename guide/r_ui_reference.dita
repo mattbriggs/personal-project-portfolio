@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_ui_reference" xml:lang="en-US">
+  <title>User Interface Reference</title>
+  <shortdesc>Portfolio Manager uses a two-panel layout with a week navigator on the left and a
+    six-tab notebook on the right. This topic describes each panel and tab.</shortdesc>
+
+  <refbody>
+
+    <section id="main_layout">
+      <title>Main Window Layout</title>
+      <image href="images/app-layout.png"
+             alt="Annotated screenshot of the Portfolio Manager main window showing the left panel week navigator and right panel tab notebook"
+             placement="break">
+        <alt>Main window: left panel shows the week navigator list; right panel shows six tabs:
+          Dashboard, Sessions, Projects, Milestones, Weekly Review, and Settings.</alt>
+      </image>
+      <p>The minimum window size is 1024 × 768 pixels. The window is resizable; both panels
+        expand proportionally.</p>
+    </section>
+
+    <section id="week_navigator">
+      <title>Left Panel — Week Navigator</title>
+      <p>The left panel displays a scrollable list of week keys in YYYY.W format. The list shows
+        the 12 preceding weeks, the current week (highlighted), and the 4 following weeks. Clicking
+        a week navigates the Sessions and Weekly Review tabs to that week.</p>
+    </section>
+
+    <section id="tab_dashboard">
+      <title>Dashboard Tab</title>
+      <p>Displays a portfolio health snapshot for the selected week:</p>
+      <simpletable>
+        <sthead>
+          <stentry>Element</stentry>
+          <stentry>Description</stentry>
+        </sthead>
+        <strow>
+          <stentry>Week header</stentry>
+          <stentry>The week key and date range (for example, "Week 2026.15 — Apr 13–19").</stentry>
+        </strow>
+        <strow>
+          <stentry>Project table</stentry>
+          <stentry>One row per active project. Columns: Name, Status, Planned sessions, Done sessions, Remaining sessions, Score.</stentry>
+        </strow>
+        <strow>
+          <stentry>Portfolio summary row</stentry>
+          <stentry>Aggregate session counts and the portfolio score with a color-coded status badge.</stentry>
+        </strow>
+        <strow>
+          <stentry>This Week panel</stentry>
+          <stentry>Total planned and done session hours, and a list of upcoming milestones for the week.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="tab_sessions">
+      <title>Sessions Tab</title>
+      <p>Lists all sessions for the selected week and provides tools to create, edit, and update
+        them:</p>
+      <simpletable>
+        <sthead>
+          <stentry>Control</stentry>
+          <stentry>Action</stentry>
+        </sthead>
+        <strow>
+          <stentry>Week selector</stentry>
+          <stentry>Text entry plus Previous and Next buttons to navigate weeks.</stentry>
+        </strow>
+        <strow>
+          <stentry>Session table</stentry>
+          <stentry>Columns: Date, Project, Milestone, Duration, Status, Session (label). Color-coded by status.</stentry>
+        </strow>
+        <strow>
+          <stentry>New Session</stentry>
+          <stentry>Opens the Session dialog to create a session.</stentry>
+        </strow>
+        <strow>
+          <stentry>Edit Session</stentry>
+          <stentry>Opens the Session dialog for the selected session.</stentry>
+        </strow>
+        <strow>
+          <stentry>Mark Done</stentry>
+          <stentry>Advances the selected session directly to Done status.</stentry>
+        </strow>
+        <strow>
+          <stentry>Delete Session</stentry>
+          <stentry>Removes the selected session after confirmation.</stentry>
+        </strow>
+        <strow>
+          <stentry>Budget bar</stentry>
+          <stentry>Shows planned hours, done hours, and remaining hours against the weekly budget.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="tab_projects">
+      <title>Projects Tab</title>
+      <simpletable>
+        <sthead>
+          <stentry>Control</stentry>
+          <stentry>Action</stentry>
+        </sthead>
+        <strow>
+          <stentry>Status filter</stentry>
+          <stentry>Dropdown to show Active, Backlog, Archive, or All projects.</stentry>
+        </strow>
+        <strow>
+          <stentry>Project table</stentry>
+          <stentry>Columns: Name, Status, Priority, Started, Milestones (count), Sessions (count).</stentry>
+        </strow>
+        <strow>
+          <stentry>New Project</stentry>
+          <stentry>Opens the Project dialog to create a project.</stentry>
+        </strow>
+        <strow>
+          <stentry>Edit Project</stentry>
+          <stentry>Opens the Project dialog for the selected project, including the plan document editor.</stentry>
+        </strow>
+        <strow>
+          <stentry>Archive Project</stentry>
+          <stentry>Moves the selected project to Archive status after confirmation.</stentry>
+        </strow>
+        <strow>
+          <stentry>Delete Project</stentry>
+          <stentry>Permanently removes the project and all its sessions and milestones. Requires confirmation.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="tab_milestones">
+      <title>Milestones Tab</title>
+      <simpletable>
+        <sthead>
+          <stentry>Control</stentry>
+          <stentry>Action</stentry>
+        </sthead>
+        <strow>
+          <stentry>Project dropdown</stentry>
+          <stentry>Selects the project whose milestones are displayed.</stentry>
+        </strow>
+        <strow>
+          <stentry>Milestone table</stentry>
+          <stentry>Columns: Description, Status, Target Date, Notes. Sorted by sort_order.</stentry>
+        </strow>
+        <strow>
+          <stentry>New Milestone</stentry>
+          <stentry>Opens the Milestone dialog.</stentry>
+        </strow>
+        <strow>
+          <stentry>Edit Milestone</stentry>
+          <stentry>Opens the Milestone dialog for the selected milestone.</stentry>
+        </strow>
+        <strow>
+          <stentry>Delete Milestone</stentry>
+          <stentry>Removes the selected milestone after confirmation.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="tab_weekly_review">
+      <title>Weekly Review Tab</title>
+      <simpletable>
+        <sthead>
+          <stentry>Element</stentry>
+          <stentry>Description</stentry>
+        </sthead>
+        <strow>
+          <stentry>Review history list</stentry>
+          <stentry>Left panel listing all saved reviews by week key. Click any entry to view that review.</stentry>
+        </strow>
+        <strow>
+          <stentry>Week selector</stentry>
+          <stentry>Text entry and navigation buttons for the review week.</stentry>
+        </strow>
+        <strow>
+          <stentry>Load button</stentry>
+          <stentry>Loads or creates the review for the selected week.</stentry>
+        </strow>
+        <strow>
+          <stentry>Review form</stentry>
+          <stentry>Eight text fields for reflection (what moved, what stalled, signals, decision for next week) and planning (primary focus, project to deprioritize, risk to watch, first session target).</stentry>
+        </strow>
+        <strow>
+          <stentry>Save Review</stentry>
+          <stentry>Saves the current review.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="tab_settings">
+      <title>Settings Tab</title>
+      <simpletable>
+        <sthead>
+          <stentry>Setting</stentry>
+          <stentry>Description</stentry>
+        </sthead>
+        <strow>
+          <stentry>Log level</stentry>
+          <stentry>Logging verbosity. Options: DEBUG, INFO, WARNING, ERROR.</stentry>
+        </strow>
+        <strow>
+          <stentry>Default session duration (minutes)</stentry>
+          <stentry>Pre-fills the duration field when creating a session. Range: 15–480.</stentry>
+        </strow>
+        <strow>
+          <stentry>Weekly budget (hours)</stentry>
+          <stentry>Hours available per week for personal projects. Range: 1–100.</stentry>
+        </strow>
+        <strow>
+          <stentry>Database path</stentry>
+          <stentry>Read-only display of the current database file location. A restart is required after changing this path.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+  </refbody>
+</reference>

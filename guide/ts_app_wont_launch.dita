@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE troubleshooting PUBLIC "-//OASIS//DTD DITA Troubleshooting//EN" "troubleshooting.dtd">
+<troubleshooting id="ts_app_wont_launch" xml:lang="en-US">
+  <title>Portfolio Manager Does Not Launch</title>
+  <shortdesc>The application fails to open, exits immediately, or shows no window after launching
+    from the Dock or a shell script.</shortdesc>
+
+  <troublebody>
+
+    <condition>
+      <p>You launch Portfolio Manager from the Dock icon or by running
+        <codeph>bash launch.sh</codeph> and one of the following occurs:</p>
+      <ul>
+        <li>No window appears.</li>
+        <li>A window flashes briefly and closes.</li>
+        <li>The terminal shows a Python traceback.</li>
+      </ul>
+    </condition>
+
+    <troubleSolution>
+      <cause>
+        <p><b>Python version is below 3.11.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Check the Python version:</cmd>
+            <info><codeblock>python3 --version</codeblock></info>
+          </step>
+          <step>
+            <cmd>If the version is below 3.11, download and install Python 3.11 or later from
+              <xref href="https://python.org" format="html" scope="external">python.org</xref>.</cmd>
+          </step>
+          <step>
+            <cmd>Delete the existing virtual environment and relaunch:</cmd>
+            <info><codeblock>rm -rf .venv
+bash launch.sh</codeblock></info>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>Tkinter is not installed or not linked correctly.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Test whether Tkinter is available:</cmd>
+            <info><codeblock>python3 -c "import tkinter; tkinter._test()"</codeblock>
+              <p>If a small test window appears, Tkinter is working. If the command fails,
+                proceed to the next step.</p></info>
+          </step>
+          <step>
+            <cmd>See <xref href="ts_tk_not_found.dita"/> for Tkinter-specific remedies.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>A dependency is missing or the virtual environment is corrupted.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Delete the virtual environment and reinstall dependencies:</cmd>
+            <info><codeblock>rm -rf .venv
+bash launch.sh</codeblock>
+              <p>The launch script recreates the virtual environment and installs all
+                dependencies.</p></info>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>A database migration error occurred during startup.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Check the application log for migration errors:</cmd>
+            <info><codeblock>ls ~/.portfolio_manager/logs/
+cat ~/.portfolio_manager/logs/portfolio_manager.log</codeblock></info>
+          </step>
+          <step>
+            <cmd>If a migration error is shown, see <xref href="ts_database_error.dita"/>.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+  </troublebody>
+</troubleshooting>

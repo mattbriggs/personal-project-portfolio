@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_project_states" xml:lang="en-US">
+  <title>Project Status Values</title>
+  <shortdesc>Reference for the three project status values and their effect on the Dashboard and
+    scoring.</shortdesc>
+
+  <refbody>
+    <table>
+      <tgroup cols="4">
+        <colspec colname="col1" colwidth="1*"/>
+        <colspec colname="col2" colwidth="2*"/>
+        <colspec colname="col3" colwidth="1.5*"/>
+        <colspec colname="col4" colwidth="1.5*"/>
+        <thead>
+          <row>
+            <entry>Status</entry>
+            <entry>Meaning</entry>
+            <entry>Appears on Dashboard?</entry>
+            <entry>Eligible for new sessions?</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>Active</entry>
+            <entry>Currently being worked on. Contributes to the portfolio score each week.</entry>
+            <entry>Yes</entry>
+            <entry>Yes</entry>
+          </row>
+          <row>
+            <entry>Backlog</entry>
+            <entry>Paused. Not scored or displayed on the Dashboard. Can be reactivated.</entry>
+            <entry>No</entry>
+            <entry>Yes (to prepare for reactivation)</entry>
+          </row>
+          <row>
+            <entry>Archive</entry>
+            <entry>Complete or discontinued. Read-only. History preserved.</entry>
+            <entry>No</entry>
+            <entry>No</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <section id="project_priority">
+      <title>Project Priority Values</title>
+      <p>Priority values range from 1 to 5:</p>
+      <simpletable>
+        <sthead>
+          <stentry>Value</stentry>
+          <stentry>Meaning</stentry>
+        </sthead>
+        <strow>
+          <stentry>1</stentry>
+          <stentry>Highest priority</stentry>
+        </strow>
+        <strow>
+          <stentry>2</stentry>
+          <stentry>High priority</stentry>
+        </strow>
+        <strow>
+          <stentry>3</stentry>
+          <stentry>Medium priority (default)</stentry>
+        </strow>
+        <strow>
+          <stentry>4</stentry>
+          <stentry>Low priority</stentry>
+        </strow>
+        <strow>
+          <stentry>5</stentry>
+          <stentry>Lowest priority</stentry>
+        </strow>
+      </simpletable>
+      <note type="note">Priority is for your reference only. It does not affect scoring, display
+        order, or scheduling behavior.</note>
+    </section>
+  </refbody>
+</reference>

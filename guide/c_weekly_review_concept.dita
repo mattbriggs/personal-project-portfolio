@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_weekly_review_concept" xml:lang="en-US">
+  <title>The Weekly Review</title>
+  <shortdesc>The weekly review is a structured reflection ritual that closes one week and opens
+    the next. It is the mechanism through which Portfolio Manager shifts from tracking to
+    learning.</shortdesc>
+
+  <conbody>
+
+    <section id="purpose">
+      <title>Purpose of the Weekly Review</title>
+      <p>Data alone does not improve your system. A high session completion rate tells you that
+        you worked, but it does not tell you whether you worked on the right things or made the
+        kind of progress that matters to you. The weekly review prompts you to examine both.</p>
+      <p>The review takes 10 to 20 minutes. It is worth the investment: the decisions you make at
+        the end of a review—which project to prioritize, which to slow down, what risk to
+        watch—directly shape how you allocate your next week's sessions.</p>
+    </section>
+
+    <section id="review_structure">
+      <title>Review Structure</title>
+      <p>The weekly review form is divided into two sections: reflection and planning.</p>
+      <p><b>Reflection fields</b> examine the week that just ended:</p>
+      <dl>
+        <dlentry>
+          <dt>What moved</dt>
+          <dd>Which projects or milestones made meaningful progress? What contributed to that
+            movement?</dd>
+        </dlentry>
+        <dlentry>
+          <dt>What stalled</dt>
+          <dd>Which projects or milestones did not advance? What blocked them?</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Signals</dt>
+          <dd>What patterns did you notice? Recurring blockers, energy patterns, or scope creep
+            are all worth capturing here.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Decision for next week</dt>
+          <dd>One key decision to carry forward—a change in approach, a scope reduction, or a
+            commitment to address a specific blocker.</dd>
+        </dlentry>
+      </dl>
+      <p><b>Planning fields</b> shape the week ahead:</p>
+      <dl>
+        <dlentry>
+          <dt>Primary focus</dt>
+          <dd>The one project that will receive your best attention this week.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Project to deprioritize</dt>
+          <dd>The project that can receive less attention without causing harm. Naming this
+            explicitly reduces decision fatigue during the week.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Risk to watch</dt>
+          <dd>A specific blocker or external dependency to monitor.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>First session target</dt>
+          <dd>The very first session you plan to complete next week. Starting with a concrete
+            first action reduces friction when Monday arrives.</dd>
+        </dlentry>
+      </dl>
+    </section>
+
+    <section id="review_history">
+      <title>Review History</title>
+      <p>Past weekly reviews are preserved and accessible from the left panel of the Weekly Review
+        tab. Reviewing three or four consecutive weeks of reflection entries reveals longer-term
+        patterns—persistent blockers, consistently stalled projects, and decisions that worked—that
+        are not visible in a single week's data.</p>
+    </section>
+
+  </conbody>
+</concept>

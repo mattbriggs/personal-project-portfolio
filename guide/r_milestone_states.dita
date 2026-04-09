@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_milestone_states" xml:lang="en-US">
+  <title>Milestone Status Values</title>
+  <shortdesc>Reference for the five milestone status values and their effect on the project health
+    score.</shortdesc>
+
+  <refbody>
+    <table>
+      <tgroup cols="3">
+        <colspec colname="col1" colwidth="1*"/>
+        <colspec colname="col2" colwidth="2.5*"/>
+        <colspec colname="col3" colwidth="1.5*"/>
+        <thead>
+          <row>
+            <entry>Status</entry>
+            <entry>Meaning</entry>
+            <entry>Counts toward milestone score?</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>Backlog</entry>
+            <entry>Identified but not yet active. Included in the total milestone count.</entry>
+            <entry>In total count (denominator only)</entry>
+          </row>
+          <row>
+            <entry>Planned</entry>
+            <entry>On the active roadmap. Work toward this outcome has started or is scheduled.</entry>
+            <entry>In total count (denominator only)</entry>
+          </row>
+          <row>
+            <entry>Doing</entry>
+            <entry>Active work toward achieving this outcome is in progress.</entry>
+            <entry>In total count (denominator only)</entry>
+          </row>
+          <row>
+            <entry>Done</entry>
+            <entry>Outcome achieved. Portfolio Manager records the completion date.</entry>
+            <entry>In numerator and denominator</entry>
+          </row>
+          <row>
+            <entry>Cancelled</entry>
+            <entry>Outcome removed from scope.</entry>
+            <entry>Not counted</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <section id="milestone_score_note">
+      <title>Milestone Score Behavior</title>
+      <p>The milestone score component is calculated as:</p>
+      <codeblock>(milestones with Done status) ÷ (all milestones except Cancelled) × 40</codeblock>
+      <p>A project with no milestones earns 0 milestone points. To reach the maximum portfolio
+        score of 100, define milestones and advance them to Done as work progresses.</p>
+    </section>
+  </refbody>
+</reference>

@@ -1,0 +1,23 @@
+%%{init: {'theme': 'base'}}%%
+stateDiagram-v2
+    [*] --> Active   : Create project
+
+    Active  --> Backlog  : Deprioritize
+    Backlog --> Active   : Reactivate
+    Active  --> Archive  : Complete / discontinue
+    Backlog --> Archive  : Discontinue
+
+    state Active {
+        [*] --> Scoring
+        Scoring : Appears on Dashboard\nContributes to portfolio score
+    }
+
+    state Backlog {
+        [*] --> Paused
+        Paused : Hidden from Dashboard\nNo scoring impact
+    }
+
+    state Archive {
+        [*] --> ReadOnly
+        ReadOnly : Read-only history\nNo new sessions or milestones
+    }

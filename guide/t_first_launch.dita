@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_first_launch" xml:lang="en-US">
+  <title>Set Up Portfolio Manager for the First Time</title>
+  <shortdesc>After installing Portfolio Manager, complete this initial setup to create your first
+    projects and configure your weekly time budget.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>On first launch, Portfolio Manager creates a database and a configuration file in
+        <filepath>~/.portfolio_manager/</filepath>. The main window opens to an empty Dashboard.
+        The following steps walk you through creating your initial portfolio.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click <uicontrol>Settings</uicontrol> in the tab bar.</cmd>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Weekly budget (hours)</uicontrol> field, enter the number of hours
+          per week you realistically have available for personal projects.</cmd>
+        <info><p>This is not a target—it is a planning constraint. Be honest about available
+          time including commutes, evenings, and weekends.</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Default session duration (minutes)</uicontrol> field, enter your
+          typical session length.</cmd>
+        <info><p>90 minutes is a good default for focused creative or technical work. Adjust to
+          30 or 60 minutes if your schedule typically allows shorter blocks.</p></info>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save</uicontrol> in the Settings tab.</cmd>
+      </step>
+      <step>
+        <cmd>Click the <uicontrol>Projects</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>New Project</uicontrol> and create your first one to three active
+          projects.</cmd>
+        <info><p>Start with the projects that matter most right now—the ones you want to make
+          real progress on this week. You can add more projects later. See
+          <xref href="t_create_project.dita"/> for detailed instructions.</p></info>
+      </step>
+      <step>
+        <cmd>For each project, add two to five milestones that describe meaningful outcomes you
+          are working toward.</cmd>
+        <info><p>See <xref href="t_create_milestone.dita"/> for instructions.</p></info>
+      </step>
+      <step>
+        <cmd>Click the <uicontrol>Sessions</uicontrol> tab and create sessions for the current
+          week.</cmd>
+        <info><p>Aim to schedule at least one session per active project. See
+          <xref href="t_create_session.dita"/> for instructions.</p></info>
+      </step>
+      <step>
+        <cmd>Click the <uicontrol>Dashboard</uicontrol> tab to review the initial portfolio
+          state.</cmd>
+        <stepresult>The Dashboard shows all active projects with their initial scores and session
+          counts.</stepresult>
+      </step>
+    </steps>
+
+    <result>
+      <p>Your portfolio is set up and ready. Return to Portfolio Manager after each work session
+        to mark it done, and complete your first weekly review at the end of the week.</p>
+    </result>
+
+  </taskbody>
+</task>

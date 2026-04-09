@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="p_weekly_workflow" xml:lang="en-US">
+  <title>The Weekly Workflow Process</title>
+  <shortdesc>Portfolio Manager structures your work into a three-phase weekly cycle: Plan,
+    Execute, and Review. Understanding how these phases connect helps you get the most value from
+    the tool.</shortdesc>
+
+  <conbody>
+
+    <section id="process_overview">
+      <title>How the Weekly Cycle Works</title>
+      <image href="images/weekly-workflow.png"
+             alt="Flowchart showing the three-phase weekly cycle: Plan on Monday, Execute through the week, Review on Friday or Sunday"
+             placement="break">
+        <alt>Weekly workflow: Plan phase (session creation and budgeting), Execute phase (working
+          sessions and status updates), Review phase (weekly review and next-week planning).</alt>
+      </image>
+      <p>Each week begins with a planning step that sets your intentions, proceeds through a
+        series of work sessions, and ends with a structured review. The review directly informs
+        the next week's plan, creating a continuous improvement loop.</p>
+    </section>
+
+    <section id="phase_plan">
+      <title>Phase 1: Plan</title>
+      <p>At the start of each week (typically Monday morning), you open the Sessions tab and
+        create or promote sessions for the coming week:</p>
+      <ol>
+        <li>Check the Dashboard to see which projects are red or yellow from last week. These
+          projects deserve higher session priority this week.</li>
+        <li>Review backlog sessions from previous weeks and promote relevant ones to the current
+          week by updating their scheduled date.</li>
+        <li>Create new sessions for work you have identified during your previous review or from
+          your project plan documents.</li>
+        <li>Set each committed session to <uicontrol>Planned</uicontrol> status.</li>
+        <li>Check the weekly budget bar to confirm your planned sessions fit within your available
+          hours.</li>
+      </ol>
+      <p>The plan phase transforms the open-ended question "what do I work on this week?" into
+        a concrete list of scheduled sessions with a project and a purpose.</p>
+    </section>
+
+    <section id="phase_execute">
+      <title>Phase 2: Execute</title>
+      <p>Throughout the week, you work your planned sessions and update their status:</p>
+      <ol>
+        <li>Before a session, open Portfolio Manager and review the session's description to
+          orient yourself.</li>
+        <li>Optionally set the session to <uicontrol>Doing</uicontrol> to signal you are
+          starting.</li>
+        <li>After completing the session, mark it <uicontrol>Done</uicontrol>. The Dashboard
+          score updates automatically.</li>
+        <li>If you cannot complete a session, mark it <uicontrol>Cancelled</uicontrol> or leave
+          it in <uicontrol>Planned</uicontrol> status—it will appear in your review as
+          incomplete.</li>
+        <li>When a project milestone is achieved, advance it to <uicontrol>Done</uicontrol> in
+          the Milestones tab.</li>
+      </ol>
+      <p>The execute phase produces the data that the Review phase interprets. The more
+        accurately you update session status during the week, the more useful your review data
+        will be.</p>
+    </section>
+
+    <section id="phase_review">
+      <title>Phase 3: Review</title>
+      <p>At the end of each week (Friday evening or Sunday), you open the Weekly Review tab and
+        complete the structured reflection form:</p>
+      <ol>
+        <li>Examine the Dashboard for the current week: note which projects are green, yellow,
+          and red.</li>
+        <li>Open the Weekly Review tab. Portfolio Manager pre-populates the week key and session
+          summary.</li>
+        <li>Complete the reflection fields: what moved, what stalled, signals, and your decision
+          for next week.</li>
+        <li>Complete the planning fields: primary focus, project to deprioritize, risk to watch,
+          and first session target.</li>
+        <li>Save the review. It becomes part of your permanent review history.</li>
+      </ol>
+      <p>The output of the review phase—particularly the primary focus and first session
+        target—feeds directly into the next Plan phase. This continuity is what makes the
+        three-phase cycle a genuine improvement system rather than a passive log.</p>
+    </section>
+
+    <section id="cycle_benefits">
+      <title>Why the Cycle Works</title>
+      <p>The three-phase cycle addresses the central challenge of managing multiple projects:
+        <i>attention fragmentation</i>. Without a structure, you default to working on whichever
+        project feels urgent or interesting, which leaves lower-energy projects stalled
+        indefinitely.</p>
+      <p>The Plan phase forces a conscious allocation decision at the start of each week. The
+        Execute phase creates a factual record of how time was actually spent. The Review phase
+        surfaces the gap between intention and reality—and provides a structured moment to
+        adjust.</p>
+    </section>
+
+  </conbody>
+</concept>
