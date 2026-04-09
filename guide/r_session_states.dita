@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_session_states" xml:lang="en-US">
+  <title>Session Status Values</title>
+  <shortdesc>Reference for the five session status values, their meaning, and their effect on
+    scoring and budget calculations.</shortdesc>
+
+  <refbody>
+    <table>
+      <tgroup cols="4">
+        <colspec colname="col1" colwidth="1*"/>
+        <colspec colname="col2" colwidth="2*"/>
+        <colspec colname="col3" colwidth="1.5*"/>
+        <colspec colname="col4" colwidth="1.5*"/>
+        <thead>
+          <row>
+            <entry>Status</entry>
+            <entry>Meaning</entry>
+            <entry>Counts toward budget?</entry>
+            <entry>Counts toward score?</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>Backlog</entry>
+            <entry>Captured but not committed to a week. The session exists as an intention.</entry>
+            <entry>No</entry>
+            <entry>No</entry>
+          </row>
+          <row>
+            <entry>Planned</entry>
+            <entry>Committed to a scheduled date. Reflects an intention to work on the project this week.</entry>
+            <entry>Yes (as planned time)</entry>
+            <entry>Yes (as a planned session in the denominator)</entry>
+          </row>
+          <row>
+            <entry>Doing</entry>
+            <entry>Work is currently in progress.</entry>
+            <entry>Yes (as planned time)</entry>
+            <entry>Yes (as a planned session in the denominator)</entry>
+          </row>
+          <row>
+            <entry>Done</entry>
+            <entry>Work is complete. Portfolio Manager records the completion timestamp.</entry>
+            <entry>Yes (as done time)</entry>
+            <entry>Yes (as a completed session in the numerator and denominator)</entry>
+          </row>
+          <row>
+            <entry>Cancelled</entry>
+            <entry>Session was abandoned. Can be deleted.</entry>
+            <entry>No</entry>
+            <entry>No</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <section id="valid_transitions">
+      <title>Valid Status Transitions</title>
+      <p>Sessions can move between states as follows:</p>
+      <ul>
+        <li>Backlog → Planned, Doing, Done, Cancelled</li>
+        <li>Planned → Doing, Done, Cancelled</li>
+        <li>Doing → Done, Cancelled</li>
+        <li>Done → (terminal; edit the session to change if needed)</li>
+        <li>Cancelled → (terminal; delete or edit to reactivate)</li>
+      </ul>
+    </section>
+  </refbody>
+</reference>

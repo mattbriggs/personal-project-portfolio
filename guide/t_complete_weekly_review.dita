@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_complete_weekly_review" xml:lang="en-US">
+  <title>Complete the Weekly Review</title>
+  <shortdesc>Reflect on the week that ended and set your intentions for the week ahead using the
+    structured Weekly Review form.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Complete your weekly review once per week, at the end of the week (Friday evening or
+        Sunday). Budget 15 to 20 minutes. The review produces decisions that shape your next
+        week's session plan.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Dashboard</uicontrol> tab and note the health status of each
+          active project for the current week.</cmd>
+        <info><p>You will reference these scores when answering the reflection questions.</p></info>
+      </step>
+      <step>
+        <cmd>Click the <uicontrol>Weekly Review</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>Verify that the week selector shows the week you just completed. Use the arrow
+          buttons to navigate if needed.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Load</uicontrol> to open or create the review for that week.</cmd>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>What moved</uicontrol> field, write two to four sentences
+          describing which projects or milestones made meaningful progress and what contributed
+          to that movement.</cmd>
+        <info><p>Be specific. "Novel Draft moved—completed three sessions and finished the
+          outline" is more useful than "Things went well."</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>What stalled</uicontrol> field, write honestly about which
+          projects did not advance and why.</cmd>
+        <info><p>Common causes: schedule conflict, decision paralysis, scope ambiguity, or loss
+          of energy. Naming the cause helps you address it next week.</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Signals</uicontrol> field, note any patterns you observed during
+          the week.</cmd>
+        <info><p>Examples: "I consistently avoided the recording project—might need to
+          investigate why." "Morning sessions were far more productive than evening ones."</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Decision for next week</uicontrol> field, write one concrete
+          decision to carry forward.</cmd>
+        <info><p>This should be an action: "Reduce scope of Album project to four songs only,"
+          "Move Web Portfolio to Backlog until certification is done."</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Primary focus</uicontrol> field, name the one project that will
+          receive your best attention next week.</cmd>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Project to deprioritize</uicontrol> field, name the project that
+          can receive minimal attention without harm.</cmd>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Risk to watch</uicontrol> field, name a specific blocker or
+          external dependency to monitor.</cmd>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>First session target</uicontrol> field, name the first session you
+          will complete next week.</cmd>
+        <info><p>Naming your first session now reduces Monday-morning friction. Make it specific:
+          "Write the opening scene of chapter five."</p></info>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save Review</uicontrol>.</cmd>
+        <stepresult>The review is saved and appears in the review history list on the left side
+          of the Weekly Review tab.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>Use the decisions from this review to create sessions for next week. See
+        <xref href="t_plan_weekly_sessions.dita"/>.</p>
+    </postreq>
+
+  </taskbody>
+</task>

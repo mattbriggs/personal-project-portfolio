@@ -1,0 +1,26 @@
+%%{init: {'theme': 'base'}}%%
+stateDiagram-v2
+    [*] --> Backlog : Create session
+
+    Backlog --> Planned   : Commit to week
+    Backlog --> Cancelled : Abandon
+
+    Planned --> Doing     : Start work
+    Planned --> Done      : Mark complete
+    Planned --> Cancelled : Abandon
+
+    Doing --> Done        : Mark complete
+    Doing --> Cancelled   : Abandon
+
+    Done --> [*]
+    Cancelled --> [*]
+
+    note right of Done
+        Completion timestamp
+        recorded automatically
+    end note
+
+    note right of Backlog
+        Does not count
+        toward budget or score
+    end note

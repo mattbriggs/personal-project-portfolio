@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_update_milestone" xml:lang="en-US">
+  <title>Advance a Milestone to Done</title>
+  <shortdesc>Mark a milestone as done when the outcome it describes has been achieved.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Milestones do not advance automatically. You mark them done when you decide the outcome
+        is complete. This is a deliberate checkpoint—before marking a milestone done, confirm
+        that the outcome truly meets the standard you defined when you created it.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Milestones</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>Select the project from the dropdown.</cmd>
+      </step>
+      <step>
+        <cmd>Select the milestone in the list.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Edit Milestone</uicontrol>.</cmd>
+      </step>
+      <step>
+        <cmd>Change the <uicontrol>Status</uicontrol> field to
+          <uicontrol>Done</uicontrol>.</cmd>
+        <stepresult>Portfolio Manager records the completion date automatically.</stepresult>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+        <stepresult>The milestone's status updates in the list. The project's milestone score
+          component increases, which may change the project's overall health score and traffic-light
+          status on the Dashboard.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>After marking a milestone done, check whether any new milestones should be promoted from
+        Backlog to Planned to maintain forward momentum.</p>
+    </postreq>
+
+  </taskbody>
+</task>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_markdown_syntax" xml:lang="en-US">
+  <title>Markdown and Mermaid Syntax Reference</title>
+  <shortdesc>Complete reference for the Markdown elements and Mermaid diagram types supported in
+    project plan documents.</shortdesc>
+
+  <refbody>
+
+    <section id="markdown_elements">
+      <title>Supported Markdown Elements</title>
+      <table>
+        <tgroup cols="3">
+          <colspec colname="col1" colwidth="1.5*"/>
+          <colspec colname="col2" colwidth="2*"/>
+          <colspec colname="col3" colwidth="1.5*"/>
+          <thead>
+            <row>
+              <entry>Element</entry>
+              <entry>Syntax</entry>
+              <entry>Notes</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Headings</entry>
+              <entry><codeph># H1</codeph>, <codeph>## H2</codeph> … <codeph>###### H6</codeph></entry>
+              <entry>Use H1 for the document title, H2 for major sections.</entry>
+            </row>
+            <row>
+              <entry>Paragraphs</entry>
+              <entry>Separate with a blank line.</entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry>Bullet list</entry>
+              <entry><codeph>- item</codeph> or <codeph>* item</codeph></entry>
+              <entry>Nested lists supported.</entry>
+            </row>
+            <row>
+              <entry>Numbered list</entry>
+              <entry><codeph>1. item</codeph></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry>Bold</entry>
+              <entry><codeph>**text**</codeph></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry>Italic</entry>
+              <entry><codeph>*text*</codeph></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry>Inline code</entry>
+              <entry><codeph>`code`</codeph></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry>Fenced code block</entry>
+              <entry><codeph>```language … ```</codeph></entry>
+              <entry>Use <codeph>mermaid</codeph> as the language for diagrams.</entry>
+            </row>
+            <row>
+              <entry>Table</entry>
+              <entry>GitHub-flavored table syntax with pipe characters</entry>
+              <entry>Header row required.</entry>
+            </row>
+            <row>
+              <entry>Blockquote</entry>
+              <entry><codeph>&gt; text</codeph></entry>
+              <entry>Nested blockquotes supported.</entry>
+            </row>
+            <row>
+              <entry>Horizontal rule</entry>
+              <entry><codeph>---</codeph></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry>Link</entry>
+              <entry><codeph>[text](url)</codeph></entry>
+              <entry>External URLs only.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+
+    <section id="mermaid_diagrams">
+      <title>Supported Mermaid Diagram Types</title>
+      <p>Embed a Mermaid diagram in a plan document with a fenced code block using
+        <codeph>mermaid</codeph> as the language identifier:</p>
+      <codeblock>```mermaid
+[diagram definition]
+```</codeblock>
+      <table>
+        <tgroup cols="3">
+          <colspec colname="col1" colwidth="1.5*"/>
+          <colspec colname="col2" colwidth="2*"/>
+          <colspec colname="col3" colwidth="1.5*"/>
+          <thead>
+            <row>
+              <entry>Diagram Type</entry>
+              <entry>Use Case</entry>
+              <entry>Opening Keyword</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Flowchart</entry>
+              <entry>Process flows, decision trees, outlines</entry>
+              <entry><codeph>flowchart TD</codeph> or <codeph>flowchart LR</codeph></entry>
+            </row>
+            <row>
+              <entry>Sequence diagram</entry>
+              <entry>Interaction flows, story scenes, API calls</entry>
+              <entry><codeph>sequenceDiagram</codeph></entry>
+            </row>
+            <row>
+              <entry>State diagram</entry>
+              <entry>Lifecycle states, character arcs, system states</entry>
+              <entry><codeph>stateDiagram-v2</codeph></entry>
+            </row>
+            <row>
+              <entry>Gantt chart</entry>
+              <entry>Project timelines, sprint plans</entry>
+              <entry><codeph>gantt</codeph></entry>
+            </row>
+            <row>
+              <entry>Entity-relationship diagram</entry>
+              <entry>Data models, world-building relationships</entry>
+              <entry><codeph>erDiagram</codeph></entry>
+            </row>
+            <row>
+              <entry>Pie chart</entry>
+              <entry>Time allocation, distribution summaries</entry>
+              <entry><codeph>pie</codeph></entry>
+            </row>
+            <row>
+              <entry>Mindmap</entry>
+              <entry>Brainstorming, concept maps</entry>
+              <entry><codeph>mindmap</codeph></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+
+    <section id="mermaid_examples">
+      <title>Mermaid Diagram Examples</title>
+      <p><b>Flowchart — story structure:</b></p>
+      <codeblock>```mermaid
+flowchart TD
+    A[Act I: Setup] --&gt; B[Inciting Incident]
+    B --&gt; C[Act II: Conflict]
+    C --&gt; D[Climax]
+    D --&gt; E[Act III: Resolution]
+```</codeblock>
+      <p><b>Gantt chart — project timeline:</b></p>
+      <codeblock>```mermaid
+gantt
+    title Album Production Timeline
+    section Writing
+    Lyrics draft    :a1, 2026-04-01, 30d
+    section Recording
+    Tracking        :a2, after a1, 21d
+    Mixing          :a3, after a2, 14d
+```</codeblock>
+    </section>
+
+  </refbody>
+</reference>

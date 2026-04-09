@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map xml:lang="en-US">
+  <title>Portfolio Manager User Guide</title>
+
+  <!-- ============================================================
+       GETTING STARTED
+       ============================================================ -->
+  <topichead navtitle="Getting Started">
+    <topicref href="c_portfolio_paradigm.dita" type="concept"/>
+    <topicref href="t_install_macos.dita"      type="task"/>
+    <topicref href="t_install_cli.dita"         type="task"/>
+    <topicref href="t_first_launch.dita"        type="task"/>
+  </topichead>
+
+  <!-- ============================================================
+       CORE CONCEPTS
+       ============================================================ -->
+  <topichead navtitle="Core Concepts">
+    <topicref href="c_project_lifecycle.dita"   type="concept"/>
+    <topicref href="c_session_paradigm.dita"    type="concept"/>
+    <topicref href="c_milestone_paradigm.dita"  type="concept"/>
+    <topicref href="c_scoring_model.dita"       type="concept"/>
+    <topicref href="c_weekly_review_concept.dita" type="concept"/>
+  </topichead>
+
+  <!-- ============================================================
+       MANAGING PROJECTS
+       ============================================================ -->
+  <topichead navtitle="Managing Projects">
+    <topicref href="t_create_project.dita"      type="task"/>
+    <topicref href="t_write_project_plan.dita"  type="task"/>
+    <topicref href="t_create_milestone.dita"    type="task"/>
+    <topicref href="t_update_milestone.dita"    type="task"/>
+    <topicref href="t_archive_project.dita"     type="task"/>
+  </topichead>
+
+  <!-- ============================================================
+       MANAGING SESSIONS
+       ============================================================ -->
+  <topichead navtitle="Managing Sessions">
+    <topicref href="t_create_session.dita"          type="task"/>
+    <topicref href="t_update_session_status.dita"   type="task"/>
+    <topicref href="t_plan_weekly_sessions.dita"    type="task"/>
+  </topichead>
+
+  <!-- ============================================================
+       WEEKLY WORKFLOW (PROCESS)
+       ============================================================ -->
+  <topichead navtitle="Weekly Workflow">
+    <topicref href="p_weekly_workflow.dita"         type="concept"/>
+    <topicref href="t_complete_weekly_review.dita"  type="task"/>
+  </topichead>
+
+  <!-- ============================================================
+       CONFIGURATION
+       ============================================================ -->
+  <topichead navtitle="Configuration">
+    <topicref href="t_configure_settings.dita"  type="task"/>
+  </topichead>
+
+  <!-- ============================================================
+       REFERENCE
+       ============================================================ -->
+  <topichead navtitle="Reference">
+    <topicref href="r_ui_reference.dita"         type="reference"/>
+    <topicref href="r_session_states.dita"       type="reference"/>
+    <topicref href="r_project_states.dita"       type="reference"/>
+    <topicref href="r_milestone_states.dita"     type="reference"/>
+    <topicref href="r_scoring_algorithm.dita"    type="reference"/>
+    <topicref href="r_config_file.dita"          type="reference"/>
+    <topicref href="r_markdown_syntax.dita"      type="reference"/>
+  </topichead>
+
+  <!-- ============================================================
+       TROUBLESHOOTING
+       ============================================================ -->
+  <topichead navtitle="Troubleshooting">
+    <topicref href="ts_app_wont_launch.dita"        type="troubleshooting"/>
+    <topicref href="ts_tk_not_found.dita"           type="troubleshooting"/>
+    <topicref href="ts_database_error.dita"         type="troubleshooting"/>
+    <topicref href="ts_mermaid_not_rendering.dita"  type="troubleshooting"/>
+    <topicref href="ts_sessions_missing.dita"       type="troubleshooting"/>
+  </topichead>
+
+  <!-- ============================================================
+       GLOSSARY
+       ============================================================ -->
+  <topicref href="glossary.dita" type="glossgroup"/>
+
+</map>

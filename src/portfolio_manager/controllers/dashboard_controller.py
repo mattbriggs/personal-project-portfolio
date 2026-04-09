@@ -4,6 +4,7 @@ import logging
 from typing import Any
 
 from portfolio_manager.events.event_bus import (
+    MILESTONE_UPDATED,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -51,6 +52,7 @@ class DashboardController:
             SESSION_UPDATED,
             SESSION_COMPLETED,
             SESSION_DELETED,
+            MILESTONE_UPDATED,
         ):
             self._bus.subscribe(event, self._on_data_changed)
 
@@ -73,23 +75,36 @@ class DashboardController:
         """Return all data needed to render the dashboard.
 
         :returns: Dict with keys ``week_key``, ``date_range``, ``rows``,
-            ``portfolio_score``, ``portfolio_status``.
+            ``portfolio_score``, ``portfolio_status``,
+            ``week_total_min``, ``week_done_min``, ``next_milestones``.
         :rtype: dict[str, Any]
         """
+        from portfolio_manager.db.connection import DatabaseConnection
+        from portfolio_manager.repositories.milestone_repo import MilestoneRepository
+        from portfolio_manager.repositories.session_repo import SessionRepository
+        from portfolio_manager.services.scoring_service import score_to_status
+
         week_key = self._weeks.current_week_key()
         date_range = self._weeks.display_range(week_key)
         projects = self._projects.list_projects(status="active")
 
+        sr = SessionRepository(DatabaseConnection.get())
+        mr = MilestoneRepository(DatabaseConnection.get())
+
         rows = []
+        week_total_min = 0
+        week_done_min = 0
+        next_milestones: list[dict[str, Any]] = []
+
         for project in projects:
             score = self._scoring.compute_and_save(project.id, week_key)
-            from portfolio_manager.db.connection import DatabaseConnection
-            from portfolio_manager.repositories.session_repo import SessionRepository
-
-            sr = SessionRepository(DatabaseConnection.get())
             counts = sr.count_by_status(project.id, week_key)
-            planned = counts.get("planned", 0) + counts.get("completed", 0)
-            completed = counts.get("completed", 0)
+            planned = (
+                counts.get("planned", 0)
+                + counts.get("doing", 0)
+                + counts.get("done", 0)
+            )
+            completed = counts.get("done", 0)
             rows.append(
                 {
                     "project": project,
@@ -100,9 +115,33 @@ class DashboardController:
                 }
             )
 
-        portfolio_score = self._scoring.portfolio_score(week_key)
-        from portfolio_manager.services.scoring_service import score_to_status
+            # Accumulate this-week minute totals across all projects
+            week_sessions = sr.list_for_project(project.id, week_key=week_key)
+            for s in week_sessions:
+                if s.status != "cancelled":
+                    week_total_min += s.duration_minutes
+                if s.status == "done":
+                    week_done_min += s.duration_minutes
 
+            # Find the earliest non-done milestone for this project
+            milestones = mr.list_for_project(project.id)
+            active_ms = [
+                m for m in milestones
+                if m.status not in ("done", "cancelled") and m.target_date is not None
+            ]
+            active_ms.sort(key=lambda m: m.target_date)  # type: ignore[arg-type]
+            if active_ms:
+                next_milestones.append(
+                    {
+                        "project": project.name,
+                        "milestone": active_ms[0].description,
+                        "target": active_ms[0].target_date,
+                    }
+                )
+
+        next_milestones.sort(key=lambda m: m["target"])
+
+        portfolio_score = self._scoring.portfolio_score(week_key)
         portfolio_status = score_to_status(portfolio_score)
 
         return {
@@ -111,4 +150,7 @@ class DashboardController:
             "rows": rows,
             "portfolio_score": portfolio_score,
             "portfolio_status": portfolio_status,
+            "week_total_min": week_total_min,
+            "week_done_min": week_done_min,
+            "next_milestones": next_milestones,
         }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_config_file" xml:lang="en-US">
+  <title>Configuration File Reference</title>
+  <shortdesc>Portfolio Manager stores its configuration in a TOML file at
+    <filepath>~/.portfolio_manager/config.toml</filepath>. This topic describes all available
+    keys and their default values.</shortdesc>
+
+  <refbody>
+
+    <section id="file_location">
+      <title>File Location</title>
+      <codeblock>~/.portfolio_manager/config.toml</codeblock>
+      <p>The file is created automatically on first launch. You can edit it in any text editor.
+        Changes take effect on the next application launch unless noted otherwise.</p>
+    </section>
+
+    <section id="config_keys">
+      <title>Configuration Keys</title>
+      <table>
+        <tgroup cols="4">
+          <colspec colname="col1" colwidth="1.5*"/>
+          <colspec colname="col2" colwidth="1*"/>
+          <colspec colname="col3" colwidth="1*"/>
+          <colspec colname="col4" colwidth="2*"/>
+          <thead>
+            <row>
+              <entry>Key</entry>
+              <entry>Type</entry>
+              <entry>Default</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><codeph>[app] log_level</codeph></entry>
+              <entry>String</entry>
+              <entry><codeph>"INFO"</codeph></entry>
+              <entry>Logging verbosity. Valid values: <codeph>"DEBUG"</codeph>,
+                <codeph>"INFO"</codeph>, <codeph>"WARNING"</codeph>,
+                <codeph>"ERROR"</codeph>.</entry>
+            </row>
+            <row>
+              <entry><codeph>[app] theme</codeph></entry>
+              <entry>String</entry>
+              <entry><codeph>"light"</codeph></entry>
+              <entry>UI color theme. Currently only <codeph>"light"</codeph> is
+                implemented.</entry>
+            </row>
+            <row>
+              <entry><codeph>[session] default_duration_minutes</codeph></entry>
+              <entry>Integer</entry>
+              <entry><codeph>90</codeph></entry>
+              <entry>Default session duration when creating a new session. Range: 15–480.</entry>
+            </row>
+            <row>
+              <entry><codeph>[session] weekly_budget_hours</codeph></entry>
+              <entry>Integer</entry>
+              <entry><codeph>12</codeph></entry>
+              <entry>Weekly time budget in hours. Range: 1–100.</entry>
+            </row>
+            <row>
+              <entry><codeph>[database] path</codeph></entry>
+              <entry>String</entry>
+              <entry><codeph>"~/.portfolio_manager/portfolio.db"</codeph></entry>
+              <entry>Path to the SQLite database file. Changing this value requires a restart.
+                The directory must exist and be writable.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+
+    <section id="default_config">
+      <title>Default Configuration File</title>
+      <codeblock>[app]
+log_level = "INFO"
+theme = "light"
+
+[session]
+default_duration_minutes = 90
+weekly_budget_hours = 12
+
+[database]
+path = "~/.portfolio_manager/portfolio.db"</codeblock>
+    </section>
+
+    <section id="data_files">
+      <title>Data File Locations</title>
+      <simpletable>
+        <sthead>
+          <stentry>File or Directory</stentry>
+          <stentry>Purpose</stentry>
+        </sthead>
+        <strow>
+          <stentry><filepath>~/.portfolio_manager/config.toml</filepath></stentry>
+          <stentry>Application configuration.</stentry>
+        </strow>
+        <strow>
+          <stentry><filepath>~/.portfolio_manager/portfolio.db</filepath></stentry>
+          <stentry>SQLite database containing all projects, sessions, milestones, scores, and reviews.</stentry>
+        </strow>
+        <strow>
+          <stentry><filepath>~/.portfolio_manager/portfolio.db.bak</filepath></stentry>
+          <stentry>Backup of the database created before schema migrations.</stentry>
+        </strow>
+        <strow>
+          <stentry><filepath>~/.portfolio_manager/logs/</filepath></stentry>
+          <stentry>Application log files (rotating).</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+  </refbody>
+</reference>

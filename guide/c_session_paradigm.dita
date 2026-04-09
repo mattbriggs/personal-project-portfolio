@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_session_paradigm" xml:lang="en-US">
+  <title>Sessions</title>
+  <shortdesc>A session is a time-boxed block of work—the fundamental unit of scheduling and
+    progress tracking in Portfolio Manager. Sessions connect your projects to your calendar and
+    your weekly time budget.</shortdesc>
+
+  <conbody>
+
+    <section id="what_is_a_session">
+      <title>What Is a Session?</title>
+      <p>A session represents a committed block of time for one project. When you create a session,
+        you specify the project it belongs to, the date it is scheduled, and its duration (15 to
+        480 minutes, default 90 minutes). You can optionally link the session to a specific
+        milestone to track which outcome the work is advancing.</p>
+      <p>Sessions are not tasks. They do not describe every step of the work; they describe a
+        block of time you intend to spend. The <uicontrol>Session</uicontrol> field holds a brief
+        label for the session (for example, "Write chapter 3 opening") and the
+        <uicontrol>Description</uicontrol> field holds any additional notes or context.</p>
+    </section>
+
+    <section id="session_lifecycle">
+      <title>Session Lifecycle</title>
+      <image href="images/session-lifecycle.png"
+             alt="State diagram showing the five session states: Backlog, Planned, Doing, Done, and Cancelled"
+             placement="break">
+        <alt>Session lifecycle: Backlog is the unscheduled state; Planned means committed to a
+          week; Doing means in progress; Done means completed; Cancelled means abandoned.</alt>
+      </image>
+      <p>Sessions move through five states:</p>
+      <dl>
+        <dlentry>
+          <dt>Backlog</dt>
+          <dd>The session exists but is not yet committed to a specific week. Use this state to
+            capture work you intend to schedule without blocking out time yet.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Planned</dt>
+          <dd>The session is committed to its scheduled date and counts toward your weekly time
+            budget. Planned sessions appear in the Dashboard's session counts.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Doing</dt>
+          <dd>You are currently working on this session. The Doing state is optional; many users
+            move directly from Planned to Done.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Done</dt>
+          <dd>The session is complete. Portfolio Manager records the completion timestamp
+            automatically. Done sessions count toward the project's weekly score.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Cancelled</dt>
+          <dd>The session was abandoned. Cancelled sessions can be deleted. They do not count
+            toward the weekly budget or the project score.</dd>
+        </dlentry>
+      </dl>
+    </section>
+
+    <section id="weekly_budget">
+      <title>The Weekly Time Budget</title>
+      <p>Portfolio Manager tracks a configurable weekly time budget (default: 12 hours). The
+        Sessions tab shows three running totals:</p>
+      <ul>
+        <li><b>Planned</b> — the total duration of all sessions with Planned, Doing, or Done
+          status for the selected week.</li>
+        <li><b>Done</b> — the total duration of sessions with Done status.</li>
+        <li><b>Remaining</b> — the difference between the budget and the total planned time.</li>
+      </ul>
+      <p>The budget is not enforced. You can schedule more sessions than your budget allows; the
+        system simply shows the overrun. Treat it as a planning signal, not a hard limit.</p>
+      <note type="tip">If your planned time consistently exceeds your budget, move lower-priority
+        sessions to Backlog status rather than cancelling them. They remain available for future
+        weeks.</note>
+    </section>
+
+    <section id="session_scoring">
+      <title>How Sessions Affect Scoring</title>
+      <p>Sessions contribute 60 percent of a project's weekly health score. The scoring component
+        is calculated as:</p>
+      <codeblock>(completed sessions ÷ planned sessions) × 60</codeblock>
+      <p>A project with four planned sessions and three completed sessions earns 45 of a possible
+        60 session points. See <xref href="c_scoring_model.dita"/> for the full scoring
+        model.</p>
+    </section>
+
+  </conbody>
+</concept>

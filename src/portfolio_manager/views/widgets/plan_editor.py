@@ -1,4 +1,4 @@
-"""Split-pane Markdown plan editor with debounced live preview."""
+"""Markdown plan editor — shows preview by default, with an Edit toggle."""
 
 import logging
 import tkinter as tk
@@ -11,18 +11,18 @@ logger = logging.getLogger(__name__)
 _DEBOUNCE_MS = 500
 
 
-class PlanEditor(ttk.PanedWindow):
-    """A split-pane widget with a Markdown text editor on the left and an
-    HTML preview on the right.
+class PlanEditor(ttk.Frame):
+    """A Markdown plan editor that defaults to a rendered preview.
 
-    The preview auto-refreshes with a debounce delay of ≤500ms after the
-    user stops typing.  Plan content auto-saves on every edit.
+    Clicking **Edit** reveals the raw Markdown editor.  Clicking **Preview**
+    returns to the rendered view.  Plan content auto-saves whenever the editor
+    text changes.
 
     :param parent: Parent Tk widget.
     :param on_save: Callback invoked with the current Markdown text when content
         changes (used to persist to the database).
     :param render_fn: Callable that converts Markdown text to an HTML string.
-    :param kwargs: Additional keyword arguments forwarded to :class:`ttk.PanedWindow`.
+    :param kwargs: Additional keyword arguments forwarded to :class:`ttk.Frame`.
     """
 
     def __init__(
@@ -32,29 +32,68 @@ class PlanEditor(ttk.PanedWindow):
         render_fn: Callable[[str], str],
         **kwargs: object,
     ) -> None:
-        kwargs.setdefault("orient", tk.HORIZONTAL)  # type: ignore[arg-type]
         super().__init__(parent, **kwargs)  # type: ignore[arg-type]
 
         self._on_save = on_save
         self._render_fn = render_fn
         self._debounce_id: str | None = None
+        self._editing = False
 
-        # Left pane: raw Markdown editor
-        left = ttk.Frame(self)
-        self.add(left, weight=1)
-        ttk.Label(left, text="Markdown source").pack(anchor="w", padx=4, pady=(4, 0))
-        self._editor = tk.Text(left, wrap="word", undo=True)
-        editor_scroll = ttk.Scrollbar(left, command=self._editor.yview)
+        # Toolbar row
+        toolbar = ttk.Frame(self)
+        toolbar.pack(fill="x", padx=4, pady=(4, 0))
+        self._toggle_btn = ttk.Button(toolbar, text="Edit", command=self._toggle_mode)
+        self._toggle_btn.pack(side="left")
+
+        # Editor pane (hidden by default)
+        self._editor_pane = ttk.Frame(self)
+        ttk.Label(self._editor_pane, text="Markdown source").pack(
+            anchor="w", padx=4, pady=(4, 0)
+        )
+        self._editor = tk.Text(self._editor_pane, wrap="word", undo=True)
+        editor_scroll = ttk.Scrollbar(self._editor_pane, command=self._editor.yview)
         self._editor.configure(yscrollcommand=editor_scroll.set)
         editor_scroll.pack(side="right", fill="y")
         self._editor.pack(fill="both", expand=True, padx=4, pady=4)
         self._editor.bind("<<Modified>>", self._on_modified)
 
-        # Right pane: rendered HTML preview
-        right = ttk.Frame(self)
-        self.add(right, weight=1)
-        ttk.Label(right, text="Preview").pack(anchor="w", padx=4, pady=(4, 0))
-        self._preview_frame = self._build_preview(right)
+        # Preview pane (shown by default)
+        self._preview_pane = ttk.Frame(self)
+        self._preview_frame = self._build_preview(self._preview_pane)
+
+        # Start in preview mode
+        self._show_preview()
+
+    # ------------------------------------------------------------------
+    # Mode switching
+    # ------------------------------------------------------------------
+
+    def _show_preview(self) -> None:
+        """Switch to preview-only mode."""
+        self._editing = False
+        self._toggle_btn.configure(text="Edit")
+        self._editor_pane.pack_forget()
+        self._preview_pane.pack(fill="both", expand=True)
+
+    def _show_edit(self) -> None:
+        """Switch to editor mode."""
+        self._editing = True
+        self._toggle_btn.configure(text="Preview")
+        self._preview_pane.pack_forget()
+        self._editor_pane.pack(fill="both", expand=True)
+
+    def _toggle_mode(self) -> None:
+        """Toggle between preview and edit modes."""
+        if self._editing:
+            # Refresh preview with current editor content before switching.
+            self._refresh_preview(self.get_content())
+            self._show_preview()
+        else:
+            self._show_edit()
+
+    # ------------------------------------------------------------------
+    # Preview construction
+    # ------------------------------------------------------------------
 
     def _build_preview(self, parent: ttk.Frame) -> tk.Widget:
         """Attempt to build a tkinterweb HtmlFrame; fall back to a Text widget.

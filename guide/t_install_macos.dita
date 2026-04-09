@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_install_macos" xml:lang="en-US">
+  <title>Install Portfolio Manager on macOS (Dock Shortcut)</title>
+  <shortdesc>Install Portfolio Manager as a macOS application bundle and add it to the Dock for
+    one-click daily access.</shortdesc>
+
+  <taskbody>
+
+    <prereq>
+      <ul>
+        <li>macOS 12 (Monterey) or later</li>
+        <li>Python 3.11 or later from <xref href="https://python.org" format="html"
+            scope="external">python.org</xref>. The python.org installer includes Tkinter.
+          <note type="caution">Python installed via Homebrew may not include Tkinter. Use the
+            python.org installer to avoid launch failures.</note></li>
+        <li>Git</li>
+        <li>An internet connection for the initial clone</li>
+      </ul>
+    </prereq>
+
+    <steps>
+      <step>
+        <cmd>Open Terminal and clone the Portfolio Manager repository:</cmd>
+        <info><codeblock>git clone &lt;repository-url&gt; portfolio-manager
+cd portfolio-manager</codeblock></info>
+      </step>
+      <step>
+        <cmd>Run the macOS shortcut creation script:</cmd>
+        <info><codeblock>bash create_shortcut.sh</codeblock>
+          <p>The script creates a <filepath>Portfolio Manager.app</filepath> bundle in
+            <filepath>~/Applications/</filepath> and sets up a Python virtual environment
+            in <filepath>.venv/</filepath> inside the repository.</p></info>
+      </step>
+      <step>
+        <cmd>Open Finder and navigate to <filepath>~/Applications/</filepath>.</cmd>
+      </step>
+      <step>
+        <cmd>Drag <filepath>Portfolio Manager.app</filepath> to the right side of the Dock.</cmd>
+      </step>
+      <step>
+        <cmd>Click the Dock icon to launch Portfolio Manager for the first time.</cmd>
+        <stepresult>Portfolio Manager opens, creates the database and configuration file at
+          <filepath>~/.portfolio_manager/</filepath>, and displays the Dashboard.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>To update the application, run <codeph>git pull origin main</codeph> in the repository
+        directory. The next time you launch from the Dock, the updated code runs automatically.
+        No reinstallation is required.</p>
+    </postreq>
+
+  </taskbody>
+</task>

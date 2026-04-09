@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE troubleshooting PUBLIC "-//OASIS//DTD DITA Troubleshooting//EN" "troubleshooting.dtd">
+<troubleshooting id="ts_sessions_missing" xml:lang="en-US">
+  <title>Sessions Not Appearing on the Dashboard or Sessions Tab</title>
+  <shortdesc>Sessions you have created do not appear in the Sessions tab or are not reflected in
+    the Dashboard score.</shortdesc>
+
+  <troublebody>
+
+    <condition>
+      <p>One or more of the following occurs:</p>
+      <ul>
+        <li>The Sessions tab shows no sessions for the current week even though sessions were
+          created.</li>
+        <li>The Dashboard shows 0 planned or done sessions for a project that has sessions.</li>
+        <li>Marking a session Done does not change the project score.</li>
+      </ul>
+    </condition>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The week selector is showing a different week than the one the sessions were
+          created for.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>In the Sessions tab, check the week key displayed in the week selector.</cmd>
+          </step>
+          <step>
+            <cmd>Compare it with the week key shown in the left panel for the current week.</cmd>
+          </step>
+          <step>
+            <cmd>If they differ, use the arrow buttons in the week selector to navigate to the
+              correct week.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The session's scheduled date falls in a different week than expected.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Locate the session: in the Sessions tab, click the Previous button to navigate
+              to surrounding weeks, or look for the session in the week where you created it.</cmd>
+          </step>
+          <step>
+            <cmd>Select the session and click <uicontrol>Edit Session</uicontrol>.</cmd>
+          </step>
+          <step>
+            <cmd>Correct the <uicontrol>Date</uicontrol> field to a date in the intended week
+              and save.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The session status is Backlog or Cancelled.</b> Backlog and Cancelled sessions
+          do not appear in the Dashboard counts and do not contribute to the project score.</p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Select the session in the Sessions tab.</cmd>
+          </step>
+          <step>
+            <cmd>Click <uicontrol>Edit Session</uicontrol>.</cmd>
+          </step>
+          <step>
+            <cmd>Change the status to <uicontrol>Planned</uicontrol> and save.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The project's status is Backlog or Archive.</b> Sessions for non-active projects
+          are excluded from the Dashboard.</p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Click the <uicontrol>Projects</uicontrol> tab.</cmd>
+          </step>
+          <step>
+            <cmd>Set the status filter to <uicontrol>All</uicontrol> and locate the project.</cmd>
+          </step>
+          <step>
+            <cmd>Click <uicontrol>Edit Project</uicontrol>, change the status to
+              <uicontrol>Active</uicontrol>, and save.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+  </troublebody>
+</troubleshooting>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE troubleshooting PUBLIC "-//OASIS//DTD DITA Troubleshooting//EN" "troubleshooting.dtd">
+<troubleshooting id="ts_database_error" xml:lang="en-US">
+  <title>Database Error on Launch or During Use</title>
+  <shortdesc>Portfolio Manager fails to start or displays an error message related to the
+    database. Most database errors are caused by a locked file, a missing directory, or a failed
+    schema migration.</shortdesc>
+
+  <troublebody>
+
+    <condition>
+      <p>One or more of the following symptoms occur:</p>
+      <ul>
+        <li>A dialog shows "Database error" on launch.</li>
+        <li>The application starts but projects, sessions, or milestones do not display.</li>
+        <li>The log file contains <codeph>sqlite3.OperationalError</codeph> entries.</li>
+        <li>The application crashes when creating or saving data.</li>
+      </ul>
+    </condition>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The database directory does not exist or is not writable.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Verify that <filepath>~/.portfolio_manager/</filepath> exists and is
+              writable:</cmd>
+            <info><codeblock>ls -la ~/.portfolio_manager/</codeblock></info>
+          </step>
+          <step>
+            <cmd>If the directory does not exist, create it:</cmd>
+            <info><codeblock>mkdir -p ~/.portfolio_manager</codeblock></info>
+          </step>
+          <step>
+            <cmd>Relaunch Portfolio Manager. It will recreate the database automatically.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>A failed schema migration corrupted the database.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Check whether a backup exists:</cmd>
+            <info><codeblock>ls ~/.portfolio_manager/*.bak</codeblock></info>
+          </step>
+          <step>
+            <cmd>If a backup file exists, restore it:</cmd>
+            <info><codeblock>cp ~/.portfolio_manager/portfolio.db.bak ~/.portfolio_manager/portfolio.db</codeblock></info>
+          </step>
+          <step>
+            <cmd>Relaunch Portfolio Manager.</cmd>
+            <stepresult>The migration runs again. If it fails a second time, check the log file
+              for the specific error and report it to the project repository.</stepresult>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+    <troubleSolution>
+      <cause>
+        <p><b>The database file is locked by another process.</b></p>
+      </cause>
+      <remedy>
+        <steps>
+          <step>
+            <cmd>Check whether another Portfolio Manager instance is already running and close
+              it.</cmd>
+          </step>
+          <step>
+            <cmd>If no other instance is running, verify no orphan process holds the database
+              lock:</cmd>
+            <info><codeblock>lsof ~/.portfolio_manager/portfolio.db</codeblock></info>
+          </step>
+          <step>
+            <cmd>Terminate any process listed, then relaunch Portfolio Manager.</cmd>
+          </step>
+        </steps>
+      </remedy>
+    </troubleSolution>
+
+  </troublebody>
+</troubleshooting>

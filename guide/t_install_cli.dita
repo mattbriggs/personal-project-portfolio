@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_install_cli" xml:lang="en-US">
+  <title>Install Portfolio Manager via the Command Line</title>
+  <shortdesc>Install and launch Portfolio Manager using the shell launch script or a manual
+    virtual-environment setup. This method is suited for development, testing, or Linux
+    systems.</shortdesc>
+
+  <taskbody>
+
+    <prereq>
+      <ul>
+        <li>macOS or Linux</li>
+        <li>Python 3.11 or later with Tkinter support</li>
+        <li>Git</li>
+        <li>An internet connection for the initial clone</li>
+      </ul>
+    </prereq>
+
+    <steps-unordered>
+      <!-- Two parallel procedures: Option A or Option B -->
+    </steps-unordered>
+
+    <steps>
+      <step>
+        <cmd>Clone the repository:</cmd>
+        <info><codeblock>git clone &lt;repository-url&gt; portfolio-manager
+cd portfolio-manager</codeblock></info>
+      </step>
+      <step>
+        <cmd>Choose one of the following launch methods:</cmd>
+        <choices>
+          <choice>
+            <p><b>Shell script (recommended):</b> Run the launch script directly. It creates
+              the virtual environment on the first run and installs all dependencies.</p>
+            <codeblock>bash launch.sh</codeblock>
+          </choice>
+          <choice>
+            <p><b>Manual virtual environment:</b> Create and activate a virtual environment,
+              then install the package and run the application.</p>
+            <codeblock>python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
+python -m portfolio_manager</codeblock>
+          </choice>
+        </choices>
+        <stepresult>Portfolio Manager opens and initializes the database and configuration file
+          at <filepath>~/.portfolio_manager/</filepath> on first launch.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>To update, run <codeph>git pull origin main</codeph> in the repository directory. The
+        launch script automatically installs any new dependencies on the next run.</p>
+      <p>To run the test suite:</p>
+      <codeblock>source .venv/bin/activate
+pytest</codeblock>
+    </postreq>
+
+  </taskbody>
+</task>

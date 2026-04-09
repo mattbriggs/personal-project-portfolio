@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_create_milestone" xml:lang="en-US">
+  <title>Create a Milestone</title>
+  <shortdesc>Add outcome-based milestones to a project to define what done looks like at each
+    meaningful stage of the work.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Milestones represent completed outcomes, not tasks. Describe each milestone as a state
+        that will be true when a phase of work is finished: "First draft complete," not "Write
+        first draft."</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Milestones</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>In the project dropdown at the top of the tab, select the project you want to add a
+          milestone to.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>New Milestone</uicontrol>.</cmd>
+        <stepresult>The Milestone dialog opens.</stepresult>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Description</uicontrol> field, enter the outcome name.</cmd>
+        <info><p>Write this as a noun phrase or past-tense statement that describes what will be
+          true when this phase is complete. Examples:</p>
+          <ul>
+            <li>"Outline approved"</li>
+            <li>"All episodes recorded"</li>
+            <li>"Prototype tested with five users"</li>
+          </ul>
+        </info>
+      </step>
+      <step>
+        <cmd>Set the <uicontrol>Status</uicontrol> field.</cmd>
+        <choices>
+          <choice>Select <uicontrol>Backlog</uicontrol> for a future milestone not yet in
+            scope.</choice>
+          <choice>Select <uicontrol>Planned</uicontrol> for a milestone you are actively working
+            toward.</choice>
+        </choices>
+      </step>
+      <step>
+        <cmd>(Optional) Enter a <uicontrol>Target Date</uicontrol> in YYYY-MM-DD format.</cmd>
+      </step>
+      <step>
+        <cmd>(Optional) Enter any notes that help clarify what this milestone means or how you
+          will know it is achieved.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+        <stepresult>The milestone appears in the Milestones list for the selected project.</stepresult>
+      </step>
+    </steps>
+
+  </taskbody>
+</task>

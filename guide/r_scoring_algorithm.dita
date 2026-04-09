@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="r_scoring_algorithm" xml:lang="en-US">
+  <title>Scoring Algorithm Reference</title>
+  <shortdesc>Complete specification of the project health score calculation, traffic-light
+    thresholds, and portfolio score aggregation.</shortdesc>
+
+  <refbody>
+
+    <section id="project_score_formula">
+      <title>Project Score Formula</title>
+      <p>For a given project and week key:</p>
+      <codeblock>session_score    = (done_sessions ÷ planned_sessions) × 60
+milestone_score  = (done_milestones ÷ total_milestones) × 40
+project_score    = session_score + milestone_score</codeblock>
+      <p>Where:</p>
+      <ul>
+        <li><codeph>done_sessions</codeph> — count of sessions with status <codeph>done</codeph>
+          for the project in the week</li>
+        <li><codeph>planned_sessions</codeph> — count of sessions with status
+          <codeph>planned</codeph>, <codeph>doing</codeph>, or <codeph>done</codeph> for the
+          project in the week</li>
+        <li><codeph>done_milestones</codeph> — count of milestones with status
+          <codeph>done</codeph></li>
+        <li><codeph>total_milestones</codeph> — count of all milestones except those with
+          status <codeph>cancelled</codeph></li>
+      </ul>
+      <p>If <codeph>planned_sessions</codeph> is 0, <codeph>session_score</codeph> is 0. If
+        <codeph>total_milestones</codeph> is 0, <codeph>milestone_score</codeph> is 0.</p>
+    </section>
+
+    <section id="traffic_light_thresholds">
+      <title>Traffic-Light Thresholds</title>
+      <simpletable>
+        <sthead>
+          <stentry>Score</stentry>
+          <stentry>Status</stentry>
+          <stentry>Dashboard indicator</stentry>
+        </sthead>
+        <strow>
+          <stentry>80–100</stentry>
+          <stentry>Green</stentry>
+          <stentry>Green badge</stentry>
+        </strow>
+        <strow>
+          <stentry>60–79</stentry>
+          <stentry>Yellow</stentry>
+          <stentry>Yellow badge</stentry>
+        </strow>
+        <strow>
+          <stentry>0–59</stentry>
+          <stentry>Red</stentry>
+          <stentry>Red badge</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="portfolio_score_formula">
+      <title>Portfolio Score Formula</title>
+      <codeblock>portfolio_score = average(project_score for each active project)</codeblock>
+      <p>Only active projects contribute to the portfolio score. Backlog and archived projects
+        are excluded.</p>
+    </section>
+
+    <section id="manual_override">
+      <title>Manual Override</title>
+      <p>A score can be overridden for a specific project and week. Overrides require a text
+        reason and set <codeph>is_manual_override = true</codeph> in the
+        <codeph>project_score</codeph> table. Override scores replace calculated scores in
+        all displayed values.</p>
+    </section>
+
+    <section id="week_key_format">
+      <title>Week Key Format</title>
+      <p>Week keys use ISO 8601 calendar week notation:</p>
+      <codeblock>YYYY.W</codeblock>
+      <p>Examples: <codeph>2026.1</codeph> (first week of 2026), <codeph>2026.52</codeph>
+        (last full week of 2026). Week 1 is the week containing the first Thursday of the year.
+        Weeks always begin on Monday and end on Sunday.</p>
+    </section>
+
+  </refbody>
+</reference>

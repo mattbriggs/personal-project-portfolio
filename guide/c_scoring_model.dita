@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_scoring_model" xml:lang="en-US">
+  <title>Project Health Scoring</title>
+  <shortdesc>Portfolio Manager calculates a weekly health score for each active project using a
+    weighted combination of session completion and milestone progress. The score drives the
+    traffic-light status indicator on the Dashboard.</shortdesc>
+
+  <conbody>
+
+    <section id="score_overview">
+      <title>Score Calculation</title>
+      <image href="images/scoring-model.png"
+             alt="Diagram showing the scoring formula: 60% session score plus 40% milestone score equals total project score"
+             placement="break">
+        <alt>Scoring model: session score (60 points max) plus milestone score (40 points max)
+          produces a total score from 0 to 100.</alt>
+      </image>
+      <p>Each project receives a score from 0 to 100 for the current week. The score is the sum
+        of two components:</p>
+      <dl>
+        <dlentry>
+          <dt>Session component (60 points maximum)</dt>
+          <dd><codeblock>(sessions with Done status ÷ sessions with Planned, Doing, or Done status) × 60</codeblock>
+            If a project has no sessions planned for the week, this component scores 0.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Milestone component (40 points maximum)</dt>
+          <dd><codeblock>(milestones with Done status ÷ total milestones) × 40</codeblock>
+            If a project has no milestones defined, this component scores 0.</dd>
+        </dlentry>
+      </dl>
+    </section>
+
+    <section id="traffic_light">
+      <title>Traffic-Light Status</title>
+      <p>Portfolio Manager converts each score to a color status for the Dashboard:</p>
+      <simpletable>
+        <sthead>
+          <stentry>Score Range</stentry>
+          <stentry>Status</stentry>
+          <stentry>Meaning</stentry>
+        </sthead>
+        <strow>
+          <stentry>80–100</stentry>
+          <stentry>Green</stentry>
+          <stentry>Project is progressing well this week.</stentry>
+        </strow>
+        <strow>
+          <stentry>60–79</stentry>
+          <stentry>Yellow</stentry>
+          <stentry>Project is moving, but attention is needed.</stentry>
+        </strow>
+        <strow>
+          <stentry>0–59</stentry>
+          <stentry>Red</stentry>
+          <stentry>Project has stalled or is significantly behind this week.</stentry>
+        </strow>
+      </simpletable>
+    </section>
+
+    <section id="score_examples">
+      <title>Score Examples</title>
+      <p><b>Example 1 — Green project:</b> A novel draft project has four planned sessions and
+        three completed (session component: 45), plus six milestones of which three are done
+        (milestone component: 20). Total score: 65. Status: Yellow.</p>
+      <p><b>Example 2 — Red project:</b> A recording project has two planned sessions and zero
+        completed (session component: 0), plus three milestones with zero done (milestone
+        component: 0). Total score: 0. Status: Red.</p>
+      <p><b>Example 3 — Sessions only:</b> A professional-development project has no milestones
+        defined. It has three planned sessions and three completed (session component: 60). Milestone
+        component: 0. Total score: 60. Status: Yellow.</p>
+      <note type="tip">To reach Green status reliably, complete most of your planned sessions
+        <i>and</i> advance at least some milestones each week.</note>
+    </section>
+
+    <section id="manual_override">
+      <title>Manual Score Override</title>
+      <p>You can override a project's calculated score for any week. An override requires a reason,
+        which is stored alongside the score for future reference. Use overrides sparingly—for
+        situations where the algorithm does not reflect the actual project state, such as a week
+        of unrecorded off-tool work.</p>
+    </section>
+
+    <section id="portfolio_score">
+      <title>Portfolio Score</title>
+      <p>The Dashboard summary row displays an aggregate portfolio score, which is the average of
+        all active projects' individual scores. The portfolio status badge reflects this
+        average.</p>
+    </section>
+
+  </conbody>
+</concept>

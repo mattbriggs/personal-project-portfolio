@@ -1,0 +1,26 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#f0f4ff', 'edgeLabelBackground': '#fff'}}}%%
+flowchart TD
+    subgraph Portfolio["Portfolio (3–8 active projects)"]
+        P1[Project A\nActive]
+        P2[Project B\nActive]
+        P3[Project C\nBacklog]
+    end
+
+    subgraph Week["Weekly Cycle"]
+        PLAN[Plan\nCreate sessions]
+        EXEC[Execute\nMark sessions done]
+        REVIEW[Review\nReflect + plan ahead]
+        PLAN --> EXEC --> REVIEW --> PLAN
+    end
+
+    subgraph Tracking["Per-Project Tracking"]
+        MS[Milestones\nOutcome checkpoints]
+        SC[Health Score\n0–100]
+        TL[Traffic Light\nGreen / Yellow / Red]
+        MS --> SC --> TL
+    end
+
+    P1 --> PLAN
+    P2 --> PLAN
+    EXEC --> MS
+    REVIEW --> P3

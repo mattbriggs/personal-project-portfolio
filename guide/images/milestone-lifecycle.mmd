@@ -1,0 +1,22 @@
+%%{init: {'theme': 'base'}}%%
+stateDiagram-v2
+    [*] --> Backlog : Create milestone
+
+    Backlog --> Planned   : Add to roadmap
+    Backlog --> Cancelled : Remove from scope
+
+    Planned --> Doing     : Begin work
+    Planned --> Done      : Achieve outcome
+    Planned --> Cancelled : Remove from scope
+
+    Doing --> Done        : Achieve outcome
+    Doing --> Cancelled   : Remove from scope
+
+    Done --> [*]
+    Cancelled --> [*]
+
+    note right of Done
+        Completion date
+        recorded automatically.\nCounts toward 40-point
+        milestone score component.
+    end note

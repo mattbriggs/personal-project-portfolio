@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_portfolio_paradigm" xml:lang="en-US">
+  <title>The Portfolio Paradigm</title>
+  <shortdesc>Portfolio Manager treats your active commitments as a portfolio—a bounded set of
+    projects that compete for your time and attention. This model gives you a single, honest view of
+    what you are working on and how each project is progressing.</shortdesc>
+
+  <conbody>
+
+    <section id="why_portfolio">
+      <title>Why a Portfolio Model?</title>
+      <p>Most task managers optimize for individual tasks or a single project. When you are running
+        three, five, or eight parallel commitments—a novel, a home-recording project, a side
+        business, a professional certification—that model breaks down. You end up with dozens of
+        undifferentiated to-do items and no clear picture of whether each project is actually
+        moving.</p>
+      <p>Portfolio Manager addresses this by treating each commitment as a named project with its
+        own health score, milestones, and work history. You schedule time for each project in
+        discrete, bounded sessions, and you review your portfolio as a whole every week. The result
+        is a system that surfaces which projects need attention and which ones are on track—without
+        requiring you to micromanage individual tasks.</p>
+    </section>
+
+    <section id="portfolio_overview_diagram">
+      <title>Portfolio Overview</title>
+      <image href="images/portfolio-overview.png"
+             alt="Diagram showing the relationship between projects, sessions, milestones, and weekly reviews in Portfolio Manager"
+             placement="break">
+        <alt>Portfolio overview: projects contain milestones; sessions are scheduled within weekly
+          budgets; weekly reviews close the planning loop.</alt>
+      </image>
+    </section>
+
+    <section id="design_philosophy">
+      <title>Design Philosophy</title>
+      <p>Portfolio Manager is built around three principles:</p>
+      <dl>
+        <dlentry>
+          <dt>Non-punitive tracking</dt>
+          <dd>A missed session is not a failure. The system records what happened without generating
+            guilt messages or penalty flags. You reflect on what stalled during your weekly review
+            and move forward.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Time-boxing over task lists</dt>
+          <dd>The unit of work is the session—a block of time dedicated to one project. You plan
+            how many sessions each project gets this week, not how many tasks you will complete.
+            This matches how creative and professional work actually happens.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Portfolio-level awareness</dt>
+          <dd>The Dashboard shows every active project's health score in one view. You can see at a
+            glance which projects are green, which are yellow, and which need immediate
+            attention.</dd>
+        </dlentry>
+      </dl>
+    </section>
+
+    <section id="portfolio_scope">
+      <title>Recommended Portfolio Size</title>
+      <p>Portfolio Manager is designed for three to eight concurrent active projects. Fewer than
+        three projects rarely justify the overhead of portfolio tracking. More than eight projects
+        typically means you are carrying commitments that are not receiving meaningful attention and
+        should be moved to your backlog or archived.</p>
+      <p>Your projects can span any domain: creative work (writing, music, art), professional
+        development (certifications, side businesses), personal goals (fitness, learning a language),
+        or any long-running commitment that benefits from structured progress tracking.</p>
+    </section>
+
+    <section id="core_entities">
+      <title>Core Entities</title>
+      <p>Portfolio Manager organizes your work into four interconnected entities:</p>
+      <ul>
+        <li><b>Projects</b> — named commitments, each with a lifecycle status, a priority level,
+          and an optional plan document written in Markdown.</li>
+        <li><b>Sessions</b> — time-boxed units of work (15 to 480 minutes) scheduled to specific
+          dates and linked to a project. Sessions are the primary way you record and plan work.</li>
+        <li><b>Milestones</b> — outcome-based checkpoints within a project. A milestone represents
+          a meaningful deliverable or achievement, not a task step.</li>
+        <li><b>Weekly Reviews</b> — structured reflections recorded each week. They capture what
+          moved, what stalled, patterns you noticed, and your plan for the following week.</li>
+      </ul>
+    </section>
+
+  </conbody>
+</concept>

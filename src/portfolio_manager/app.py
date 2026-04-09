@@ -1,6 +1,8 @@
 """Application bootstrap — wires all layers together and starts the GUI."""
 
 import logging
+import tempfile
+from pathlib import Path
 
 from portfolio_manager.config.settings import Settings, load_settings
 from portfolio_manager.controllers.dashboard_controller import DashboardController
@@ -28,20 +30,33 @@ from portfolio_manager.views.main_window import MainWindow
 logger = logging.getLogger(__name__)
 
 
-def build_app(settings: Settings | None = None) -> MainWindow:
+def build_app(
+    settings: Settings | None = None,
+    log_dir: Path | None = None,
+) -> MainWindow:
     """Bootstrap the application and return the root Tk window.
 
     :param settings: Optional pre-loaded settings (used in tests to inject
         an in-memory database path).
     :type settings: Settings | None
+    :param log_dir: Override the log directory.  When ``None`` (default) the
+        directory is derived from the database path so that tests using a
+        temporary database automatically get isolated logs.
+    :type log_dir: pathlib.Path | None
     :returns: The fully wired :class:`~portfolio_manager.views.main_window.MainWindow`.
     :rtype: MainWindow
     """
     if settings is None:
         settings = load_settings()
 
-    # Logging
-    configure_logging(log_level=settings.app.log_level)
+    # Logging — derive log dir from DB location so tests get isolated logs.
+    if log_dir is None:
+        db_path_str = settings.database.path
+        if db_path_str == ":memory:":
+            log_dir = Path(tempfile.mkdtemp()) / "logs"
+        else:
+            log_dir = Path(db_path_str).expanduser().parent / "logs"
+    configure_logging(log_level=settings.app.log_level, log_dir=log_dir)
     logger.info("Portfolio Manager starting up.")
 
     # Database
@@ -70,7 +85,12 @@ def build_app(settings: Settings | None = None) -> MainWindow:
     # Controllers
     dashboard_ctrl = DashboardController(project_svc, scoring_svc, week_svc, bus)
     project_ctrl = ProjectController(project_svc, plan_svc)
-    session_ctrl = SessionController(session_svc, week_svc)
+    session_ctrl = SessionController(
+        session_svc,
+        week_svc,
+        milestone_repo=milestone_repo,
+        default_duration_minutes=settings.session.default_duration_minutes,
+    )
     milestone_ctrl = MilestoneController(milestone_repo, bus)
     review_ctrl = ReviewController(review_repo, week_svc, bus)
     settings_ctrl = SettingsController(settings, bus)

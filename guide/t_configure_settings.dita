@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_configure_settings" xml:lang="en-US">
+  <title>Configure Application Settings</title>
+  <shortdesc>Adjust the weekly time budget, default session duration, and other application
+    preferences using the Settings tab.</shortdesc>
+
+  <taskbody>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Settings</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Weekly budget (hours)</uicontrol> spinbox, enter the number of
+          hours you have available for personal projects each week.</cmd>
+        <info><p>Set this to a number you can reliably achieve, not an aspirational target.
+          The budget is a planning guide, not a quota.</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Default session duration (minutes)</uicontrol> spinbox, enter
+          your typical session length.</cmd>
+        <info><p>This value pre-fills the duration field when you create a new session. Valid
+          values are 15 to 480 minutes.</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Log level</uicontrol> dropdown, select the logging verbosity.</cmd>
+        <choices>
+          <choice><uicontrol>ERROR</uicontrol> — logs only application errors (recommended for
+            daily use).</choice>
+          <choice><uicontrol>WARNING</uicontrol> — logs errors and warnings.</choice>
+          <choice><uicontrol>INFO</uicontrol> — logs normal application events.</choice>
+          <choice><uicontrol>DEBUG</uicontrol> — logs all events including internal state changes
+            (for troubleshooting only).</choice>
+        </choices>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+        <stepresult>Settings are applied immediately. Changes to the weekly budget are reflected
+          in the budget bar on the Sessions tab.</stepresult>
+      </step>
+    </steps>
+
+    <postreq>
+      <p>Settings are persisted in <filepath>~/.portfolio_manager/config.toml</filepath>. You can
+        also edit this file directly in a text editor. See <xref href="r_config_file.dita"/> for
+        the full list of configuration keys and their valid values.</p>
+    </postreq>
+
+  </taskbody>
+</task>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_project_lifecycle" xml:lang="en-US">
+  <title>Project Lifecycle</title>
+  <shortdesc>Every project in Portfolio Manager moves through three lifecycle states—Active,
+    Backlog, and Archive—that reflect how much attention the project is currently
+    receiving.</shortdesc>
+
+  <conbody>
+
+    <section id="lifecycle_overview">
+      <title>Lifecycle States</title>
+      <image href="images/project-lifecycle.png"
+             alt="State diagram showing transitions between Active, Backlog, and Archive states"
+             placement="break">
+        <alt>Project lifecycle: Active is the working state; Backlog is a deferred state; Archive
+          is a terminal state for completed or abandoned projects.</alt>
+      </image>
+      <dl>
+        <dlentry>
+          <dt>Active</dt>
+          <dd>The project appears on the Dashboard and is eligible for session scheduling. Active
+            projects contribute to your portfolio score each week. Limit your active projects to
+            what you can realistically schedule at least one session per week.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Backlog</dt>
+          <dd>The project is paused. It does not appear on the Dashboard and does not affect
+            scoring. Use the backlog state when you need to deprioritize a project temporarily
+            without abandoning it.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Archive</dt>
+          <dd>The project is complete or permanently closed. Archived projects are read-only and
+            preserved for historical reference. You can view the project's sessions, milestones, and
+            plan document, but you cannot create new sessions or milestones for an archived
+            project.</dd>
+        </dlentry>
+      </dl>
+    </section>
+
+    <section id="lifecycle_transitions">
+      <title>State Transitions</title>
+      <p>Transitions between states are always manual—you change a project's status explicitly.
+        Portfolio Manager never moves a project automatically. Valid transitions are:</p>
+      <ul>
+        <li>Active ↔ Backlog (reversible at any time)</li>
+        <li>Active → Archive</li>
+        <li>Backlog → Archive</li>
+      </ul>
+      <note type="tip">There is no delete operation for projects with existing sessions or
+        milestones. Archive a completed project to preserve its history.</note>
+    </section>
+
+    <section id="project_metadata">
+      <title>Project Metadata</title>
+      <p>Each project stores the following information:</p>
+      <ul>
+        <li><b>Name</b> — the display name shown throughout the interface.</li>
+        <li><b>Description</b> — a brief summary of the project's purpose.</li>
+        <li><b>Status</b> — Active, Backlog, or Archive.</li>
+        <li><b>Priority</b> — a ranking from 1 (highest) to 5 (lowest) used for your own reference.
+          Priority does not affect scoring or scheduling.</li>
+        <li><b>Start date</b> — the date you began the project (optional).</li>
+        <li><b>End date</b> — your target completion date (optional).</li>
+        <li><b>Plan document</b> — a freeform Markdown document for notes, outlines, Mermaid
+          diagrams, and any planning material specific to the project.</li>
+      </ul>
+    </section>
+
+    <section id="plan_document">
+      <title>Plan Documents</title>
+      <p>Each project includes an embedded plan document—a Markdown editor with a live preview
+        panel. The plan document has no required structure. Use it for whatever helps you think
+        through the project: an outline, a character list, a research log, a sprint plan, or a
+        decision journal.</p>
+      <p>The plan document supports standard Markdown syntax, tables, and fenced Mermaid diagram
+        blocks. Changes save automatically as you type; no explicit save action is required.</p>
+    </section>
+
+  </conbody>
+</concept>

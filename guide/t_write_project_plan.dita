@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_write_project_plan" xml:lang="en-US">
+  <title>Write a Project Plan Document</title>
+  <shortdesc>Use the project plan editor to capture outlines, research notes, diagrams, and any
+    reference material that supports your work on a project.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Each project includes a Markdown plan document. The editor offers a preview panel that
+        renders formatted text and Mermaid diagrams. All changes save automatically as you type.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Projects</uicontrol> tab and select the project you want to
+          edit.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Edit Project</uicontrol>.</cmd>
+        <stepresult>The Project dialog opens. The lower half of the dialog shows the plan document
+          in preview mode.</stepresult>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Edit</uicontrol> to switch the plan document to edit mode.</cmd>
+        <stepresult>A Markdown text editor replaces the preview panel.</stepresult>
+      </step>
+      <step>
+        <cmd>Write your plan document using standard Markdown syntax.</cmd>
+        <info>
+          <p>The plan document has no required structure. Common approaches include:</p>
+          <ul>
+            <li>An outline or table of contents</li>
+            <li>A goals or objectives section</li>
+            <li>Reference notes or research summaries</li>
+            <li>A decision log</li>
+            <li>Tables of characters, chapters, modules, or tasks</li>
+          </ul>
+          <p>To include a Mermaid diagram, use a fenced code block with the
+            <codeph>mermaid</codeph> language tag:</p>
+          <codeblock>```mermaid
+flowchart TD
+    A[Draft] --&gt; B[Revision]
+    B --&gt; C[Final]
+```</codeblock>
+        </info>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Preview</uicontrol> to review the rendered output.</cmd>
+        <stepresult>The editor switches to preview mode. Markdown formatting and Mermaid diagrams
+          render automatically. Click <uicontrol>Edit</uicontrol> to return to edit mode at any
+          time.</stepresult>
+      </step>
+    </steps>
+
+    <result>
+      <p>Your plan document is saved automatically. There is no separate save action for plan
+        document content.</p>
+    </result>
+
+    <postreq>
+      <p>See <xref href="r_markdown_syntax.dita"/> for the full list of supported Markdown
+        elements and Mermaid diagram types.</p>
+    </postreq>
+
+  </taskbody>
+</task>

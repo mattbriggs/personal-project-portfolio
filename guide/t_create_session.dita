@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_create_session" xml:lang="en-US">
+  <title>Create a Session</title>
+  <shortdesc>Schedule a work session for a project by specifying its date, duration, and
+    purpose.</shortdesc>
+
+  <taskbody>
+
+    <context>
+      <p>Sessions are your primary planning tool. Create sessions at the start of the week to
+        commit to specific blocks of work, or create them on the day you plan to work if you
+        prefer a more spontaneous workflow.</p>
+    </context>
+
+    <steps>
+      <step>
+        <cmd>Click the <uicontrol>Sessions</uicontrol> tab.</cmd>
+      </step>
+      <step>
+        <cmd>Verify that the week displayed in the week selector matches the week you are
+          planning for. Use the arrow buttons to navigate to a different week if needed.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>New Session</uicontrol>.</cmd>
+        <stepresult>The Session dialog opens.</stepresult>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Project</uicontrol> dropdown, select the project this session
+          belongs to.</cmd>
+      </step>
+      <step>
+        <cmd>(Optional) In the <uicontrol>Milestone</uicontrol> dropdown, select the milestone
+          this session will advance.</cmd>
+        <info><p>Only milestones for the selected project are shown. You can change or clear this
+          field later.</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Session</uicontrol> field, enter a brief label for what this
+          session will accomplish.</cmd>
+        <info><p>Keep this to one phrase: "Write act two outline," "Record guitar tracks,"
+          "Study AWS IAM chapter." It appears in the Sessions table and the Dashboard.</p></info>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Date</uicontrol> field, enter the scheduled date in YYYY-MM-DD
+          format, or click <uicontrol>Today</uicontrol> to fill in today's date.</cmd>
+      </step>
+      <step>
+        <cmd>Set the <uicontrol>Status</uicontrol> field.</cmd>
+        <choices>
+          <choice>Select <uicontrol>Planned</uicontrol> if this session is committed for this
+            week and should count toward the weekly budget.</choice>
+          <choice>Select <uicontrol>Backlog</uicontrol> if you are capturing the session idea
+            without committing to a specific week.</choice>
+        </choices>
+      </step>
+      <step>
+        <cmd>In the <uicontrol>Min</uicontrol> spinbox, set the session duration in
+          minutes.</cmd>
+        <info><p>The default is set in <uicontrol>Settings</uicontrol>. Valid values are 15 to
+          480.</p></info>
+      </step>
+      <step>
+        <cmd>(Optional) In the <uicontrol>Description</uicontrol> field, add any notes or
+          context for the session—references to read, questions to explore, or specifics about
+          what to accomplish.</cmd>
+      </step>
+      <step>
+        <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+        <stepresult>The session appears in the Sessions table. If status is Planned, the weekly
+          budget bar updates to reflect the added duration.</stepresult>
+      </step>
+    </steps>
+
+  </taskbody>
+</task>
