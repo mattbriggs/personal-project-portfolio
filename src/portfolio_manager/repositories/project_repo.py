@@ -24,6 +24,9 @@ def _row_to_project(row: sqlite3.Row) -> Project:
         started_date=(
             date.fromisoformat(row["started_date"]) if row["started_date"] else None
         ),
+        end_date=(
+            date.fromisoformat(row["end_date"]) if row["end_date"] else None
+        ),
         owner=row["owner"],
         review_cadence=row["review_cadence"],
         plan_content=row["plan_content"],
@@ -55,9 +58,9 @@ class ProjectRepository(BaseRepository):
             cur = self._db.execute(
                 """
                 INSERT INTO project
-                    (name, slug, status, priority, started_date, owner,
+                    (name, slug, status, priority, started_date, end_date, owner,
                      review_cadence, plan_content, description)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     project.name,
@@ -65,6 +68,7 @@ class ProjectRepository(BaseRepository):
                     project.status,
                     project.priority,
                     project.started_date.isoformat() if project.started_date else None,
+                    project.end_date.isoformat() if project.end_date else None,
                     project.owner,
                     project.review_cadence,
                     project.plan_content,
@@ -127,7 +131,7 @@ class ProjectRepository(BaseRepository):
                 """
                 UPDATE project SET
                     name = ?, slug = ?, status = ?, priority = ?,
-                    started_date = ?, owner = ?, review_cadence = ?,
+                    started_date = ?, end_date = ?, owner = ?, review_cadence = ?,
                     plan_content = ?, description = ?
                 WHERE id = ?
                 """,
@@ -137,6 +141,7 @@ class ProjectRepository(BaseRepository):
                     project.status,
                     project.priority,
                     project.started_date.isoformat() if project.started_date else None,
+                    project.end_date.isoformat() if project.end_date else None,
                     project.owner,
                     project.review_cadence,
                     project.plan_content,

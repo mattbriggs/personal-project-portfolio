@@ -70,7 +70,7 @@ class DashboardView(ttk.Frame):
 
         # Summary row
         summary_frame = ttk.LabelFrame(self, text="Portfolio Summary")
-        summary_frame.pack(fill="x", padx=8, pady=4)
+        summary_frame.pack(fill="x", padx=8, pady=(4, 4))
 
         self._portfolio_score_label = ttk.Label(summary_frame, text="Score: —")
         self._portfolio_score_label.pack(side="left", padx=12, pady=4)
@@ -78,12 +78,15 @@ class DashboardView(ttk.Frame):
         self._portfolio_status_badge = StatusBadge(summary_frame)
         self._portfolio_status_badge.pack(side="left", padx=8)
 
-        # Status notes
-        notes_frame = ttk.LabelFrame(self, text="Status Notes")
-        notes_frame.pack(fill="x", padx=8, pady=(0, 8))
+        # This Week focus section
+        focus_frame = ttk.LabelFrame(self, text="This Week")
+        focus_frame.pack(fill="x", padx=8, pady=(0, 8))
 
-        self._notes_text = tk.Text(notes_frame, height=4, state="disabled", wrap="word")
-        self._notes_text.pack(fill="x", padx=4, pady=4)
+        self._week_totals_label = ttk.Label(focus_frame, text="")
+        self._week_totals_label.pack(anchor="w", padx=12, pady=(4, 2))
+
+        self._next_milestones_label = ttk.Label(focus_frame, text="", justify="left")
+        self._next_milestones_label.pack(anchor="w", padx=12, pady=(0, 6))
 
     # ------------------------------------------------------------------
     # Data refresh
@@ -102,6 +105,9 @@ class DashboardView(ttk.Frame):
         rows: list[dict] = data["rows"]
         portfolio_score: int = data["portfolio_score"]
         portfolio_status: str = data["portfolio_status"]
+        week_total_min: int = data.get("week_total_min", 0)
+        week_done_min: int = data.get("week_done_min", 0)
+        next_milestones: list[dict] = data.get("next_milestones", [])
 
         self._week_label.configure(text=f"Week {week_key}")
         self._range_label.configure(text=date_range)
@@ -111,7 +117,6 @@ class DashboardView(ttk.Frame):
             self._tree.delete(item)
 
         # Populate rows
-        notes_lines: list[str] = []
         total_planned = total_done = total_remaining = 0
 
         for row in rows:
@@ -137,8 +142,6 @@ class DashboardView(ttk.Frame):
                     score_obj.score,
                 ),
             )
-            if score_obj.status_note:
-                notes_lines.append(f"• {project.name}: {score_obj.status_note}")
 
         self._portfolio_score_label.configure(
             text=(
@@ -150,8 +153,17 @@ class DashboardView(ttk.Frame):
         )
         self._portfolio_status_badge.set_status(portfolio_status)
 
-        notes_text = "\n".join(notes_lines) if notes_lines else "No status notes."
-        self._notes_text.configure(state="normal")
-        self._notes_text.delete("1.0", tk.END)
-        self._notes_text.insert("1.0", notes_text)
-        self._notes_text.configure(state="disabled")
+        # This Week section
+        self._week_totals_label.configure(
+            text=f"Sessions: {week_total_min} min planned  |  {week_done_min} min done"
+        )
+        if next_milestones:
+            ms_lines = []
+            for m in next_milestones[:5]:
+                target = m["target"].isoformat() if m["target"] else "—"
+                ms_lines.append(f"  {m['project']}: {m['milestone'][:50]}  ({target})")
+            self._next_milestones_label.configure(
+                text="Next milestones:\n" + "\n".join(ms_lines)
+            )
+        else:
+            self._next_milestones_label.configure(text="No upcoming milestones.")

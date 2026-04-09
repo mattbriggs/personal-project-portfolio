@@ -4,12 +4,13 @@ A personal desktop application for managing, scheduling, and executing work acro
 
 ## Features
 
-- **Portfolio dashboard** — traffic-light status indicators, scores, and weekly summary at a glance
-- **Project management** — active / backlog / archive lifecycle with priority ordering
-- **Session scheduling** — time-boxed work units (60–180 min) linked to projects and weeks
-- **Milestone tracking** — outcome-based milestones with completion toggling
+- **Portfolio dashboard** — traffic-light status indicators, scores, weekly session totals, and upcoming milestones at a glance
+- **Project management** — active / backlog / archive lifecycle with priority 1–5 ordering
+- **Session scheduling** — time-boxed work units (15–480 min, default 90 min) linked to projects, milestones, and weeks
+- **Weekly budget tracking** — configurable weekly hour budget with a live planned/done/remaining summary in the Sessions tab
+- **Milestone tracking** — outcome-based milestones with full status lifecycle (backlog → planned → doing → done / cancelled)
 - **Plan documents** — per-project Markdown editor with live Mermaid diagram preview
-- **Weekly review** — structured reflection form stored in the database
+- **Weekly review** — structured reflection form with a browsable history of past reviews
 - **Scoring** — configurable algorithm (session completion + milestone ratio)
 - **Auto-save** — all changes commit immediately; no explicit save required
 - **macOS Dock shortcut** — one-click launch via a native `.app` bundle
