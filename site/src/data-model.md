@@ -15,6 +15,7 @@ erDiagram
         string status
         int priority
         date started_date
+        date end_date
         string owner
         string review_cadence
         text plan_content
@@ -26,11 +27,12 @@ erDiagram
     SESSION {
         int id PK
         int project_id FK
+        int milestone_id FK
         date scheduled_date
         string week_key
         int duration_minutes
         string status
-        string focus
+        string description
         string notes
         datetime created_at
         datetime completed_at
@@ -40,9 +42,11 @@ erDiagram
         int id PK
         int project_id FK
         string description
-        bool is_complete
+        string status
+        date target_date
         date completed_date
         int sort_order
+        string notes
         datetime created_at
         datetime updated_at
     }
@@ -87,6 +91,7 @@ erDiagram
     }
 
     PROJECT ||--o{ SESSION : "has"
+    MILESTONE ||--o{ SESSION : "groups"
     PROJECT ||--o{ MILESTONE : "has"
     PROJECT ||--o{ PROJECT_SCORE : "scored by"
 ```
@@ -103,8 +108,9 @@ erDiagram
 | `name` | TEXT | NOT NULL | Display name |
 | `slug` | TEXT | NOT NULL UNIQUE | URL-safe folder name |
 | `status` | TEXT | CHECK IN ('active','backlog','archive') | |
-| `priority` | INTEGER | DEFAULT 3, CHECK 1–5 | 1 = highest |
+| `priority` | INTEGER | DEFAULT 3, CHECK 1–3 | 1 = highest |
 | `started_date` | DATE | | ISO 8601 |
+| `end_date` | DATE | | Optional target completion date |
 | `owner` | TEXT | DEFAULT 'Matt Briggs' | |
 | `review_cadence` | TEXT | DEFAULT 'weekly' | |
 | `plan_content` | TEXT | DEFAULT '' | Markdown; may contain Mermaid blocks |
@@ -118,14 +124,15 @@ erDiagram
 |--------|------|-------------|-------|
 | `id` | INTEGER | PK AUTOINCREMENT | |
 | `project_id` | INTEGER | FK → project.id CASCADE DELETE | |
+| `milestone_id` | INTEGER | FK → milestone.id SET NULL | Optional |
 | `scheduled_date` | DATE | NOT NULL | |
 | `week_key` | TEXT | NOT NULL | `YYYY.W` format |
-| `duration_minutes` | INTEGER | DEFAULT 60, CHECK 60–180 | |
-| `status` | TEXT | CHECK IN ('planned','completed','cancelled') | |
-| `focus` | TEXT | | Brief focus description |
-| `notes` | TEXT | | Completion notes |
+| `duration_minutes` | INTEGER | DEFAULT 90, CHECK 15–480 | |
+| `status` | TEXT | CHECK IN ('backlog','planned','doing','done','cancelled') | |
+| `description` | TEXT | NOT NULL DEFAULT '' | Session name / brief focus |
+| `notes` | TEXT | NOT NULL DEFAULT '' | Longer session notes |
 | `created_at` | DATETIME | | |
-| `completed_at` | DATETIME | | Set when status → completed |
+| `completed_at` | DATETIME | | Set when status → done |
 
 ### `milestone`
 
@@ -133,10 +140,14 @@ erDiagram
 |--------|------|-------|
 | `id` | INTEGER PK | |
 | `project_id` | INTEGER FK | CASCADE DELETE |
-| `description` | TEXT | Outcome statement |
-| `is_complete` | BOOLEAN DEFAULT 0 | |
-| `completed_date` | DATE | Set on toggle |
+| `description` | TEXT NOT NULL | Outcome-based name |
+| `status` | TEXT NOT NULL | 'backlog'\|'planned'\|'doing'\|'done'\|'cancelled'; DEFAULT 'backlog' |
+| `target_date` | DATE | Optional target completion date |
+| `completed_date` | DATE | Set automatically when status → done |
 | `sort_order` | INTEGER DEFAULT 0 | Display order |
+| `notes` | TEXT NOT NULL DEFAULT '' | Free-text notes |
+| `created_at` | DATETIME | |
+| `updated_at` | DATETIME | Updated by trigger |
 
 ### `project_score`
 
@@ -171,7 +182,7 @@ Week 1 is the week containing the first Thursday of the year. The week always st
 
 ## Migrations
 
-Schema changes are tracked in `schema_migration`. Each migration is a `(version, description, sql)` triple defined in `db/migrations.py`. The migration runner:
+Schema changes are tracked in `schema_migration`. Each migration is a `(version, description, sql)` triple defined in `db/migrations.py`. The current schema is at **v4**. The migration runner:
 
 1. Reads `schema_migration` to find applied versions.
 2. Backs up the database to `<name>.db.bak` before the first change.
@@ -181,5 +192,5 @@ Schema changes are tracked in `schema_migration`. Each migration is a `(version,
 To add a migration, append to the `_build_migrations()` list:
 
 ```python
-("v2", "Add color column to project", "ALTER TABLE project ADD COLUMN color TEXT;"),
+("v5", "Add color column to project", "ALTER TABLE project ADD COLUMN color TEXT;"),
 ```

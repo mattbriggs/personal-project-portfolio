@@ -6,11 +6,11 @@ A personal desktop application for managing, scheduling, and executing work acro
 
 Portfolio Manager is a **single-user Tkinter desktop app** backed by SQLite. It gives you one place to:
 
-- Track active projects with traffic-light status indicators
-- Schedule and log time-boxed work sessions (60–180 min)
-- Track milestones and plan documents with live Mermaid diagram preview
-- Run weekly planning and review cycles
-- See a dashboard score for every project and the overall portfolio
+- Track active projects with traffic-light status indicators and priority 1–5 ordering
+- Schedule and log time-boxed work sessions (15–480 min, default 90 min) against a configurable weekly hour budget
+- Track milestones with a full five-state lifecycle and per-project plan documents with live Mermaid diagram preview
+- Run weekly planning and review cycles, with a browsable history of past reviews
+- See a dashboard score for every project, the overall portfolio, and a "This Week" focus panel showing upcoming milestones
 
 The design philosophy is **low-friction and forgiving**: no required save actions, no failure messages for missed sessions, and a dashboard you can understand after four weeks away.
 

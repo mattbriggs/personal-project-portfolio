@@ -1,7 +1,9 @@
 """Settings view."""
 
 import logging
+import subprocess
 import tkinter as tk
+from pathlib import Path
 from tkinter import messagebox, ttk
 from typing import Any
 
@@ -48,8 +50,8 @@ class SettingsView(ttk.Frame):
         self._duration_var = tk.IntVar()
         ttk.Spinbox(
             form,
-            from_=60,
-            to=180,
+            from_=15,
+            to=480,
             increment=15,
             textvariable=self._duration_var,
             width=6,
@@ -82,11 +84,26 @@ class SettingsView(ttk.Frame):
             state="readonly",
             width=10,
         ).grid(row=row, column=1, sticky="w", padx=8)
+        ttk.Label(
+            form,
+            text="(saved to config; visual change requires app restart and theme library)",
+            foreground="#888",
+        ).grid(row=row, column=2, sticky="w", padx=4)
         row += 1
 
-        ttk.Button(self, text="Save Settings", command=self._save_settings).pack(
-            anchor="w", padx=16, pady=8
+        btn_row = ttk.Frame(self)
+        btn_row.pack(anchor="w", padx=16, pady=8)
+        ttk.Button(btn_row, text="Save Settings", command=self._save_settings).pack(
+            side="left", padx=(0, 8)
         )
+        ttk.Button(btn_row, text="Open Log File", command=self._open_log_file).pack(
+            side="left"
+        )
+        ttk.Label(
+            self,
+            text="Log file: ~/.portfolio_manager/logs/app.log",
+            foreground="#555",
+        ).pack(anchor="w", padx=16)
 
     def _load_settings(self) -> None:
         """Populate form fields from current settings."""
@@ -115,6 +132,17 @@ class SettingsView(ttk.Frame):
             messagebox.showinfo("Saved", "Settings saved.")
         except Exception as exc:
             messagebox.showerror("Error", str(exc))
+
+    def _open_log_file(self) -> None:
+        """Open the application log file in the system default text viewer."""
+        log_file = Path.home() / ".portfolio_manager" / "logs" / "app.log"
+        if log_file.exists():
+            subprocess.run(["open", str(log_file)], check=False)
+        else:
+            messagebox.showinfo(
+                "Log File",
+                f"Log file not found yet:\n{log_file}\n\nIt will be created on next launch.",
+            )
 
     def refresh(self) -> None:
         """Reload settings from controller (called when SETTINGS_CHANGED fires)."""

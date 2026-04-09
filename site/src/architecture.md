@@ -135,14 +135,33 @@ stateDiagram-v2
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Planned : create session
-    Planned --> Completed : mark complete
+    [*] --> Backlog : create session
+    Backlog --> Planned : plan
+    Planned --> Doing : start
+    Doing --> Done : complete
+    Planned --> Done : mark done
+    Backlog --> Cancelled : cancel
     Planned --> Cancelled : cancel
-    Planned --> Planned : reschedule
-    Completed --> Planned : reopen (manual override)
-    Cancelled --> Planned : restore
-    Completed --> [*] : archived with project
+    Doing --> Cancelled : cancel
+    Done --> [*] : archived with project
     Cancelled --> [*] : delete
+```
+
+---
+
+## Milestone Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Backlog : create milestone
+    Backlog --> Planned : plan
+    Planned --> Doing : start work
+    Doing --> Done : complete
+    Planned --> Done : mark done directly
+    Backlog --> Cancelled : cancel
+    Planned --> Cancelled : cancel
+    Doing --> Cancelled : cancel
+    Done --> [*] : (remains in history)
 ```
 
 ---

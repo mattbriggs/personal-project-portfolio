@@ -165,8 +165,13 @@ class ScoringService:
             return existing
 
         counts = self._sessions.count_by_status(project_id, week_key)
-        planned = counts.get("planned", 0) + counts.get("completed", 0)
-        completed = counts.get("completed", 0)
+        # planned = all committed (non-backlog, non-cancelled) sessions
+        planned = (
+            counts.get("planned", 0)
+            + counts.get("doing", 0)
+            + counts.get("done", 0)
+        )
+        completed = counts.get("done", 0)
         total_ms, completed_ms = self._milestones.count(project_id)
 
         score_value = self._strategy.compute_score(

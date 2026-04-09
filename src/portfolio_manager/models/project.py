@@ -31,6 +31,7 @@ class Project:
     status: ProjectStatus = "active"
     priority: int = 3
     started_date: date | None = None
+    end_date: date | None = None
     owner: str = "Matt Briggs"
     review_cadence: str = "weekly"
     plan_content: str = ""

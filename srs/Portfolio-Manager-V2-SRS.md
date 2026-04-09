@@ -2,9 +2,9 @@
 ## Personal Portfolio Work Orchestrator — Version 2
 
 **Document Version:** 2.0
-**Date:** 2026-04-07
+**Date:** 2026-04-09
 **Standard:** IEEE 830-1998
-**Status:** Draft
+**Status:** Released
 
 ---
 
@@ -67,7 +67,7 @@ The system is a **desktop GUI application** named **Portfolio Manager** with the
 | Term | Definition |
 |------|------------|
 | **Project** | A unit of work with goals, milestones, and work sessions tracked in the system |
-| **Session** | A time-boxed work unit of 60–180 minutes linked to a project |
+| **Session** | A time-boxed work unit of 15–480 minutes linked to a project and optional milestone |
 | **Week Key** | Canonical week identifier in `YYYY.W` format (e.g., `2026.15`) |
 | **Weekly Budget** | Total hours the user has available for sessions in a given week |
 | **Dashboard** | Primary UI view summarizing portfolio state, scores, and session schedule |
@@ -142,7 +142,7 @@ graph TD
 At a high level, the system shall:
 
 1. Manage a portfolio of projects with status, priority, and lifecycle states
-2. Represent work as discrete sessions of 60–180 minutes
+2. Represent work as discrete sessions of 15–480 minutes, linked to projects and optional milestones
 3. Schedule sessions within a weekly time budget
 4. Log completed sessions with notes and outcomes
 5. Track milestones per project
@@ -176,7 +176,7 @@ The system is designed for a **single experienced user** who:
 | Network | No network connectivity required |
 | Python version | Python 3.11 or later |
 | Package management | `pyproject.toml` with `pip` and `venv` |
-| Screen resolution | Minimum 1280×800 |
+| Screen resolution | Minimum 1024×768 |
 
 ---
 
@@ -202,7 +202,7 @@ The GUI shall be built with **Tkinter** using the `ttk` themed widget set.
 ```mermaid
 graph LR
     subgraph "Main Window (1024×768 min)"
-        L[Left Panel\nProject List\n+ status indicators]
+        L[Left Panel\nWeek Navigator]
         R[Right Panel\nTabbed Notebook]
         L --> R
     end
@@ -227,8 +227,8 @@ graph LR
 **UI Requirements:**
 
 - REQ-UI-001: The main window shall be resizable with a minimum size of 1024×768 pixels
-- REQ-UI-002: The left panel shall display all active projects with a colored status indicator (traffic light)
-- REQ-UI-003: Clicking a project in the left panel shall update the right panel to that project's context
+- REQ-UI-002: The left panel shall display a week navigator listing 17 weeks (12 past + current + 4 future), with the current week highlighted
+- REQ-UI-003: Clicking a week in the navigator shall navigate the Sessions and Weekly Review tabs to that week
 - REQ-UI-004: The tabbed notebook shall persist the active tab across navigation events
 - REQ-UI-005: All destructive actions (delete project, delete session) shall require confirmation
 - REQ-UI-006: The application shall use a consistent monospace or sans-serif font stack
@@ -270,26 +270,25 @@ Requirements use the format **REQ-[AREA]-[NUMBER]**.
 
 #### 3.2.2 Project Management
 
-- **REQ-PRJ-001**: The system shall allow the user to create a new project with at minimum: name, status, and started date
+- **REQ-PRJ-001**: The system shall allow the user to create a new project with at minimum: name; full detail (description, status, priority, start date, end date) shall be editable via a popup dialog
 - **REQ-PRJ-002**: The system shall allow editing all project fields
 - **REQ-PRJ-003**: The system shall allow deleting a project after confirmation; deletion shall cascade to associated sessions and milestones
 - **REQ-PRJ-004**: Projects shall support three lifecycle states: `active`, `backlog`, `archive`
-- **REQ-PRJ-005**: Projects shall have an optional priority value (1–5) for ordering
+- **REQ-PRJ-005**: Projects shall have an optional priority value (1–3) for ordering; 1 = highest
 - **REQ-PRJ-006**: The project list shall filter by status (default: active only)
 - **REQ-PRJ-007**: Archiving a project shall move its status to `archive`; archived projects remain in the database and are read-only
 - **REQ-PRJ-008**: The system shall record `created_at` and `updated_at` timestamps for all projects
 
 #### 3.2.3 Session Management
 
-- **REQ-SES-001**: The system shall define a session as a work unit with a duration of 60–180 minutes
-- **REQ-SES-002**: The system shall allow creating sessions linked to a project and a date
-- **REQ-SES-003**: Sessions shall have states: `planned`, `completed`, `cancelled`
-- **REQ-SES-004**: The system shall allow marking a session as completed with optional focus description and notes
+- **REQ-SES-001**: The system shall define a session as a work unit with a duration of 15–480 minutes (configurable default, default 90 min)
+- **REQ-SES-002**: The system shall allow creating sessions linked to a project, a date, and an optional milestone
+- **REQ-SES-003**: Sessions shall have five states: `backlog`, `planned`, `doing`, `done`, `cancelled`
+- **REQ-SES-004**: The system shall allow editing a session's name (Session field), description (notes), status, date, duration, project, and milestone via a popup dialog
 - **REQ-SES-005**: The system shall allow rescheduling a session to a different date
 - **REQ-SES-006**: The system shall allow cancelling or deleting sessions
 - **REQ-SES-007**: Sessions shall be associated with a week key computed automatically from their date
-- **REQ-SES-008**: The system shall display sessions grouped by week for a given project
-- **REQ-SES-009**: The system shall allow bulk-creating sessions for a project across a week
+- **REQ-SES-008**: The system shall display all sessions for the current week across all projects in a single table view, navigable by week
 
 #### 3.2.4 Weekly Budget and Planning
 
@@ -303,7 +302,7 @@ Requirements use the format **REQ-[AREA]-[NUMBER]**.
 
 - **REQ-DSH-001**: The dashboard shall display a table of all active projects with: name, deliverable this week, sessions planned, sessions done, sessions remaining, status indicator
 - **REQ-DSH-002**: The dashboard shall display a portfolio summary row: total sessions planned, total sessions done, total sessions remaining, portfolio score, portfolio state
-- **REQ-DSH-003**: The dashboard shall display a status notes panel with one note per project explaining the status
+- **REQ-DSH-003**: The dashboard shall display a portfolio summary row with total planned, done, remaining session counts, aggregate score, and traffic-light status badge
 - **REQ-DSH-004**: The dashboard shall auto-refresh when the underlying data changes
 - **REQ-DSH-005**: The dashboard shall display the current week key and date range
 
@@ -324,15 +323,14 @@ Requirements use the format **REQ-[AREA]-[NUMBER]**.
 #### 3.2.7 Milestone Tracking
 
 - **REQ-MIL-001**: The system shall allow creating, editing, and deleting milestones per project
-- **REQ-MIL-002**: Milestones shall have: description, completion state, completion date, sort order
-- **REQ-MIL-003**: The system shall allow toggling milestone completion with a single click
-- **REQ-MIL-004**: Milestones shall be displayed in sort order within the project detail view
-- **REQ-MIL-005**: The system shall import milestone descriptions from `milestones.md` when a project is linked to a repository folder (user-confirmed, one-time import)
+- **REQ-MIL-002**: Milestones shall have: name (description), status (backlog/planned/doing/done/cancelled), target date, completion date, sort order, and free-text notes
+- **REQ-MIL-003**: The system shall allow setting a milestone's status via an action bar dropdown (quick change) or a popup dialog (full edit including name, target, notes)
+- **REQ-MIL-004**: Milestones shall be displayed in sort order within the Milestones tab, filtered by the selected project
 
 #### 3.2.8 Plan Document Management
 
 - **REQ-PLN-001**: Each project shall have a single plan document stored as Markdown text in the database
-- **REQ-PLN-002**: The system shall provide a split-pane plan editor: a raw Markdown text editor on the left and a rendered preview on the right
+- **REQ-PLN-002**: The system shall provide a plan editor that defaults to rendered HTML preview; an Edit button toggles to raw Markdown editing mode
 - **REQ-PLN-003**: The rendered preview shall support standard Markdown formatting and Mermaid diagram blocks (flowchart, sequenceDiagram, stateDiagram-v2, erDiagram)
 - **REQ-PLN-004**: Rendering shall be performed by converting Markdown to HTML (via the `markdown` library) and loading the result into an embedded WebKit view (`tkinterweb`) with the Mermaid.js script injected
 - **REQ-PLN-005**: The preview shall refresh automatically when the user stops typing (debounced, ≤500ms delay)
@@ -555,13 +553,15 @@ sequenceDiagram
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Planned : create session
-    Planned --> Completed : mark complete
+    [*] --> Backlog : create session
+    Backlog --> Planned : plan
+    Planned --> Doing : start
+    Doing --> Done : complete
+    Planned --> Done : mark done
+    Backlog --> Cancelled : cancel
     Planned --> Cancelled : cancel
-    Planned --> Planned : reschedule
-    Completed --> Planned : reopen (manual override)
-    Cancelled --> Planned : restore
-    Completed --> [*] : (archived with project)
+    Doing --> Cancelled : cancel
+    Done --> [*] : (archived with project)
     Cancelled --> [*] : delete
 ```
 
@@ -618,6 +618,7 @@ erDiagram
         string status
         int priority
         date started_date
+        date end_date
         string owner
         string review_cadence
         text plan_content
@@ -629,11 +630,12 @@ erDiagram
     SESSION {
         int id PK
         int project_id FK
+        int milestone_id FK
         date scheduled_date
         string week_key
         int duration_minutes
         string status
-        string focus
+        string description
         string notes
         datetime created_at
         datetime completed_at
@@ -643,9 +645,11 @@ erDiagram
         int id PK
         int project_id FK
         string description
-        bool is_complete
+        string status
+        date target_date
         date completed_date
         int sort_order
+        string notes
         datetime created_at
         datetime updated_at
     }
@@ -690,6 +694,7 @@ erDiagram
     }
 
     PROJECT ||--o{ SESSION : "has"
+    MILESTONE ||--o{ SESSION : "groups"
     PROJECT ||--o{ MILESTONE : "has"
     PROJECT ||--o{ PROJECT_SCORE : "scored by"
 ```
@@ -706,8 +711,9 @@ erDiagram
 | `name` | TEXT | NOT NULL | Display name |
 | `slug` | TEXT | NOT NULL, UNIQUE | URL-safe folder name |
 | `status` | TEXT | NOT NULL, CHECK IN ('active','backlog','archive') | |
-| `priority` | INTEGER | DEFAULT 3, CHECK 1–5 | 1 = highest |
+| `priority` | INTEGER | DEFAULT 3, CHECK 1–3 | 1 = highest |
 | `started_date` | DATE | | ISO 8601 date |
+| `end_date` | DATE | | ISO 8601 target completion date |
 | `owner` | TEXT | DEFAULT 'Matt Briggs' | |
 | `review_cadence` | TEXT | DEFAULT 'weekly' | |
 | `plan_content` | TEXT | DEFAULT '' | Markdown text of the project plan document; may contain Mermaid blocks |
@@ -721,14 +727,15 @@ erDiagram
 |--------|------|-------------|-------|
 | `id` | INTEGER | PK, AUTOINCREMENT | |
 | `project_id` | INTEGER | FK → project.id, NOT NULL | CASCADE DELETE |
+| `milestone_id` | INTEGER | FK → milestone.id | SET NULL on delete; optional |
 | `scheduled_date` | DATE | NOT NULL | ISO 8601 |
 | `week_key` | TEXT | NOT NULL | Computed: `YYYY.W` |
-| `duration_minutes` | INTEGER | DEFAULT 60, CHECK 60–180 | |
-| `status` | TEXT | CHECK IN ('planned','completed','cancelled') | |
-| `focus` | TEXT | | Brief focus description |
-| `notes` | TEXT | | Session notes |
+| `duration_minutes` | INTEGER | DEFAULT 90, CHECK 15–480 | |
+| `status` | TEXT | CHECK IN ('backlog','planned','doing','done','cancelled') | |
+| `description` | TEXT | NOT NULL, DEFAULT '' | Session name / brief focus |
+| `notes` | TEXT | NOT NULL, DEFAULT '' | Longer session notes |
 | `created_at` | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP | |
-| `completed_at` | DATETIME | | Set when status → completed |
+| `completed_at` | DATETIME | | Set when status → done |
 
 #### 5.2.3 MILESTONE
 
@@ -736,12 +743,14 @@ erDiagram
 |--------|------|-------------|-------|
 | `id` | INTEGER | PK, AUTOINCREMENT | |
 | `project_id` | INTEGER | FK → project.id, NOT NULL | CASCADE DELETE |
-| `description` | TEXT | NOT NULL | Outcome-based description |
-| `is_complete` | BOOLEAN | DEFAULT 0 | |
-| `completed_date` | DATE | | Set when toggled complete |
+| `description` | TEXT | NOT NULL | Outcome-based milestone name |
+| `status` | TEXT | NOT NULL, CHECK IN ('backlog','planned','doing','done','cancelled') | DEFAULT 'backlog' |
+| `target_date` | DATE | | Optional target completion date |
+| `completed_date` | DATE | | Set automatically when status → done |
 | `sort_order` | INTEGER | DEFAULT 0 | |
+| `notes` | TEXT | NOT NULL, DEFAULT '' | Free-text notes |
 | `created_at` | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP | |
-| `updated_at` | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP | |
+| `updated_at` | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Updated by trigger |
 
 #### 5.2.4 PROJECT_SCORE
 
@@ -803,11 +812,8 @@ erDiagram
 | `tkinterweb` | ≥3.20 | Embedded WebKit HTML renderer for plan preview (Mermaid.js support) |
 | `mkdocs` | ≥1.5 | Documentation site generator |
 | `mkdocs-material` | ≥9.5 | Material theme for MkDocs |
-| `mkdocs-mermaid2-plugin` | ≥1.1 | Mermaid diagram support in docs |
 | `pytest` | ≥8.0 | Test runner |
 | `pytest-cov` | ≥4.0 | Code coverage measurement |
-| `sphinx` | ≥7.0 | API documentation generation |
-| `sphinx-rtd-theme` | ≥2.0 | Sphinx theme (Read the Docs) |
 
 ### 6.3 Development Tools
 
@@ -893,8 +899,7 @@ portfolio-manager/
 │       │   ├── settings_view.py    # Settings tab
 │       │   └── widgets/
 │       │       ├── status_badge.py  # Traffic-light status widget
-│       │       ├── score_bar.py     # Score progress bar widget
-│       │       └── plan_editor.py   # Split-pane Markdown editor + WebKit preview widget
+│       │       └── plan_editor.py   # Preview-first Markdown editor + WebKit preview widget
 │       │
 │       ├── events/
 │       │   ├── __init__.py
@@ -959,24 +964,16 @@ portfolio-manager/
 All public modules, classes, and functions shall have docstrings following the **reStructuredText** format compatible with Sphinx `autodoc`:
 
 ```python
-def complete_session(
-    self,
-    session_id: int,
-    notes: str = "",
-    focus: str = "",
-) -> Session:
-    """Mark a session as completed and record the completion timestamp.
+def set_status(self, session_id: int, status: SessionStatus) -> Session:
+    """Set the status of a session, managing completed_at automatically.
 
-    :param session_id: The primary key of the session to complete.
+    :param session_id: Primary key of the session.
     :type session_id: int
-    :param notes: Optional session notes to record.
-    :type notes: str
-    :param focus: Optional focus description for the session.
-    :type focus: str
+    :param status: New status — one of ``backlog``, ``planned``, ``doing``, ``done``, ``cancelled``.
+    :type status: SessionStatus
     :returns: The updated Session domain object.
     :rtype: Session
-    :raises ValueError: If the session does not exist.
-    :raises SessionStateError: If the session is already completed or cancelled.
+    :raises ValidationError: If *status* is not a recognised value.
     """
 ```
 
