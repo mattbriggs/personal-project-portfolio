@@ -1,0 +1,78 @@
+# Glossary
+
+## Active \(project status\)
+
+A project lifecycle state in which the project appears on the Dashboard, is eligible for new sessions and milestones, and contributes to the portfolio score each week. Contrast with Backlog and Archive.
+
+## Archive \(project status\)
+
+A terminal project lifecycle state for projects that are complete or permanently discontinued. Archived projects are read-only; their history is preserved but no new sessions or milestones can be added.
+
+## Backlog \(project status\)
+
+A project lifecycle state in which the project is paused. Backlog projects do not appear on the Dashboard and do not affect portfolio scoring. A project can be moved from Backlog back to Active at any time.
+
+## Backlog \(session and milestone status\)
+
+The initial status of a session or milestone. A backlog session or milestone is captured but not yet committed to a specific week or roadmap. It does not count toward the weekly budget or the project score.
+
+## Weekly time budget
+
+The number of hours per week the user has available for personal projects, as configured in Settings. The budget is used as a planning constraint displayed in the Sessions tab. It is not enforced; scheduled time can exceed the budget without restriction.
+
+## Dashboard
+
+The first tab in the Portfolio Manager interface. Displays a portfolio health snapshot showing each active project's session counts, health score, and traffic-light status for the selected week. Also shows aggregate portfolio totals.
+
+## Done \(status\)
+
+A terminal status for sessions and milestones indicating that the work or outcome is complete. Portfolio Manager records a completion timestamp automatically when a session or milestone is marked Done.
+
+## Milestone
+
+An outcome-based checkpoint within a project that marks a meaningful phase of completion. Milestones are described as achieved states \("First draft complete"\) rather than as task steps. They share the five-state lifecycle with sessions: Backlog, Planned, Doing, Done, Cancelled. Completed milestones contribute 40 percent of a project's health score.
+
+## Plan document
+
+A freeform Markdown document stored with each project. The plan document has no required structure and supports standard Markdown syntax plus Mermaid diagram blocks. Changes save automatically as the user types.
+
+## Planned \(status\)
+
+A session or milestone status indicating that the work is committed to a specific date or timeframe. Planned sessions count toward the weekly time budget and appear in the Dashboard's planned session count. They form the denominator of the session score component.
+
+## Portfolio
+
+The complete set of projects managed in Portfolio Manager. The recommended portfolio size is three to eight concurrent active projects. The portfolio score is the average of all active projects' individual health scores.
+
+## Priority
+
+A user-defined ranking from 1 \(highest\) to 5 \(lowest\) assigned to a project. Priority is for the user's reference only; it does not affect scoring, display order, or session scheduling behavior.
+
+## Project
+
+A named commitment in the user's portfolio. Projects have three lifecycle states \(Active, Backlog, Archive\), a priority level, optional start and end dates, a Markdown plan document, and associated sessions and milestones.
+
+## Project health score
+
+A value from 0 to 100 calculated weekly for each active project. The score is the sum of the session score component \(up to 60 points\) and the milestone score component \(up to 40 points\). It drives the traffic-light status displayed on the Dashboard.
+
+## Session
+
+A time-boxed block of work scheduled for a specific project. Sessions have a duration \(15 to 480 minutes\), a scheduled date, and five lifecycle states: Backlog, Planned, Doing, Done, Cancelled. Completed sessions contribute 60 percent of a project's health score.
+
+## Slug
+
+A URL-safe identifier generated automatically from a project's name. For example, a project named "Novel Draft" receives the slug `novel-draft`. Slugs are used internally as unique identifiers and do not appear in the user interface.
+
+## Traffic-light status
+
+A color-coded indicator on the Dashboard that summarizes a project's or portfolio's health score: Green \(80–100\), Yellow \(60–79\), or Red \(0–59\).
+
+## Week key
+
+A string identifier for a calendar week in the format YYYY.W, based on ISO 8601 calendar week numbering. For example, `2026.15` identifies the 15th week of 2026 \(April 13–19\). Week 1 contains the first Thursday of the year. Sessions and weekly reviews are indexed by week key.
+
+## Weekly review
+
+A structured reflection form completed once per week. The form captures what moved and what stalled during the week, patterns observed, a key decision for the following week, and planning decisions for the next week's sessions. Weekly reviews are preserved permanently in the review history.
+
