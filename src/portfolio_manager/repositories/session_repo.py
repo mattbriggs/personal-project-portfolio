@@ -126,12 +126,13 @@ class SessionRepository(BaseRepository):
             self._db.execute(
                 """
                 UPDATE session SET
-                    milestone_id = ?, scheduled_date = ?, week_key = ?,
+                    project_id = ?, milestone_id = ?, scheduled_date = ?, week_key = ?,
                     duration_minutes = ?, status = ?, description = ?,
                     notes = ?, completed_at = ?
                 WHERE id = ?
                 """,
                 (
+                    session.project_id,
                     session.milestone_id,
                     session.scheduled_date.isoformat(),
                     session.week_key,

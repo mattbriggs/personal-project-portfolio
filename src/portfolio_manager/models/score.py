@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal
 
+from portfolio_manager.utils.date_utils import utcnow
+
 ScoreStatus = Literal["green", "yellow", "red"]
 
 
@@ -30,7 +32,7 @@ class ProjectScore:
     status_note: str = ""
     is_manual_override: bool = False
     override_reason: str = ""
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=utcnow)
 
     def __str__(self) -> str:
         flag = " [manual]" if self.is_manual_override else ""

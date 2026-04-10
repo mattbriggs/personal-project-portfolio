@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import Literal
 
+from portfolio_manager.utils.date_utils import utcnow
+
 ProjectStatus = Literal["active", "backlog", "archive"]
 
 
@@ -36,8 +38,8 @@ class Project:
     review_cadence: str = "weekly"
     plan_content: str = ""
     description: str = ""
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=utcnow)
+    updated_at: datetime = field(default_factory=utcnow)
 
     def is_archived(self) -> bool:
         """Return ``True`` if the project is archived (read-only).

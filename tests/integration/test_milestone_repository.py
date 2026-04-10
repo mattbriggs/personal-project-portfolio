@@ -35,19 +35,22 @@ class TestMilestoneRepositoryCreate:
         assert fetched.description == "Ship chapter 1"
 
 
-class TestMilestoneRepositoryToggle:
-    def test_toggle_updates_is_complete(self, repo, a_milestone):
-        a_milestone.toggle()
+class TestMilestoneRepositoryUpdate:
+    def test_mark_done_persists(self, repo, a_milestone):
+        a_milestone.status = "done"
+        a_milestone.completed_date = date.today()
         updated = repo.update(a_milestone)
-        assert updated.is_complete is True
+        assert updated.is_done() is True
         assert updated.completed_date == date.today()
 
-    def test_double_toggle_restores(self, repo, a_milestone):
-        a_milestone.toggle()
+    def test_reopen_milestone_persists(self, repo, a_milestone):
+        a_milestone.status = "done"
+        a_milestone.completed_date = date.today()
         repo.update(a_milestone)
-        a_milestone.toggle()
+        a_milestone.status = "planned"
+        a_milestone.completed_date = None
         updated = repo.update(a_milestone)
-        assert updated.is_complete is False
+        assert updated.is_done() is False
         assert updated.completed_date is None
 
 
@@ -60,7 +63,7 @@ class TestMilestoneRepositoryCount:
     def test_count_with_milestones(self, repo, sample_project):
         ms1 = repo.create(Milestone(project_id=sample_project.id, description="M1"))
         repo.create(Milestone(project_id=sample_project.id, description="M2"))
-        ms1.is_complete = True
+        ms1.status = "done"
         ms1.completed_date = date.today()
         repo.update(ms1)
 

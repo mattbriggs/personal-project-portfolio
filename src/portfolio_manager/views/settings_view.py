@@ -99,11 +99,14 @@ class SettingsView(ttk.Frame):
         ttk.Button(btn_row, text="Open Log File", command=self._open_log_file).pack(
             side="left"
         )
-        ttk.Label(
-            self,
-            text="Log file: ~/.portfolio_manager/logs/app.log",
-            foreground="#555",
-        ).pack(anchor="w", padx=16)
+        self._log_path_label = ttk.Label(self, text="", foreground="#555")
+        self._log_path_label.pack(anchor="w", padx=16)
+
+    def _log_file_path(self) -> Path:
+        """Derive the log file path from the current database location."""
+        return (
+            self._controller.settings.database.resolved_path.parent / "logs" / "app.log"
+        )
 
     def _load_settings(self) -> None:
         """Populate form fields from current settings."""
@@ -112,6 +115,7 @@ class SettingsView(ttk.Frame):
         self._duration_var.set(s.session.default_duration_minutes)
         self._log_level_var.set(s.app.log_level)
         self._theme_var.set(s.app.theme)
+        self._log_path_label.configure(text=f"Log file: {self._log_file_path()}")
 
     def _save_settings(self) -> None:
         """Read form values and persist updated settings."""
@@ -135,7 +139,7 @@ class SettingsView(ttk.Frame):
 
     def _open_log_file(self) -> None:
         """Open the application log file in the system default text viewer."""
-        log_file = Path.home() / ".portfolio_manager" / "logs" / "app.log"
+        log_file = self._log_file_path()
         if log_file.exists():
             subprocess.run(["open", str(log_file)], check=False)
         else:

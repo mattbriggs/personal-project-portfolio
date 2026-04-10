@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import Literal
 
+from portfolio_manager.utils.date_utils import utcnow
+
 SessionStatus = Literal["backlog", "planned", "doing", "done", "cancelled"]
 
 
@@ -33,7 +35,7 @@ class Session:
     status: SessionStatus = "backlog"
     description: str = ""
     notes: str = ""
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=utcnow)
     completed_at: datetime | None = None
 
     def is_done(self) -> bool:
