@@ -114,5 +114,9 @@ class ReviewRepository(BaseRepository):
 
         :rtype: list[WeeklyReview]
         """
-        rows = self._db.fetchall("SELECT * FROM weekly_review ORDER BY week_key DESC")
+        rows = self._db.fetchall(
+            "SELECT * FROM weekly_review"
+            " ORDER BY substr(week_key, 1, 4) DESC,"
+            " CAST(substr(week_key, 6) AS INTEGER) DESC"
+        )
         return [_row_to_review(r) for r in rows]

@@ -130,11 +130,21 @@ class MainWindow(tk.Tk):
     def _wire_cross_view_events(self) -> None:
         """Subscribe views to events that their controllers don't already handle."""
         bus = EventBus.get()
+
+        def _refresh_projects(**_kw: object) -> None:
+            self._project_view.refresh()
+
+        def _refresh_milestone_projects(**_kw: object) -> None:
+            self._milestone_view.refresh_projects()
+
         # Milestone counts in ProjectView go stale when milestones change.
-        bus.subscribe(MILESTONE_UPDATED, lambda **_kw: self._project_view.refresh())
+        bus.subscribe(MILESTONE_UPDATED, _refresh_projects)
+        # ProjectView table goes stale when projects are created, updated, or deleted.
+        for event in (PROJECT_CREATED, PROJECT_UPDATED, PROJECT_DELETED):
+            bus.subscribe(event, _refresh_projects)
         # MilestoneView project selector goes stale when projects change.
         for event in (PROJECT_CREATED, PROJECT_UPDATED, PROJECT_DELETED):
-            bus.subscribe(event, lambda **_kw: self._milestone_view.refresh_projects())
+            bus.subscribe(event, _refresh_milestone_projects)
 
     # ------------------------------------------------------------------
     # Left panel (week navigator) helpers

@@ -158,7 +158,7 @@ def save_settings(settings: Settings, config_path: Path | None = None) -> None:
     :type config_path: pathlib.Path | None
     """
     path = config_path or _CONFIG_FILE
-    _CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
 
     content = f"""\
 [app]

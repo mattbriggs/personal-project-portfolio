@@ -59,8 +59,9 @@ class DatabaseConnection:
     def initialise(cls, db_path: Path) -> "DatabaseConnection":
         """Create (or reuse) the singleton connection.
 
-        Safe to call multiple times; subsequent calls with the same path are
-        no-ops.
+        Subsequent calls with the *same* resolved path are no-ops and return
+        the existing instance.  If a *different* path is given the old
+        connection is closed and a new one is opened at the new path.
 
         :param db_path: Path to the SQLite database file.
         :type db_path: pathlib.Path
@@ -68,6 +69,17 @@ class DatabaseConnection:
         :rtype: DatabaseConnection
         """
         global _instance
+        if _instance is not None and _instance._path.resolve() != db_path.resolve():
+            logger.warning(
+                "DatabaseConnection: path changed from %s to %s — reopening.",
+                _instance._path,
+                db_path,
+            )
+            try:
+                _instance._conn.close()
+            except Exception:
+                pass
+            _instance = None
         if _instance is None:
             _instance = cls(db_path)
         return _instance
