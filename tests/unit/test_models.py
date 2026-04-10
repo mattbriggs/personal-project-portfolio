@@ -33,37 +33,40 @@ class TestProject:
 class TestSession:
     def test_defaults(self):
         s = Session(project_id=1)
-        assert s.status == "planned"
+        assert s.status == "backlog"
         assert s.duration_minutes == 90
 
-    def test_is_completed(self):
-        s = Session(project_id=1, status="completed")
-        assert s.is_completed()
+    def test_is_done(self):
+        s = Session(project_id=1, status="done")
+        assert s.is_done()
         assert not s.is_planned()
 
     def test_is_planned(self):
         s = Session(project_id=1, status="planned")
         assert s.is_planned()
-        assert not s.is_completed()
+        assert not s.is_done()
 
 
 class TestMilestone:
-    def test_toggle_marks_complete(self):
+    def test_mark_done(self):
         ms = Milestone(project_id=1, description="Ship v1")
-        assert not ms.is_complete
-        ms.toggle()
-        assert ms.is_complete
+        assert not ms.is_done()
+        ms.status = "done"
+        ms.completed_date = date.today()
+        assert ms.is_done()
         assert ms.completed_date == date.today()
 
-    def test_toggle_clears_completion(self):
+    def test_reopen_clears_completion(self):
         ms = Milestone(
             project_id=1,
             description="Ship v1",
-            is_complete=True,
+            status="done",
             completed_date=date.today(),
         )
-        ms.toggle()
-        assert not ms.is_complete
+        assert ms.is_done()
+        ms.status = "planned"
+        ms.completed_date = None
+        assert not ms.is_done()
         assert ms.completed_date is None
 
     def test_str_contains_description(self):

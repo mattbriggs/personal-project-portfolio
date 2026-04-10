@@ -157,7 +157,8 @@ class _SessionDialog(tk.Toplevel):
         self._milestone_map = {"— none —": None}
         if project_id is not None:
             for ms in self._controller.get_milestones_for_project(project_id):
-                self._milestone_map[ms.description[:40]] = ms.id
+                label = f"[{ms.id}] {ms.description[:36]}"
+                self._milestone_map[label] = ms.id
         self._milestone_combo["values"] = list(self._milestone_map.keys())
         self._milestone_combo.current(0)
 

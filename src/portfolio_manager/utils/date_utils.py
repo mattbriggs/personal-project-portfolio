@@ -6,7 +6,19 @@ Week 1 is the week containing the first Thursday of the year.
 Week key format: ``YYYY.W`` — e.g. ``2026.15``.
 """
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
+
+
+def utcnow() -> datetime:
+    """Return the current UTC datetime as a naive :class:`datetime`.
+
+    Replaces the deprecated :func:`datetime.utcnow` while keeping stored
+    timestamps as naive UTC strings for backward compatibility with existing
+    database rows.
+
+    :rtype: datetime
+    """
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 def to_week_key(d: date) -> str:

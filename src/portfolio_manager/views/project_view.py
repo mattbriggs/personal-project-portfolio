@@ -11,6 +11,32 @@ from portfolio_manager.views.widgets.plan_editor import PlanEditor
 logger = logging.getLogger(__name__)
 
 
+def _apply_project_form_values(
+    project: Any,
+    *,
+    name: str,
+    description: str,
+    status: str,
+    priority: str,
+    raw_start: str,
+    raw_end: str,
+    plan_content: str,
+) -> Any:
+    """Apply dialog form values to a project object.
+
+    Keeps the latest plan editor content attached to the in-memory project so a
+    metadata save cannot overwrite freshly edited plan text with stale data.
+    """
+    project.name = name.strip()
+    project.description = description.strip()
+    project.status = status
+    project.priority = int(priority or "3")
+    project.plan_content = plan_content
+    project.started_date = date.fromisoformat(raw_start) if raw_start else None
+    project.end_date = date.fromisoformat(raw_end) if raw_end else None
+    return project
+
+
 class _ProjectDialog(tk.Toplevel):
     """Non-modal popup for editing a project's metadata and plan document.
 
@@ -126,7 +152,7 @@ class _ProjectDialog(tk.Toplevel):
 
         self._plan_editor = PlanEditor(
             plan_frame,
-            on_save=lambda text: self._controller.save_plan(self._project.id, text),
+            on_save=self._save_plan_content,
             render_fn=self._controller.render_plan,
         )
         self._plan_editor.pack(fill="both", expand=True)
@@ -145,20 +171,24 @@ class _ProjectDialog(tk.Toplevel):
         self._end_var.set(p.end_date.isoformat() if p.end_date else "")
         self._plan_editor.set_content(p.plan_content)
 
+    def _save_plan_content(self, text: str) -> None:
+        """Persist plan content and keep the in-memory project copy in sync."""
+        self._project.plan_content = text
+        self._controller.save_plan(self._project.id, text)
+
     def _on_save(self) -> None:
         try:
-            self._project.name = self._name_var.get().strip()
-            self._project.description = self._desc_var.get().strip()
-            self._project.status = self._status_var.get()
-            self._project.priority = int(self._priority_var.get() or "3")
-
-            raw_start = self._start_var.get().strip()
-            self._project.started_date = date.fromisoformat(raw_start) if raw_start else None
-
-            raw_end = self._end_var.get().strip()
-            self._project.end_date = date.fromisoformat(raw_end) if raw_end else None
-
-            self._controller.update_project(self._project)
+            self._project = _apply_project_form_values(
+                self._project,
+                name=self._name_var.get(),
+                description=self._desc_var.get(),
+                status=self._status_var.get(),
+                priority=self._priority_var.get(),
+                raw_start=self._start_var.get().strip(),
+                raw_end=self._end_var.get().strip(),
+                plan_content=self._plan_editor.get_content(),
+            )
+            self._project = self._controller.update_project(self._project)
             self.title(f"Project — {self._project.name}")
         except ValueError as exc:
             messagebox.showerror("Invalid Date", str(exc), parent=self)

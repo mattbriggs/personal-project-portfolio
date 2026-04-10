@@ -3,6 +3,8 @@
 from dataclasses import dataclass, field
 from datetime import date, datetime
 
+from portfolio_manager.utils.date_utils import utcnow
+
 
 @dataclass
 class WeeklyReview:
@@ -42,8 +44,8 @@ class WeeklyReview:
     risk_to_watch: str = ""
     first_session_target: str = ""
     written_to_repo: bool = False
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=utcnow)
+    updated_at: datetime = field(default_factory=utcnow)
 
     def __str__(self) -> str:
         return f"WeeklyReview({self.week_key})"

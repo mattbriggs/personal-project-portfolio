@@ -25,7 +25,7 @@ def a_session(repo, sample_project):
             week_key=to_week_key(today),
             duration_minutes=90,
             status="planned",
-            focus="Write chapter 1",
+            description="Write chapter 1",
         )
     )
 
@@ -46,7 +46,7 @@ class TestSessionRepositoryCreate:
 
     def test_create_persists_fields(self, a_session, repo):
         fetched = repo.get(a_session.id)
-        assert fetched.focus == "Write chapter 1"
+        assert fetched.description == "Write chapter 1"
         assert fetched.duration_minutes == 90
 
 
@@ -77,12 +77,12 @@ class TestSessionRepositoryList:
 
 class TestSessionRepositoryUpdate:
     def test_update_status(self, repo, a_session):
-        from datetime import datetime
+        from datetime import datetime, timezone
 
-        a_session.status = "completed"
-        a_session.completed_at = datetime.utcnow()
+        a_session.status = "done"
+        a_session.completed_at = datetime.now(timezone.utc).replace(tzinfo=None)
         updated = repo.update(a_session)
-        assert updated.status == "completed"
+        assert updated.status == "done"
         assert updated.completed_at is not None
 
 
@@ -98,5 +98,5 @@ class TestSessionRepositoryCountByStatus:
         week_key = sample_sessions[0].week_key
         counts = repo.count_by_status(sample_project.id, week_key)
         assert counts.get("planned", 0) >= 1
-        assert counts.get("completed", 0) >= 1
+        assert counts.get("done", 0) >= 1
         assert counts.get("cancelled", 0) >= 1

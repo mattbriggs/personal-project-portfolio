@@ -44,7 +44,7 @@ class DashboardController:
         self._view: Any = None  # set by main_window after view is created
 
         # Subscribe to events that require a dashboard refresh.
-        for event in (
+        self._subscribed_events = (
             PROJECT_CREATED,
             PROJECT_UPDATED,
             PROJECT_DELETED,
@@ -53,8 +53,19 @@ class DashboardController:
             SESSION_COMPLETED,
             SESSION_DELETED,
             MILESTONE_UPDATED,
-        ):
+        )
+        for event in self._subscribed_events:
             self._bus.subscribe(event, self._on_data_changed)
+
+    def close(self) -> None:
+        """Unsubscribe all dashboard event listeners from the bus.
+
+        Call this when the controller is being discarded so subscriptions do
+        not accumulate across repeated ``build_app()`` calls in tests or
+        future multi-window scenarios.
+        """
+        for event in self._subscribed_events:
+            self._bus.unsubscribe(event, self._on_data_changed)
 
     def bind_view(self, view: Any) -> None:
         """Attach the dashboard view so the controller can trigger refreshes.

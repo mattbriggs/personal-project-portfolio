@@ -6,7 +6,7 @@ import pytest
 
 from portfolio_manager.db.connection import DatabaseConnection
 from portfolio_manager.events.event_bus import EventBus
-from portfolio_manager.exceptions import SessionStateError, ValidationError
+from portfolio_manager.exceptions import ValidationError
 from portfolio_manager.repositories.session_repo import SessionRepository
 from portfolio_manager.services.session_service import SessionService
 from portfolio_manager.utils.date_utils import to_week_key
@@ -28,7 +28,7 @@ class TestSessionServiceCreate:
     def test_create_returns_session_with_id(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
         assert s.id > 0
-        assert s.status == "planned"
+        assert s.status == "backlog"
 
     def test_create_sets_week_key(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
@@ -36,7 +36,7 @@ class TestSessionServiceCreate:
 
     def test_create_invalid_duration_raises(self, svc, sample_project, today):
         with pytest.raises(ValidationError):
-            svc.create_session(sample_project.id, today, duration_minutes=30)
+            svc.create_session(sample_project.id, today, duration_minutes=10)
 
     def test_create_emits_event(self, svc, sample_project, today):
         received = []
@@ -44,30 +44,29 @@ class TestSessionServiceCreate:
         svc.create_session(sample_project.id, today)
         assert len(received) == 1
 
-    def test_create_stores_focus(self, svc, sample_project, today):
-        s = svc.create_session(sample_project.id, today, focus="Write chapter 1")
-        assert s.focus == "Write chapter 1"
+    def test_create_stores_description(self, svc, sample_project, today):
+        s = svc.create_session(sample_project.id, today, description="Write chapter 1")
+        assert s.description == "Write chapter 1"
 
 
 class TestSessionServiceComplete:
-    def test_complete_changes_status(self, svc, sample_project, today):
+    def test_complete_changes_status_to_done(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
-        completed = svc.complete_session(s.id, notes="Done!", focus="Final edit")
-        assert completed.status == "completed"
+        completed = svc.complete_session(s.id, notes="Done!", description="Final edit")
+        assert completed.status == "done"
         assert completed.completed_at is not None
         assert completed.notes == "Done!"
 
-    def test_complete_already_completed_raises(self, svc, sample_project, today):
+    def test_complete_sets_completed_at(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
-        svc.complete_session(s.id)
-        with pytest.raises(SessionStateError):
-            svc.complete_session(s.id)
+        completed = svc.complete_session(s.id)
+        assert completed.completed_at is not None
 
-    def test_complete_cancelled_raises(self, svc, sample_project, today):
+    def test_complete_from_cancelled_changes_to_done(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
         svc.cancel_session(s.id)
-        with pytest.raises(SessionStateError):
-            svc.complete_session(s.id)
+        result = svc.complete_session(s.id)
+        assert result.status == "done"
 
     def test_complete_emits_event(self, svc, sample_project, today):
         received = []
@@ -85,11 +84,11 @@ class TestSessionServiceReschedule:
         assert updated.scheduled_date == next_week
         assert updated.week_key == to_week_key(next_week)
 
-    def test_reschedule_completed_raises(self, svc, sample_project, today):
+    def test_reschedule_from_done_status(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
         svc.complete_session(s.id)
-        with pytest.raises(SessionStateError):
-            svc.reschedule_session(s.id, today + timedelta(days=1))
+        updated = svc.reschedule_session(s.id, today + timedelta(days=1))
+        assert updated.scheduled_date == today + timedelta(days=1)
 
 
 class TestSessionServiceCancel:
@@ -98,26 +97,31 @@ class TestSessionServiceCancel:
         cancelled = svc.cancel_session(s.id)
         assert cancelled.status == "cancelled"
 
-    def test_cancel_non_planned_raises(self, svc, sample_project, today):
+    def test_cancel_from_done_status(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
         svc.complete_session(s.id)
-        with pytest.raises(SessionStateError):
-            svc.cancel_session(s.id)
+        result = svc.cancel_session(s.id)
+        assert result.status == "cancelled"
 
 
-class TestSessionServiceReopen:
-    def test_reopen_completed(self, svc, sample_project, today):
+class TestSessionServiceSetStatus:
+    def test_set_status_to_planned(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
         svc.complete_session(s.id)
-        reopened = svc.reopen_session(s.id)
+        reopened = svc.set_status(s.id, "planned")
         assert reopened.status == "planned"
         assert reopened.completed_at is None
 
-    def test_reopen_cancelled(self, svc, sample_project, today):
+    def test_set_status_cancelled_to_planned(self, svc, sample_project, today):
         s = svc.create_session(sample_project.id, today)
         svc.cancel_session(s.id)
-        reopened = svc.reopen_session(s.id)
+        reopened = svc.set_status(s.id, "planned")
         assert reopened.status == "planned"
+
+    def test_set_status_invalid_raises(self, svc, sample_project, today):
+        s = svc.create_session(sample_project.id, today)
+        with pytest.raises(ValidationError):
+            svc.set_status(s.id, "unknown")
 
 
 class TestSessionServiceDelete:

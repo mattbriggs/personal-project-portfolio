@@ -2,6 +2,7 @@
 
 import logging
 import re
+import sqlite3
 
 from portfolio_manager.events.event_bus import (
     PROJECT_CREATED,
@@ -86,7 +87,12 @@ class ProjectService:
             description=description,
             **kwargs,  # type: ignore[arg-type]
         )
-        project = self._projects.create(project)
+        try:
+            project = self._projects.create(project)
+        except sqlite3.IntegrityError:
+            raise ValidationError(
+                f"A project named {name!r} already exists. Choose a different name."
+            )
         self._bus.emit(PROJECT_CREATED, project_id=project.id)
         logger.info("Created project %d: %r", project.id, project.name)
         return project

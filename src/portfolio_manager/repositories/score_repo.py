@@ -95,7 +95,9 @@ class ScoreRepository(BaseRepository):
         :rtype: list[ProjectScore]
         """
         rows = self._db.fetchall(
-            "SELECT * FROM project_score WHERE project_id = ? ORDER BY week_key DESC",
+            "SELECT * FROM project_score WHERE project_id = ?"
+            " ORDER BY substr(week_key, 1, 4) DESC,"
+            " CAST(substr(week_key, 6) AS INTEGER) DESC",
             (project_id,),
         )
         return [_row_to_score(r) for r in rows]

@@ -94,7 +94,7 @@ def sample_sessions(
             week_key=week_key,
             duration_minutes=90,
             status="planned",
-            focus="Write chapter 1",
+            description="Write chapter 1",
         )
     )
     completed = repo.create(
@@ -103,8 +103,8 @@ def sample_sessions(
             scheduled_date=today,
             week_key=week_key,
             duration_minutes=60,
-            status="completed",
-            focus="Outline done",
+            status="done",
+            description="Outline done",
             notes="Completed outline.",
         )
     )

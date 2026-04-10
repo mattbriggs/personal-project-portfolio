@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import Literal
 
+from portfolio_manager.utils.date_utils import utcnow
+
 MilestoneStatus = Literal["backlog", "planned", "doing", "done", "cancelled"]
 
 
@@ -32,8 +34,8 @@ class Milestone:
     target_date: date | None = None
     sort_order: int = 0
     notes: str = ""
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=utcnow)
+    updated_at: datetime = field(default_factory=utcnow)
 
     def is_done(self) -> bool:
         """Return ``True`` if the milestone has been completed.

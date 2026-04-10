@@ -1,7 +1,7 @@
 """Business logic for session lifecycle management."""
 
 import logging
-from datetime import date, datetime
+from datetime import date
 
 from portfolio_manager.events.event_bus import (
     SESSION_COMPLETED,
@@ -13,7 +13,7 @@ from portfolio_manager.events.event_bus import (
 from portfolio_manager.exceptions import ValidationError
 from portfolio_manager.models.session import Session, SessionStatus
 from portfolio_manager.repositories.session_repo import SessionRepository
-from portfolio_manager.utils.date_utils import to_week_key
+from portfolio_manager.utils.date_utils import to_week_key, utcnow
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +103,7 @@ class SessionService:
         session = self._sessions.get(session_id)
         session.status = status
         if status == "done" and session.completed_at is None:
-            session.completed_at = datetime.utcnow()
+            session.completed_at = utcnow()
         elif status != "done":
             session.completed_at = None
         updated = self._sessions.update(session)
@@ -133,7 +133,7 @@ class SessionService:
             )
         session.week_key = to_week_key(session.scheduled_date)
         if session.status == "done" and session.completed_at is None:
-            session.completed_at = datetime.utcnow()
+            session.completed_at = utcnow()
         elif session.status != "done":
             session.completed_at = None
         updated = self._sessions.update(session)
