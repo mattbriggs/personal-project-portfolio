@@ -51,6 +51,7 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Guide: guide/index.md
   - Architecture: architecture.md
   - Data Model: data-model.md
   - Design Patterns: design-patterns.md
