@@ -25,6 +25,9 @@ theme:
     - navigation.sections
     - toc.integrate
 
+hooks:
+  - tools/prepare_guide.py
+
 plugins:
   - search
 

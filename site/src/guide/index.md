@@ -1,0 +1,44 @@
+# Portfolio Manager User Guide
+
+-   Getting Started
+    -   [The Portfolio Paradigm](c_portfolio_paradigm.md)
+    -   [Install Portfolio Manager on macOS \(Dock Shortcut\)](t_install_macos.md)
+    -   [Install Portfolio Manager via the Command Line](t_install_cli.md)
+    -   [Set Up Portfolio Manager for the First Time](t_first_launch.md)
+-   Core Concepts
+    -   [Project Lifecycle](c_project_lifecycle.md)
+    -   [Sessions](c_session_paradigm.md)
+    -   [Milestones](c_milestone_paradigm.md)
+    -   [Project Health Scoring](c_scoring_model.md)
+    -   [The Weekly Review](c_weekly_review_concept.md)
+-   Managing Projects
+    -   [Create a Project](t_create_project.md)
+    -   [Write a Project Plan Document](t_write_project_plan.md)
+    -   [Create a Milestone](t_create_milestone.md)
+    -   [Advance a Milestone to Done](t_update_milestone.md)
+    -   [Archive a Project](t_archive_project.md)
+-   Managing Sessions
+    -   [Create a Session](t_create_session.md)
+    -   [Update a Session's Status](t_update_session_status.md)
+    -   [Plan Sessions for the Week](t_plan_weekly_sessions.md)
+-   Weekly Workflow
+    -   [The Weekly Workflow Process](p_weekly_workflow.md)
+    -   [Complete the Weekly Review](t_complete_weekly_review.md)
+-   Configuration
+    -   [Configure Application Settings](t_configure_settings.md)
+-   Reference
+    -   [User Interface Reference](r_ui_reference.md)
+    -   [Session Status Values](r_session_states.md)
+    -   [Project Status Values](r_project_states.md)
+    -   [Milestone Status Values](r_milestone_states.md)
+    -   [Scoring Algorithm Reference](r_scoring_algorithm.md)
+    -   [Configuration File Reference](r_config_file.md)
+    -   [Markdown and Mermaid Syntax Reference](r_markdown_syntax.md)
+-   Troubleshooting
+    -   [Portfolio Manager Does Not Launch](ts_app_wont_launch.md)
+    -   [Tkinter Not Found](ts_tk_not_found.md)
+    -   [Database Error on Launch or During Use](ts_database_error.md)
+    -   [Mermaid Diagrams Not Rendering in Plan Documents](ts_mermaid_not_rendering.md)
+    -   [Sessions Not Appearing on the Dashboard or Sessions Tab](ts_sessions_missing.md)
+-   [Glossary](glossary.md)
+
