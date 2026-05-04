@@ -2232,7 +2232,8 @@ block-beta
 <em>Main window: left panel shows the week navigator list; right panel shows six tabs: Dashboard, Sessions, Projects, Milestones, Weekly Review, and Settings.</em></p>
 <p>The minimum window size is 1024 × 768 pixels. The window is resizable; both panels expand proportionally.</p>
 <h2 id="left-panel-week-navigator">Left Panel — Week Navigator<a class="headerlink" href="#left-panel-week-navigator" title="Permanent link">&para;</a></h2>
-<p>The left panel displays a scrollable list of week keys in YYYY.W format. The list shows the 12 preceding weeks, the current week (highlighted), and the 4 following weeks. Clicking a week navigates the Sessions and Weekly Review tabs to that week.</p>
+<p>The left panel displays a scrollable list of week keys in YYYY.W format. The list shows the 12 preceding weeks, the current week (highlighted), and at least 4 following weeks. Clicking a week navigates the Sessions and Weekly Review tabs to that week.</p>
+<p>The <strong>More Weeks ▼</strong> button at the bottom of the list appends 4 additional future weeks each time it is clicked, allowing the timeline to extend as far forward as needed.</p>
 <h2 id="dashboard-tab">Dashboard Tab<a class="headerlink" href="#dashboard-tab" title="Permanent link">&para;</a></h2>
 <p>Displays a portfolio health snapshot for the selected week:</p>
 <table>
@@ -2351,7 +2352,11 @@ block-beta
 </tr>
 <tr>
 <td>Milestone table</td>
-<td>Columns: Description, Status, Target Date, Notes. Sorted by sort_order.</td>
+<td>Columns: Milestone, Target, Week, Total Min, Status.</td>
+</tr>
+<tr>
+<td>Milestone heading</td>
+<td>Click to cycle sort: ascending ▲ → descending ▼ → original order. The arrow indicator reflects the active sort direction.</td>
 </tr>
 <tr>
 <td>New Milestone</td>
@@ -2359,7 +2364,11 @@ block-beta
 </tr>
 <tr>
 <td>Edit Milestone</td>
-<td>Opens the Milestone dialog for the selected milestone.</td>
+<td>Double-click a row to open the Milestone dialog for the selected milestone.</td>
+</tr>
+<tr>
+<td>Set Status / Apply</td>
+<td>Changes the status of the selected milestone without opening the dialog.</td>
 </tr>
 <tr>
 <td>Delete Milestone</td>
@@ -2390,7 +2399,11 @@ block-beta
 </tr>
 <tr>
 <td>Review form</td>
-<td>Eight text fields for reflection (what moved, what stalled, signals, decision for next week) and planning (primary focus, project to deprioritize, risk to watch, first session target).</td>
+<td>Eight text fields for reflection (what moved, what stalled, signals, decision for next week) and planning (primary focus, project to deprioritize, risk to watch, first session target). Each field displays three lines of text.</td>
+</tr>
+<tr>
+<td>Expand button (⤢)</td>
+<td>Each field label row has a ⤢ button on the right. Clicking it opens a resizable popup editor pre-filled with the field's current content. Click <strong>Done</strong> to apply changes or <strong>Cancel</strong> (or press Escape) to discard them.</td>
 </tr>
 <tr>
 <td>Save Review</td>

@@ -214,6 +214,8 @@ class MilestoneView(ttk.Frame):
         self._selected_project_id: int | None = None
         self._milestone_ids: list[int] = []
         self._milestones_cache: list[Any] = []  # list of (Milestone, total_min)
+        self._ms_sort_active: bool = False
+        self._ms_sort_reverse: bool = False
         self._build_ui()
         self.refresh_projects()
 
@@ -252,8 +254,11 @@ class MilestoneView(ttk.Frame):
             ("total_min",  "Total Min",   80, "center"),
             ("status",     "Status",      80, "center"),
         ]:
-            self._tree.heading(col, text=heading)
             self._tree.column(col, width=width, anchor=anchor)
+            if col == "milestone":
+                self._tree.heading(col, text=heading, command=self._toggle_milestone_sort)
+            else:
+                self._tree.heading(col, text=heading)
 
         scroll = ttk.Scrollbar(self, orient="vertical", command=self._tree.yview)
         self._tree.configure(yscrollcommand=scroll.set)
@@ -282,6 +287,24 @@ class MilestoneView(ttk.Frame):
     # ------------------------------------------------------------------
     # Data refresh
     # ------------------------------------------------------------------
+
+    def _toggle_milestone_sort(self) -> None:
+        """Cycle sort: unsorted → ascending ▲ → descending ▼ → unsorted."""
+        if not self._ms_sort_active:
+            self._ms_sort_active = True
+            self._ms_sort_reverse = False
+        elif not self._ms_sort_reverse:
+            self._ms_sort_reverse = True
+        else:
+            self._ms_sort_active = False
+            self._ms_sort_reverse = False
+
+        if self._ms_sort_active:
+            arrow = " ▼" if self._ms_sort_reverse else " ▲"
+        else:
+            arrow = ""
+        self._tree.heading("milestone", text=f"Milestone{arrow}")
+        self._refresh_milestones()
 
     def refresh_projects(self) -> None:
         """Reload the project list into the project selector."""
@@ -319,6 +342,8 @@ class MilestoneView(ttk.Frame):
             return
 
         rows = self._controller.list_milestones_with_totals(self._selected_project_id)
+        if self._ms_sort_active:
+            rows = sorted(rows, key=lambda r: r[0].description.lower(), reverse=self._ms_sort_reverse)
         self._milestones_cache = rows
 
         for ms, total_min in rows:
