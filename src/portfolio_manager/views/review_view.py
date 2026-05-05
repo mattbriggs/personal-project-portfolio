@@ -35,7 +35,7 @@ class ReviewView(ttk.Frame):
         super().__init__(parent, **kwargs)  # type: ignore[arg-type]
         self._controller = controller
         self._review: Any = None
-        self._vars: dict[str, tk.StringVar | tk.Text] = {}
+        self._vars: dict[str, tk.Text] = {}
         self._build_ui()
         self._load_review()
 
@@ -98,33 +98,28 @@ class ReviewView(ttk.Frame):
         scroll.pack(side="right", fill="y")
         canvas.pack(fill="both", expand=True)
 
-        for attr, label, multiline in _FIELDS:
-            ttk.Label(self._form, text=label).pack(anchor="w", padx=4, pady=(6, 0))
-            if multiline:
-                text = tk.Text(self._form, height=3, wrap="word")
-                text.pack(fill="x", padx=4, pady=(0, 2))
-                self._vars[attr] = text
-            else:
-                var = tk.StringVar()
-                ttk.Entry(self._form, textvariable=var).pack(
-                    fill="x", padx=4, pady=(0, 2)
-                )
-                self._vars[attr] = var
+        for attr, label, _multiline in _FIELDS:
+            header = ttk.Frame(self._form)
+            header.pack(fill="x", padx=4, pady=(6, 0))
+            ttk.Label(header, text=label).pack(side="left")
+            ttk.Button(
+                header, text="⤢", width=2,
+                command=lambda a=attr: self._open_expand_popup(a),
+            ).pack(side="right")
+
+            text = tk.Text(self._form, height=3, wrap="word")
+            text.pack(fill="x", padx=4, pady=(0, 2))
+            self._vars[attr] = text
 
     def _load_review(self) -> None:
         """Load (or create) the review for the selected week."""
         week_key = self._week_var.get().strip()
         self._review = self._controller.get_or_create_review(week_key)
-        for attr, _label, multiline in _FIELDS:
-            value = getattr(self._review, attr, "")
+        for attr, _label, _multiline in _FIELDS:
+            value = getattr(self._review, attr, "") or ""
             widget = self._vars[attr]
-            if multiline:
-                assert isinstance(widget, tk.Text)
-                widget.delete("1.0", tk.END)
-                widget.insert("1.0", value)
-            else:
-                assert isinstance(widget, tk.StringVar)
-                widget.set(value)
+            widget.delete("1.0", tk.END)
+            widget.insert("1.0", value)
         self._refresh_history()
 
     def _refresh_history(self) -> None:
@@ -155,20 +150,47 @@ class ReviewView(ttk.Frame):
         """Read form values and persist the review."""
         if self._review is None:
             return
-        for attr, _label, multiline in _FIELDS:
+        for attr, _label, _multiline in _FIELDS:
             widget = self._vars[attr]
-            if multiline:
-                assert isinstance(widget, tk.Text)
-                setattr(self._review, attr, widget.get("1.0", tk.END).strip())
-            else:
-                assert isinstance(widget, tk.StringVar)
-                setattr(self._review, attr, widget.get())
+            setattr(self._review, attr, widget.get("1.0", tk.END).strip())
         try:
             self._review = self._controller.save_review(self._review)
             messagebox.showinfo("Saved", "Weekly review saved.")
             self._refresh_history()
         except Exception as exc:
             messagebox.showerror("Error", str(exc))
+
+    def _open_expand_popup(self, attr: str) -> None:
+        """Open a larger editor popup for *attr* and sync content on close."""
+        source: tk.Text = self._vars[attr]
+        current = source.get("1.0", tk.END).rstrip("\n")
+
+        label = next(lbl for a, lbl, _ in _FIELDS if a == attr)
+        popup = tk.Toplevel(self)
+        popup.title(label.rstrip(":"))
+        popup.geometry("560x320")
+        popup.grab_set()
+
+        text = tk.Text(popup, wrap="word", font=source.cget("font"))
+        text.insert("1.0", current)
+        scroll = ttk.Scrollbar(popup, orient="vertical", command=text.yview)
+        text.configure(yscrollcommand=scroll.set)
+        scroll.pack(side="right", fill="y")
+        text.pack(fill="both", expand=True, padx=8, pady=(8, 4))
+
+        def _apply() -> None:
+            source.delete("1.0", tk.END)
+            source.insert("1.0", text.get("1.0", tk.END).rstrip("\n"))
+            popup.destroy()
+
+        btn_row = ttk.Frame(popup)
+        btn_row.pack(fill="x", padx=8, pady=(0, 8))
+        ttk.Button(btn_row, text="Done", command=_apply, width=10).pack(side="left")
+        ttk.Button(btn_row, text="Cancel", command=popup.destroy, width=10).pack(
+            side="left", padx=4
+        )
+        popup.bind("<Escape>", lambda _e: popup.destroy())
+        text.focus_set()
 
     def navigate_to_week(self, week_key: str) -> None:
         """Navigate to *week_key* and reload the review form.

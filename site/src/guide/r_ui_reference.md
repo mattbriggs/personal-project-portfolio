@@ -26,7 +26,9 @@ The minimum window size is 1024 × 768 pixels. The window is resizable; both pan
 
 ## Left Panel — Week Navigator
 
-The left panel displays a scrollable list of week keys in YYYY.W format. The list shows the 12 preceding weeks, the current week \(highlighted\), and the 4 following weeks. Clicking a week navigates the Sessions and Weekly Review tabs to that week.
+The left panel displays a scrollable list of week keys in YYYY.W format. The list shows the 12 preceding weeks, the current week \(highlighted\), and at least 4 following weeks. Clicking a week navigates the Sessions and Weekly Review tabs to that week.
+
+The **More Weeks ▼** button at the bottom of the list appends 4 additional future weeks each time it is clicked, allowing the timeline to extend as far forward as needed.
 
 ## Dashboard Tab
 
@@ -69,9 +71,11 @@ Lists all sessions for the selected week and provides tools to create, edit, and
 |Control|Action|
 |-------|------|
 |Project dropdown|Selects the project whose milestones are displayed.|
-|Milestone table|Columns: Description, Status, Target Date, Notes. Sorted by sort\_order.|
+|Milestone table|Columns: Milestone, Target, Week, Total Min, Status.|
+|Milestone heading|Click to cycle sort: ascending ▲ → descending ▼ → original order. The arrow indicator reflects the active sort direction.|
 |New Milestone|Opens the Milestone dialog.|
-|Edit Milestone|Opens the Milestone dialog for the selected milestone.|
+|Edit Milestone|Double-click a row to open the Milestone dialog for the selected milestone.|
+|Set Status / Apply|Changes the status of the selected milestone without opening the dialog.|
 |Delete Milestone|Removes the selected milestone after confirmation.|
 
 ## Weekly Review Tab
@@ -81,7 +85,8 @@ Lists all sessions for the selected week and provides tools to create, edit, and
 |Review history list|Left panel listing all saved reviews by week key. Click any entry to view that review.|
 |Week selector|Text entry and navigation buttons for the review week.|
 |Load button|Loads or creates the review for the selected week.|
-|Review form|Eight text fields for reflection \(what moved, what stalled, signals, decision for next week\) and planning \(primary focus, project to deprioritize, risk to watch, first session target\).|
+|Review form|Eight text fields for reflection \(what moved, what stalled, signals, decision for next week\) and planning \(primary focus, project to deprioritize, risk to watch, first session target\). Each field displays three lines of text.|
+|Expand button \(⤢\)|Each field label row has a ⤢ button on the right. Clicking it opens a resizable popup editor pre-filled with the field's current content. Click **Done** to apply changes or **Cancel** \(or press Escape\) to discard them.|
 |Save Review|Saves the current review.|
 
 ## Settings Tab
