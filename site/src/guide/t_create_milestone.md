@@ -31,4 +31,7 @@ Milestones represent completed outcomes, not tasks. Describe each milestone as a
 
     The milestone appears in the Milestones list for the selected project.
 
+## Reorder milestones by name
+
+Click the **Milestone** column heading to sort the list alphabetically. Clicking again reverses the sort order \(▼\). A third click returns to the original order. You can rename a milestone to use a numbered prefix \(for example, "1. Outline approved", "2. First draft complete"\) so that clicking the heading sorts them in your intended sequence.
 

@@ -90,6 +90,11 @@ class MainWindow(tk.Tk):
 
         self._week_listbox.bind("<<ListboxSelect>>", self._on_week_select)
         self._week_keys: list[str] = []
+        self._extra_weeks: int = 0
+
+        ttk.Button(
+            left, text="More Weeks ▼", command=self._add_more_weeks
+        ).grid(row=2, column=0, columnspan=2, sticky="ew", padx=4, pady=(2, 4))
 
     def _build_right_panel(self) -> None:
         """Build the tabbed right panel and instantiate all views."""
@@ -150,8 +155,13 @@ class MainWindow(tk.Tk):
     # Left panel (week navigator) helpers
     # ------------------------------------------------------------------
 
+    def _add_more_weeks(self) -> None:
+        """Append 4 more future weeks to the week list."""
+        self._extra_weeks += 4
+        self._refresh_week_panel()
+
     def _refresh_week_panel(self) -> None:
-        """Populate the week list: 12 past weeks + current + 4 future weeks."""
+        """Populate the week list: 12 past weeks + current + 4 future weeks + any extras."""
         self._week_listbox.delete(0, tk.END)
         self._week_keys = []
 
@@ -159,8 +169,9 @@ class MainWindow(tk.Tk):
         monday_today = today - timedelta(days=today.weekday())
         start_monday = monday_today - timedelta(weeks=12)
 
+        total = 17 + self._extra_weeks  # 12 past + current + 4 future + extras
         current_idx: int | None = None
-        for i in range(17):  # 12 past + current + 4 future
+        for i in range(total):  # 12 past + current + 4 future
             wk_monday = start_monday + timedelta(weeks=i)
             wk_sunday = wk_monday + timedelta(days=6)
             iso = wk_monday.isocalendar()

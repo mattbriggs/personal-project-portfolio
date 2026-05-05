@@ -18,6 +18,8 @@ Complete your weekly review once per week, at the end of the week \(Friday eveni
 
     Be specific. "Novel Draft moved—completed three sessions and finished the outline" is more useful than "Things went well."
 
+    If you need more space than the three-line field provides, click the **⤢** button to the right of the field label to open a full-size editor. Click **Done** when finished to copy the text back, or **Cancel** to discard changes.
+
 6.  In the **What stalled** field, write honestly about which projects did not advance and why.
 
     Common causes: schedule conflict, decision paralysis, scope ambiguity, or loss of energy. Naming the cause helps you address it next week.
