@@ -5,13 +5,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
+    "dev": "vite frontend",
+    "build": "npm run typecheck && vite build frontend",
+    "preview": "vite preview --outDir frontend/dist",
+    "test": "vitest run --root frontend",
+    "test:watch": "vitest --root frontend",
+    "test:coverage": "vitest run --root frontend --coverage",
+    "typecheck": "tsc --noEmit -p frontend/tsconfig.json",
     "tauri": "tauri"
   },
   "dependencies": {

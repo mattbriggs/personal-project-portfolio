@@ -12,9 +12,15 @@ export interface WeekInfo {
   label: string;
 }
 
-/** ISO week number for a date (week containing the first Thursday). */
+/**
+ * ISO week number for a date (week containing the first Thursday).
+ *
+ * *date* is read as a UTC calendar date, matching {@link mondayOf} and the
+ * UTC-based dates in {@link WeekInfo}. To go from a local wall-clock instant
+ * (such as `new Date()`) use {@link utcCalendarDay} first.
+ */
 export function isoWeek(date: Date): { year: number; week: number } {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
   const day = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - day);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
@@ -59,9 +65,20 @@ export function weekInfo(key: string): WeekInfo {
   };
 }
 
+/**
+ * The calendar day *instant* falls on in local time, as a UTC-midnight date.
+ *
+ * The backend keys weeks off a naive local `date`, so the renderer resolves
+ * "which day is it" locally and only then hands the result to the UTC-based
+ * helpers here.
+ */
+function utcCalendarDay(instant: Date): Date {
+  return new Date(Date.UTC(instant.getFullYear(), instant.getMonth(), instant.getDate()));
+}
+
 /** Current week key. */
 export function currentWeekKey(now: Date = new Date()): string {
-  const { year, week } = isoWeek(now);
+  const { year, week } = isoWeek(utcCalendarDay(now));
   return `${year}.${week}`;
 }
 
