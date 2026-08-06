@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Portfolio Manager",
+  "version": "2.0.0",
+  "identifier": "com.mattbriggs.portfolio-manager",
+  "build": {
+    "frontendDist": "../frontend/dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "Portfolio Manager",
+        "width": 1280,
+        "height": 860,
+        "minWidth": 1024,
+        "minHeight": 768,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'",
+      "devCsp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg"],
+    "icon": ["icons/icon.png"],
+    "externalBin": ["binaries/portfolio-sidecar"],
+    "macOS": {
+      "minimumSystemVersion": "11.0"
+    }
+  }
+}

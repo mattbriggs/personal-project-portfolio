@@ -1,0 +1,2682 @@
+{
+  "components": {
+    "schemas": {
+      "DashboardResponse": {
+        "description": "Aggregate dashboard response for a single week.",
+        "properties": {
+          "budget_minutes": {
+            "title": "Budget Minutes",
+            "type": "integer"
+          },
+          "date_range": {
+            "title": "Date Range",
+            "type": "string"
+          },
+          "portfolio_score": {
+            "title": "Portfolio Score",
+            "type": "integer"
+          },
+          "portfolio_status": {
+            "enum": [
+              "green",
+              "yellow",
+              "red"
+            ],
+            "title": "Portfolio Status",
+            "type": "string"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardRowResponse"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "upcoming_milestones": {
+            "items": {
+              "$ref": "#/components/schemas/UpcomingMilestoneResponse"
+            },
+            "title": "Upcoming Milestones",
+            "type": "array"
+          },
+          "week_done_minutes": {
+            "title": "Week Done Minutes",
+            "type": "integer"
+          },
+          "week_key": {
+            "title": "Week Key",
+            "type": "string"
+          },
+          "week_remaining_minutes": {
+            "title": "Week Remaining Minutes",
+            "type": "integer"
+          },
+          "week_total_minutes": {
+            "title": "Week Total Minutes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "week_key",
+          "date_range",
+          "rows",
+          "portfolio_score",
+          "portfolio_status",
+          "week_total_minutes",
+          "week_done_minutes",
+          "week_remaining_minutes",
+          "budget_minutes",
+          "upcoming_milestones"
+        ],
+        "title": "DashboardResponse",
+        "type": "object"
+      },
+      "DashboardRowResponse": {
+        "description": "Per-project dashboard row.",
+        "properties": {
+          "completed": {
+            "title": "Completed",
+            "type": "integer"
+          },
+          "planned": {
+            "title": "Planned",
+            "type": "integer"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectResponse"
+          },
+          "remaining": {
+            "title": "Remaining",
+            "type": "integer"
+          },
+          "score": {
+            "$ref": "#/components/schemas/ScoreResponse"
+          }
+        },
+        "required": [
+          "project",
+          "score",
+          "planned",
+          "completed",
+          "remaining"
+        ],
+        "title": "DashboardRowResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "MilestoneCreateRequest": {
+        "description": "Request body for creating a milestone.",
+        "properties": {
+          "description": {
+            "minLength": 1,
+            "title": "Description",
+            "type": "string"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "project_id": {
+            "exclusiveMinimum": 0.0,
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "sort_order": {
+            "default": 0,
+            "title": "Sort Order",
+            "type": "integer"
+          },
+          "status": {
+            "default": "backlog",
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Date"
+          }
+        },
+        "required": [
+          "project_id",
+          "description"
+        ],
+        "title": "MilestoneCreateRequest",
+        "type": "object"
+      },
+      "MilestoneListResponse": {
+        "description": "List of milestones.",
+        "properties": {
+          "milestones": {
+            "items": {
+              "$ref": "#/components/schemas/MilestoneResponse"
+            },
+            "title": "Milestones",
+            "type": "array"
+          }
+        },
+        "required": [
+          "milestones"
+        ],
+        "title": "MilestoneListResponse",
+        "type": "object"
+      },
+      "MilestoneResponse": {
+        "description": "Milestone response body, including associated session minutes.",
+        "properties": {
+          "completed_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed Date"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "sort_order": {
+            "title": "Sort Order",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Date"
+          },
+          "total_session_minutes": {
+            "title": "Total Session Minutes",
+            "type": "integer"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "description",
+          "status",
+          "completed_date",
+          "target_date",
+          "sort_order",
+          "notes",
+          "total_session_minutes",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "MilestoneResponse",
+        "type": "object"
+      },
+      "MilestoneStatusRequest": {
+        "description": "Request body for a milestone status transition.",
+        "properties": {
+          "status": {
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "MilestoneStatusRequest",
+        "type": "object"
+      },
+      "MilestoneUpdateRequest": {
+        "description": "Request body for updating a milestone.",
+        "properties": {
+          "description": {
+            "minLength": 1,
+            "title": "Description",
+            "type": "string"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "sort_order": {
+            "default": 0,
+            "title": "Sort Order",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Date"
+          }
+        },
+        "required": [
+          "description",
+          "status"
+        ],
+        "title": "MilestoneUpdateRequest",
+        "type": "object"
+      },
+      "OkResponse": {
+        "description": "Generic success acknowledgement for operations without a body.\n\n:param ok: Always ``True``.",
+        "properties": {
+          "ok": {
+            "default": true,
+            "title": "Ok",
+            "type": "boolean"
+          }
+        },
+        "title": "OkResponse",
+        "type": "object"
+      },
+      "PlanResponse": {
+        "description": "Raw Markdown plan content for a project.\n\n:param project_id: Owning project.\n:param content: Markdown text (may be empty).",
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "project_id",
+          "content"
+        ],
+        "title": "PlanResponse",
+        "type": "object"
+      },
+      "PlanSaveRequest": {
+        "description": "Request body for saving plan content.\n\n:param content: New Markdown text.",
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "PlanSaveRequest",
+        "type": "object"
+      },
+      "ProjectCreateRequest": {
+        "description": "Request body for creating a project.",
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "owner": {
+            "default": "Matt Briggs",
+            "title": "Owner",
+            "type": "string"
+          },
+          "priority": {
+            "default": 3,
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Priority",
+            "type": "integer"
+          },
+          "review_cadence": {
+            "default": "weekly",
+            "title": "Review Cadence",
+            "type": "string"
+          },
+          "started_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started Date"
+          },
+          "status": {
+            "default": "active",
+            "enum": [
+              "active",
+              "backlog",
+              "archive"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ProjectCreateRequest",
+        "type": "object"
+      },
+      "ProjectListResponse": {
+        "description": "List of projects.",
+        "properties": {
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/ProjectResponse"
+            },
+            "title": "Projects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "projects"
+        ],
+        "title": "ProjectListResponse",
+        "type": "object"
+      },
+      "ProjectResponse": {
+        "description": "Project response body.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "owner": {
+            "title": "Owner",
+            "type": "string"
+          },
+          "priority": {
+            "title": "Priority",
+            "type": "integer"
+          },
+          "review_cadence": {
+            "title": "Review Cadence",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "started_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started Date"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "backlog",
+              "archive"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "status",
+          "priority",
+          "started_date",
+          "end_date",
+          "owner",
+          "review_cadence",
+          "description",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ProjectResponse",
+        "type": "object"
+      },
+      "ProjectUpdateRequest": {
+        "description": "Request body for updating a project (full replacement of editable fields).",
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "owner": {
+            "default": "Matt Briggs",
+            "title": "Owner",
+            "type": "string"
+          },
+          "priority": {
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Priority",
+            "type": "integer"
+          },
+          "review_cadence": {
+            "default": "weekly",
+            "title": "Review Cadence",
+            "type": "string"
+          },
+          "started_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started Date"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "backlog",
+              "archive"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "status",
+          "priority"
+        ],
+        "title": "ProjectUpdateRequest",
+        "type": "object"
+      },
+      "ReviewListResponse": {
+        "description": "List of weekly reviews, most recent first.",
+        "properties": {
+          "reviews": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewResponse"
+            },
+            "title": "Reviews",
+            "type": "array"
+          }
+        },
+        "required": [
+          "reviews"
+        ],
+        "title": "ReviewListResponse",
+        "type": "object"
+      },
+      "ReviewResponse": {
+        "description": "Weekly review response body.",
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "date_from": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date From"
+          },
+          "date_to": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date To"
+          },
+          "decision_next_week": {
+            "title": "Decision Next Week",
+            "type": "string"
+          },
+          "first_session_target": {
+            "title": "First Session Target",
+            "type": "string"
+          },
+          "hours_invested": {
+            "title": "Hours Invested",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "primary_focus": {
+            "title": "Primary Focus",
+            "type": "string"
+          },
+          "project_to_deprioritize": {
+            "title": "Project To Deprioritize",
+            "type": "string"
+          },
+          "risk_to_watch": {
+            "title": "Risk To Watch",
+            "type": "string"
+          },
+          "sessions_completed": {
+            "title": "Sessions Completed",
+            "type": "integer"
+          },
+          "signals": {
+            "title": "Signals",
+            "type": "string"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "week_key": {
+            "title": "Week Key",
+            "type": "string"
+          },
+          "what_moved": {
+            "title": "What Moved",
+            "type": "string"
+          },
+          "what_stalled": {
+            "title": "What Stalled",
+            "type": "string"
+          },
+          "written_to_repo": {
+            "title": "Written To Repo",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "week_key",
+          "date_from",
+          "date_to",
+          "hours_invested",
+          "sessions_completed",
+          "what_moved",
+          "what_stalled",
+          "signals",
+          "decision_next_week",
+          "primary_focus",
+          "project_to_deprioritize",
+          "risk_to_watch",
+          "first_session_target",
+          "written_to_repo",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ReviewResponse",
+        "type": "object"
+      },
+      "ReviewSaveRequest": {
+        "description": "Request body for saving a weekly review.\n\n``week_key`` comes from the path; the date range is derived server-side.",
+        "properties": {
+          "decision_next_week": {
+            "default": "",
+            "title": "Decision Next Week",
+            "type": "string"
+          },
+          "first_session_target": {
+            "default": "",
+            "title": "First Session Target",
+            "type": "string"
+          },
+          "hours_invested": {
+            "default": 0.0,
+            "minimum": 0.0,
+            "title": "Hours Invested",
+            "type": "number"
+          },
+          "primary_focus": {
+            "default": "",
+            "title": "Primary Focus",
+            "type": "string"
+          },
+          "project_to_deprioritize": {
+            "default": "",
+            "title": "Project To Deprioritize",
+            "type": "string"
+          },
+          "risk_to_watch": {
+            "default": "",
+            "title": "Risk To Watch",
+            "type": "string"
+          },
+          "sessions_completed": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Sessions Completed",
+            "type": "integer"
+          },
+          "signals": {
+            "default": "",
+            "title": "Signals",
+            "type": "string"
+          },
+          "what_moved": {
+            "default": "",
+            "title": "What Moved",
+            "type": "string"
+          },
+          "what_stalled": {
+            "default": "",
+            "title": "What Stalled",
+            "type": "string"
+          },
+          "written_to_repo": {
+            "default": false,
+            "title": "Written To Repo",
+            "type": "boolean"
+          }
+        },
+        "title": "ReviewSaveRequest",
+        "type": "object"
+      },
+      "ScoreOverrideRequest": {
+        "description": "Request body for a manual score override.\n\n``reason`` is required and non-empty (SRS \u00a73.10 Score).",
+        "properties": {
+          "project_id": {
+            "exclusiveMinimum": 0.0,
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "reason": {
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "score": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "green",
+              "yellow",
+              "red"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_note": {
+            "default": "",
+            "title": "Status Note",
+            "type": "string"
+          },
+          "week_key": {
+            "title": "Week Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "week_key",
+          "score",
+          "status",
+          "reason"
+        ],
+        "title": "ScoreOverrideRequest",
+        "type": "object"
+      },
+      "ScoreResponse": {
+        "description": "Project score response body.",
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_manual_override": {
+            "title": "Is Manual Override",
+            "type": "boolean"
+          },
+          "override_reason": {
+            "title": "Override Reason",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "green",
+              "yellow",
+              "red"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_note": {
+            "title": "Status Note",
+            "type": "string"
+          },
+          "week_key": {
+            "title": "Week Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "week_key",
+          "score",
+          "status",
+          "status_note",
+          "is_manual_override",
+          "override_reason",
+          "created_at"
+        ],
+        "title": "ScoreResponse",
+        "type": "object"
+      },
+      "SessionCreateRequest": {
+        "description": "Request body for creating a session.",
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "duration_minutes": {
+            "anyOf": [
+              {
+                "maximum": 480.0,
+                "minimum": 15.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Minutes"
+          },
+          "milestone_id": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Milestone Id"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "project_id": {
+            "exclusiveMinimum": 0.0,
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "scheduled_date": {
+            "format": "date",
+            "title": "Scheduled Date",
+            "type": "string"
+          },
+          "status": {
+            "default": "backlog",
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "scheduled_date"
+        ],
+        "title": "SessionCreateRequest",
+        "type": "object"
+      },
+      "SessionListResponse": {
+        "description": "List of sessions.",
+        "properties": {
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/SessionResponse"
+            },
+            "title": "Sessions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sessions"
+        ],
+        "title": "SessionListResponse",
+        "type": "object"
+      },
+      "SessionRescheduleRequest": {
+        "description": "Request body for rescheduling a session.",
+        "properties": {
+          "scheduled_date": {
+            "format": "date",
+            "title": "Scheduled Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scheduled_date"
+        ],
+        "title": "SessionRescheduleRequest",
+        "type": "object"
+      },
+      "SessionResponse": {
+        "description": "Session response body.",
+        "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "duration_minutes": {
+            "title": "Duration Minutes",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "milestone_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Milestone Id"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "scheduled_date": {
+            "format": "date",
+            "title": "Scheduled Date",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "week_key": {
+            "title": "Week Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "milestone_id",
+          "scheduled_date",
+          "week_key",
+          "duration_minutes",
+          "status",
+          "description",
+          "notes",
+          "created_at",
+          "completed_at"
+        ],
+        "title": "SessionResponse",
+        "type": "object"
+      },
+      "SessionStatusRequest": {
+        "description": "Request body for a session status transition.",
+        "properties": {
+          "status": {
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "SessionStatusRequest",
+        "type": "object"
+      },
+      "SessionUpdateRequest": {
+        "description": "Request body for updating an existing session.",
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "duration_minutes": {
+            "maximum": 480.0,
+            "minimum": 15.0,
+            "title": "Duration Minutes",
+            "type": "integer"
+          },
+          "milestone_id": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Milestone Id"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          },
+          "project_id": {
+            "exclusiveMinimum": 0.0,
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "scheduled_date": {
+            "format": "date",
+            "title": "Scheduled Date",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "backlog",
+              "planned",
+              "doing",
+              "done",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "scheduled_date",
+          "duration_minutes",
+          "status"
+        ],
+        "title": "SessionUpdateRequest",
+        "type": "object"
+      },
+      "SettingsResponse": {
+        "description": "Settings response, exposing a resolved (display) database path.\n\nThe active path (currently opened by the sidecar) is reported separately so\nthe UI can show a pending restart-required change (SRS \u00a75.13).",
+        "properties": {
+          "active_database_path": {
+            "title": "Active Database Path",
+            "type": "string"
+          },
+          "database_path": {
+            "title": "Database Path",
+            "type": "string"
+          },
+          "default_duration_minutes": {
+            "title": "Default Duration Minutes",
+            "type": "integer"
+          },
+          "log_level": {
+            "title": "Log Level",
+            "type": "string"
+          },
+          "resolved_database_path": {
+            "title": "Resolved Database Path",
+            "type": "string"
+          },
+          "theme": {
+            "title": "Theme",
+            "type": "string"
+          },
+          "weekly_budget_hours": {
+            "title": "Weekly Budget Hours",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "log_level",
+          "theme",
+          "default_duration_minutes",
+          "weekly_budget_hours",
+          "database_path",
+          "resolved_database_path",
+          "active_database_path"
+        ],
+        "title": "SettingsResponse",
+        "type": "object"
+      },
+      "SettingsUpdateRequest": {
+        "description": "Request body for updating settings.\n\nValidation bounds mirror :mod:`portfolio_manager.infrastructure.config.models`.",
+        "properties": {
+          "database_path": {
+            "minLength": 1,
+            "title": "Database Path",
+            "type": "string"
+          },
+          "default_duration_minutes": {
+            "maximum": 480.0,
+            "minimum": 15.0,
+            "title": "Default Duration Minutes",
+            "type": "integer"
+          },
+          "log_level": {
+            "title": "Log Level",
+            "type": "string"
+          },
+          "theme": {
+            "title": "Theme",
+            "type": "string"
+          },
+          "weekly_budget_hours": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Weekly Budget Hours",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "log_level",
+          "theme",
+          "default_duration_minutes",
+          "weekly_budget_hours",
+          "database_path"
+        ],
+        "title": "SettingsUpdateRequest",
+        "type": "object"
+      },
+      "UpcomingMilestoneResponse": {
+        "description": "An upcoming milestone with its target date.",
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "project_name": {
+            "title": "Project Name",
+            "type": "string"
+          },
+          "target_date": {
+            "format": "date",
+            "title": "Target Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_name",
+          "description",
+          "target_date"
+        ],
+        "title": "UpcomingMilestoneResponse",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Portfolio Manager Sidecar",
+    "version": "2.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/dashboard": {
+      "get": {
+        "description": "Return the aggregate dashboard for a week (defaults to the current week).",
+        "operationId": "get_dashboard_view_api_v1_dashboard_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "week_key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Week Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Dashboard View",
+        "tags": [
+          "dashboard"
+        ]
+      }
+    },
+    "/api/v1/milestones": {
+      "post": {
+        "description": "Create a milestone.",
+        "operationId": "create_milestone_api_v1_milestones_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MilestoneCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilestoneResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Milestone",
+        "tags": [
+          "milestones"
+        ]
+      }
+    },
+    "/api/v1/milestones/{milestone_id}": {
+      "delete": {
+        "description": "Delete a milestone permanently.",
+        "operationId": "delete_milestone_api_v1_milestones__milestone_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "milestone_id",
+            "required": true,
+            "schema": {
+              "title": "Milestone Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OkResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Milestone",
+        "tags": [
+          "milestones"
+        ]
+      },
+      "get": {
+        "description": "Fetch a single milestone.",
+        "operationId": "get_milestone_api_v1_milestones__milestone_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "milestone_id",
+            "required": true,
+            "schema": {
+              "title": "Milestone Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilestoneResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Milestone",
+        "tags": [
+          "milestones"
+        ]
+      },
+      "put": {
+        "description": "Update a milestone's editable fields.",
+        "operationId": "update_milestone_api_v1_milestones__milestone_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "milestone_id",
+            "required": true,
+            "schema": {
+              "title": "Milestone Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MilestoneUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilestoneResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Milestone",
+        "tags": [
+          "milestones"
+        ]
+      }
+    },
+    "/api/v1/milestones/{milestone_id}/status": {
+      "post": {
+        "description": "Transition a milestone to a new status.",
+        "operationId": "set_status_api_v1_milestones__milestone_id__status_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "milestone_id",
+            "required": true,
+            "schema": {
+              "title": "Milestone Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MilestoneStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilestoneResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Status",
+        "tags": [
+          "milestones"
+        ]
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "description": "List projects, optionally filtered by status (``None`` returns all).",
+        "operationId": "list_projects_api_v1_projects_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "active",
+                    "backlog",
+                    "archive"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Projects",
+        "tags": [
+          "projects"
+        ]
+      },
+      "post": {
+        "description": "Create a project.",
+        "operationId": "create_project_api_v1_projects_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Project",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_id}": {
+      "delete": {
+        "description": "Permanently delete a project and its cascaded records.",
+        "operationId": "delete_project_api_v1_projects__project_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OkResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Project",
+        "tags": [
+          "projects"
+        ]
+      },
+      "get": {
+        "description": "Fetch a single project.",
+        "operationId": "get_project_api_v1_projects__project_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Project",
+        "tags": [
+          "projects"
+        ]
+      },
+      "put": {
+        "description": "Update a project's editable fields.",
+        "operationId": "update_project_api_v1_projects__project_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Project",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_id}/archive": {
+      "post": {
+        "description": "Archive a project (makes it read-only).",
+        "operationId": "archive_project_api_v1_projects__project_id__archive_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Archive Project",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_id}/milestones": {
+      "get": {
+        "description": "List a project's milestones (ordered) with session-minute totals.",
+        "operationId": "list_milestones_api_v1_projects__project_id__milestones_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilestoneListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Milestones",
+        "tags": [
+          "milestones"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_id}/plan": {
+      "get": {
+        "description": "Return a project's raw Markdown plan content.",
+        "operationId": "get_plan_api_v1_projects__project_id__plan_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Plan",
+        "tags": [
+          "projects"
+        ]
+      },
+      "put": {
+        "description": "Persist a project's Markdown plan content.",
+        "operationId": "save_plan_api_v1_projects__project_id__plan_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanSaveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Plan",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/v1/reviews": {
+      "get": {
+        "description": "List all weekly reviews, most recent first.",
+        "operationId": "list_reviews_api_v1_reviews_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Reviews",
+        "tags": [
+          "reviews"
+        ]
+      }
+    },
+    "/api/v1/reviews/{week_key}": {
+      "get": {
+        "description": "Return the review for *week_key*, or a transient blank one if absent.",
+        "operationId": "get_or_create_review_api_v1_reviews__week_key__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "week_key",
+            "required": true,
+            "schema": {
+              "title": "Week Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Or Create Review",
+        "tags": [
+          "reviews"
+        ]
+      },
+      "put": {
+        "description": "Persist a weekly review for *week_key*.",
+        "operationId": "save_review_api_v1_reviews__week_key__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "week_key",
+            "required": true,
+            "schema": {
+              "title": "Week Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewSaveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Review",
+        "tags": [
+          "reviews"
+        ]
+      }
+    },
+    "/api/v1/scores/override": {
+      "post": {
+        "description": "Persist a manual score override (requires a non-empty reason).",
+        "operationId": "override_score_api_v1_scores_override_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoreOverrideRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScoreResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Override Score",
+        "tags": [
+          "scores"
+        ]
+      }
+    },
+    "/api/v1/sessions": {
+      "get": {
+        "description": "List all sessions for a given week.",
+        "operationId": "list_sessions_api_v1_sessions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "week_key",
+            "required": true,
+            "schema": {
+              "title": "Week Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Sessions",
+        "tags": [
+          "sessions"
+        ]
+      },
+      "post": {
+        "description": "Create a session, applying the configured default duration when omitted.",
+        "operationId": "create_session_api_v1_sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Session",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/api/v1/sessions/{session_id}": {
+      "delete": {
+        "description": "Delete a session permanently.",
+        "operationId": "delete_session_api_v1_sessions__session_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OkResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Session",
+        "tags": [
+          "sessions"
+        ]
+      },
+      "get": {
+        "description": "Fetch a single session.",
+        "operationId": "get_session_api_v1_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Session",
+        "tags": [
+          "sessions"
+        ]
+      },
+      "put": {
+        "description": "Update a session's editable fields (week key re-derived from date).",
+        "operationId": "update_session_api_v1_sessions__session_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Session",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/api/v1/sessions/{session_id}/reschedule": {
+      "post": {
+        "description": "Reschedule a session and recompute its week key.",
+        "operationId": "reschedule_api_v1_sessions__session_id__reschedule_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionRescheduleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reschedule",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/api/v1/sessions/{session_id}/status": {
+      "post": {
+        "description": "Transition a session to a new status.",
+        "operationId": "set_status_api_v1_sessions__session_id__status_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Status",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/api/v1/settings": {
+      "get": {
+        "description": "Return current settings, including the active database path.",
+        "operationId": "get_settings_api_v1_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Settings",
+        "tags": [
+          "settings"
+        ]
+      },
+      "put": {
+        "description": "Persist settings. A database-path change reports ``restart_required``.\n\nThe response's ``active_database_path`` differs from ``resolved_database_path``\nwhen a restart is pending, so the UI can surface the difference.",
+        "operationId": "update_settings_api_v1_settings_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Settings",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Report process liveness.\n\n:returns: ``{\"status\": \"ok\"}``.\n:rtype: dict[str, str]",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/ready": {
+      "get": {
+        "description": "Report operational readiness by probing the database.\n\n:returns: ``{\"status\": \"ready\"}`` when the database responds.\n:rtype: dict[str, str]",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Ready Ready Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  }
+}

@@ -1,114 +1,126 @@
 # Portfolio Manager
 
-A personal desktop application for managing, scheduling, and executing work across a portfolio of creative and technical projects using time-boxed sessions.
+A personal, **local-first desktop application** for managing, scheduling, and
+executing work across a portfolio of creative and technical projects using
+time-boxed sessions.
 
-## Features
+This repository is being migrated from a Python/Tkinter desktop app to a **Tauri
++ React + Python (FastAPI) architecture**. The new stack lives in `backend/`,
+`frontend/`, and `src-tauri/`; the original Tkinter app remains in `src/` until
+feature parity is confirmed (see [design report](design/Portfolio-Manager-Tauri-React-Python-SRS-Design-Report.md)
+and [implementation plan](design/Portfolio-Manager-Tauri-React-Python-Implementation.md)).
 
-- **Portfolio dashboard** — traffic-light status indicators, scores, weekly session totals, and upcoming milestones at a glance
-- **Project management** — active / backlog / archive lifecycle with priority 1–5 ordering
-- **Session scheduling** — time-boxed work units (15–480 min, default 90 min) linked to projects, milestones, and weeks
-- **Weekly budget tracking** — configurable weekly hour budget with a live planned/done/remaining summary in the Sessions tab
-- **Milestone tracking** — outcome-based milestones with full status lifecycle (backlog → planned → doing → done / cancelled)
-- **Plan documents** — per-project Markdown editor with live Mermaid diagram preview
-- **Weekly review** — structured reflection form with a browsable history of past reviews
-- **Scoring** — configurable algorithm (session completion + milestone ratio)
-- **Auto-save** — all changes commit immediately; no explicit save required
-- **macOS Dock shortcut** — one-click launch via a native `.app` bundle
+## Target architecture
 
-## Requirements
-
-- Python 3.11 or later
-- macOS (primary) — core logic runs on Linux too
-
-## Quick Start
-
-### Option 1 — Dock shortcut (recommended for daily use)
-
-```bash
-git clone <repo-url> portfolio-manager
-cd portfolio-manager
-bash create_shortcut.sh
+```
+React renderer
+  → typed Tauri command client        (frontend/src/command-client)
+  → allowlisted Tauri command          (src-tauri/src/commands)
+  → authenticated Rust HTTP forwarder  (src-tauri/src/http)
+  → loopback-only FastAPI route        (backend/.../api/routes)
+  → Pydantic contract                  (backend/.../contracts)
+  → application service                (backend/.../application/services)
+  → repository port → SQLite           (backend/.../infrastructure/db)
 ```
 
-The script creates `.venv`, installs dependencies, and writes
-`~/Applications/Portfolio Manager.app`. Drag it to the Dock.
+The renderer never contacts the sidecar directly. The sidecar binds only to
+`127.0.0.1` on a dynamic port and requires a per-launch `X-API-Key` token that
+lives solely in Rust in-memory state — it is never written to disk, sent to the
+renderer, or logged.
 
-### Option 2 — Shell script
+## Supported platforms
 
-```bash
-git clone <repo-url> portfolio-manager
-cd portfolio-manager
-bash launch.sh
-```
+macOS is the first release target (Apple Silicon / Intel). Windows and Linux
+follow after macOS parity. Core Python logic runs on any platform.
 
-`launch.sh` creates the venv on first run and launches the app every time.
+## Prerequisites
 
-### Option 3 — Command line (development)
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .[dev]
-python -m portfolio_manager
-```
-
-## Updating
-
-```bash
-git pull origin main
-.venv/bin/pip install -e .[dev] --quiet
-```
-
-No rebuild of the `.app` bundle is required — it calls `launch.sh` which always uses the current source.
+- Python 3.11+
+- Node 18+ and npm
+- Rust **≥ 1.85** and the Tauri CLI (`cargo install tauri-cli` or `npm run tauri`).
+  Rust 1.85 is required by the current Tauri 2.x dependency tree — see
+  [docs/development/rust-toolchain.md](docs/development/rust-toolchain.md).
 
 ## Development
 
+### Backend (FastAPI sidecar)
+
 ```bash
-# Install with dev dependencies
-pip install -e .[dev]
-
-# Run tests
-pytest
-
-# Lint
-ruff check src/ tests/
-
-# Format
-black src/ tests/
-
-# Build docs
-mkdocs build --config-file site/mkdocs.yml       # output → docs/ (GitHub Pages)
-mkdocs serve --config-file site/mkdocs.yml       # live preview at http://127.0.0.1:8000
+cd backend
+python -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/pytest                       # 84 tests, ~85% coverage
 ```
 
-## Configuration
+Run the sidecar directly (loopback + token auth):
 
-On first launch the application writes defaults to `~/.portfolio_manager/config.toml`.
-Edit that file to override settings:
-
-```toml
-[app]
-log_level = "INFO"
-theme = "light"
-
-[session]
-default_duration_minutes = 90
-weekly_budget_hours = 12
-
-[database]
-path = "~/.portfolio_manager/portfolio.db"
+```bash
+PORTFOLIO_SIDECAR_TOKEN=dev-token \
+  .venv/bin/python -m portfolio_manager.cli.sidecar --port 8765
+curl -s 127.0.0.1:8765/health
+curl -s -H "X-API-Key: dev-token" 127.0.0.1:8765/api/v1/projects
 ```
 
-## Project Structure
+### Frontend (React renderer)
 
+```bash
+npm install
+npm run test        # Vitest component tests
+npm run build       # type-check + production bundle
 ```
-src/portfolio_manager/   # Application source
-tests/                   # Unit, integration, and e2e tests
-docs/                    # MkDocs documentation site
-launch.sh                # Daily-use launcher
-create_shortcut.sh       # macOS .app bundle creator
-pyproject.toml           # Build config and dependencies
+
+### Tauri shell
+
+```bash
+cd src-tauri
+cargo test          # security / supervisor / forwarder unit tests (Rust >= 1.85)
+npm run tauri dev   # from repo root — runs the full stack
 ```
+
+### Contract types
+
+```bash
+python scripts/generate_openapi.py     # regenerate frontend/src/contracts/generated
+python scripts/verify_no_renderer_http.py   # assert renderer has no direct HTTP
+```
+
+### Package the sidecar
+
+```bash
+pip install -e "backend[dev,package]"
+python scripts/build_sidecar.py --target-triple x86_64-apple-darwin
+```
+
+## Default local paths
+
+| Purpose | Path |
+| --- | --- |
+| Config | `~/.portfolio_manager/config.toml` |
+| Database | `~/.portfolio_manager/portfolio.db` |
+| Backups | `~/.portfolio_manager/portfolio.db.bak` |
+| Logs | `~/.portfolio_manager/logs/` |
+
+Existing Tkinter-created databases (schema v1–v4) open without manual conversion;
+a backup is written before any pending migration.
+
+## Security boundary summary
+
+- Dynamic loopback port + cryptographically random per-launch token.
+- Token in Rust in-memory state only (`secrecy::SecretString`); never persisted,
+  sent to the renderer, or logged.
+- Every non-health route requires `X-API-Key`; `/health` and `/ready` are
+  unauthenticated and expose no sensitive data (ADR-007).
+- Production builds disable Swagger/ReDoc/OpenAPI and WebView devtools.
+- No generic renderer command; the Tauri command allowlist is the full surface.
+
+See [docs/architecture/decisions](docs/architecture/decisions) for the ADRs and
+[docs/requirements/traceability.md](docs/requirements/traceability.md) for the
+requirement-to-test matrix.
+
+## Legacy Tkinter app
+
+The original app still runs from `src/` via `bash launch.sh`. It will be retired
+once the Tauri app reaches accepted parity (implementation plan, Phase 17).
 
 ## License
 
