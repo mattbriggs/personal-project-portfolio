@@ -1,123 +1,123 @@
 # Testing
 
-## Running Tests
+Four suites cover the two applications. All figures below were measured on
+macOS with Python 3.12, Node 22, and Rust 1.97.
+
+| Suite | Command | Tests | Coverage |
+| --- | --- | ---: | --- |
+| Sidecar backend | `cd backend && pytest` | 84 | ~85% line |
+| React renderer | `npm test` | 11 | — |
+| Tauri shell | `cd src-tauri && cargo test` | 10 | — |
+| Legacy Tkinter app | `pytest tests` | 147 | 92.85% |
+
+Coverage target is **80%** for Python, enforced with `--cov-fail-under=80` on
+the legacy suite.
+
+---
+
+## Sidecar backend
 
 ```bash
-# Run the full test suite with coverage
-pytest
+python -m venv .venv
+.venv/bin/pip install -e "backend[dev]"
+cd backend
+../.venv/bin/pytest                          # all 84
+../.venv/bin/pytest tests/unit               # domain + services
+../.venv/bin/pytest --cov=portfolio_manager  # with coverage
+```
 
-# Run a specific tier
-pytest tests/unit/
-pytest tests/integration/
-pytest tests/e2e/
+### Tiers
 
-# Run with verbose output
-pytest -v
+| Tier | Path | What it covers |
+| --- | --- | --- |
+| Unit — domain | `tests/unit/domain/` | Scoring thresholds (59/60/79/80), ISO week boundaries, slug rules |
+| Unit — services | `tests/unit/application/` | Project, session, milestone, review, and scoring service rules |
+| Integration | `tests/integration/` | Repository CRUD and cascade, migration idempotency, backup-before-migrate |
+| Contract | `tests/contract/` | Auth (missing / invalid / valid token), full workflow, production hardening |
+| Compatibility | `tests/compatibility/` | A v2-schema legacy database upgrades to v4 and preserves data across restart |
 
-# Run a single file
-pytest tests/unit/test_scoring_service.py
+The contract tests drive the API through FastAPI's `TestClient` in-process.
+That is deliberate: it needs no running server and no network, so the suite
+works in sandboxes where a cross-process request to a locally started sidecar
+would be blocked.
+
+`test_production_hardening.py` asserts the things that must *not* be present in
+a production build — Swagger, ReDoc, and the OpenAPI schema all return 404.
+
+---
+
+## React renderer
+
+```bash
+npm test                # Vitest, jsdom
+npm run test:watch
+npm run test:coverage
+npm run typecheck       # tsc --noEmit, strict
+```
+
+Component tests use Testing Library and drive real user interactions
+(`@testing-library/user-event`) rather than calling handlers directly.
+
+!!! warning "Run the scripts, not the tools"
+    `vite.config.ts` and `tsconfig.json` live in `frontend/`, but the npm
+    scripts live in the root `package.json`. The scripts pass the correct root
+    through. Invoking `vitest` or `tsc` bare from the repository root finds no
+    config, silently skips the jsdom environment and setup file, and reports
+    failures that have nothing to do with your code.
+
+### Timezone sensitivity
+
+`src/utils/week.test.ts` covers the week-key helpers, which convert between
+local wall-clock time and the UTC-based dates the rest of the module uses. A
+mismatch there produces an off-by-one week **only** in timezones behind UTC — a
+suite that runs in UTC will pass with the bug present. When touching
+`utils/week.ts`, run the suite under at least one negative-offset zone:
+
+```bash
+TZ=America/Los_Angeles npm test
+TZ=UTC npm test
+TZ=Asia/Tokyo npm test
 ```
 
 ---
 
-## Coverage Target
+## Tauri shell
 
-**Minimum: 80%** across all source files.
-
-Coverage configuration in `pyproject.toml`:
-
-```toml
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "--cov=src/portfolio_manager --cov-report=term-missing --cov-fail-under=80"
-
-[tool.coverage.run]
-source = ["src/portfolio_manager"]
-omit = ["*/views/*", "*/controllers/*", "*/__main__.py"]
+```bash
+cd src-tauri
+cargo test
+cargo test -- --test-threads=1   # deterministic; see below
 ```
 
-Views and controllers are excluded from coverage since Tkinter GUI code cannot be reliably tested headlessly.
+Ten unit tests cover token entropy and redaction, loopback port selection, the
+sidecar launch plan (asserting the token never appears in `argv`), readiness
+timeout, and child-process shutdown.
+
+The build requires a frozen sidecar binary and an RGBA icon to exist before it
+will compile at all — see [Development](development.md#tauri-shell).
+
+!!! bug "Known flaky test"
+    `security::port::tests::picks_a_nonzero_loopback_port` fails roughly 1 run
+    in 10 under parallel execution, and never under `--test-threads=1`. It
+    asserts that a released ephemeral port is immediately re-bindable, which is
+    exactly the race `security/port.rs` documents as unavoidable and mitigates
+    with readiness polling. The production code is correct; the assertion is
+    stronger than the design guarantees.
 
 ---
 
-## Test Tiers
+## Legacy Tkinter app
 
-```mermaid
-graph TD
-    subgraph "Unit Tests — fast, isolated"
-        U1[test_models.py — dataclass construction and validation]
-        U2[test_scoring_service.py — algorithm and strategy]
-        U3[test_week_service.py — week key computation]
-        U4[test_plan_service.py — Markdown rendering pipeline]
-        U5[test_date_utils.py — ISO week helpers]
-    end
-
-    subgraph "Integration Tests — real SQLite in-memory"
-        I1[test_project_repository.py — CRUD + cascade]
-        I2[test_session_repository.py — CRUD + count_by_status]
-        I3[test_milestone_repository.py — toggle + count]
-        I4[test_project_service.py — service + repo + event bus]
-    end
-
-    subgraph "E2E Tests — headless"
-        E1[test_app_startup.py — full startup smoke test]
-    end
+```bash
+pytest tests                       # 147 tests, 92.85% coverage
+pytest tests/unit
+pytest tests/integration
+pytest tests/e2e                   # requires a Tk-capable Python
 ```
 
----
-
-## Shared Fixtures (`tests/conftest.py`)
-
-| Fixture | Type | Description |
-|---------|------|-------------|
-| `reset_singletons` | autouse | Resets `DatabaseConnection` and `EventBus` before/after each test |
-| `in_memory_db` | `DatabaseConnection` | Fully migrated in-memory SQLite connection |
-| `test_config` | `Settings` | Settings pointing at `:memory:` database |
-| `sample_project` | `Project` | A persisted active project with `plan_content` |
-| `sample_sessions` | `list[Session]` | Three sessions (planned, completed, cancelled) for `sample_project` |
-
----
-
-## Writing Unit Tests
-
-Unit tests use **fake repositories** — plain Python objects that satisfy the interface without hitting a database:
-
-```python
-class _FakeProjectRepo:
-    def __init__(self, plan_content=""):
-        from portfolio_manager.models.project import Project
-        self._project = Project(id=1, name="Test", slug="test", plan_content=plan_content)
-
-    def get(self, project_id):
-        return self._project
-
-    def update_plan(self, project_id, content):
-        self._project.plan_content = content
-```
-
----
-
-## Writing Integration Tests
-
-Integration tests use the `in_memory_db` fixture and create real repository instances:
-
-```python
-@pytest.fixture
-def repo(in_memory_db):
-    return ProjectRepository(in_memory_db)
-
-def test_create_assigns_id(repo):
-    p = repo.create(Project(name="Novel", slug="novel", status="active"))
-    assert p.id > 0
-```
-
----
-
-## E2E / GUI Testing
-
-Tkinter tests are minimised because GUI testing is fragile and platform-dependent.
-
-The headless startup test uses `Tk.withdraw()` to suppress the window:
+Views and controllers are excluded from coverage — Tkinter GUI code cannot be
+tested reliably headlessly. The e2e startup test calls `Tk.withdraw()` to
+suppress the window and skips itself when no display is available:
 
 ```python
 def test_builds_without_error(headless_settings):
@@ -130,4 +130,32 @@ def test_builds_without_error(headless_settings):
         pytest.skip(f"No display available: {exc}")
 ```
 
-On CI without a display the test is automatically skipped rather than failing.
+A Python built without `_tkinter` will skip the whole tier rather than fail.
+
+### Shared fixtures (`tests/conftest.py`)
+
+| Fixture | Type | Description |
+| --- | --- | --- |
+| `reset_singletons` | autouse | Resets `DatabaseConnection` and `EventBus` around each test |
+| `in_memory_db` | `DatabaseConnection` | Fully migrated in-memory SQLite connection |
+| `test_config` | `Settings` | Settings pointing at a `:memory:` database |
+| `sample_project` | `Project` | A persisted active project with `plan_content` |
+| `sample_sessions` | `list[Session]` | Three sessions (planned, completed, cancelled) |
+
+---
+
+## Guard rails
+
+Beyond the test suites, two checks enforce architectural invariants:
+
+```bash
+python scripts/verify_no_renderer_http.py   # renderer makes no direct HTTP calls
+python scripts/generate_openapi.py          # regenerate types; diff to detect drift
+```
+
+The first backs [ADR-001](architecture/decisions/adr-001-tauri-mediated-sidecar.md);
+the second backs [ADR-005](architecture/decisions/adr-005-openapi-typescript.md).
+Run both before a release.
+
+See the [Traceability Matrix](requirements/traceability.md) for the
+requirement-to-test mapping.
