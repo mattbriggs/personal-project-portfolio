@@ -24,10 +24,10 @@ The project is mid-migration. Both apps read the same SQLite database and the sa
 | --- | --- | --- |
 | Stack | Python + Tkinter | Tauri (Rust) + React + FastAPI sidecar |
 | Source | `src/portfolio_manager/` | `backend/`, `frontend/`, `src-tauri/` |
-| Status | **Working — the one you can run today** | Code complete, not yet packaged |
-| Launch | `bash launch.sh` | not yet buildable (see below) |
+| Status | Working | **Working — installed and running** |
+| Launch | `bash launch.sh` | `/Applications/Portfolio Manager.app` |
 
-The V2 stack is fully implemented and unit-tested at every layer, but it has **never been built into a runnable app bundle**. The Tauri CLI is not installed, so `npm run tauri dev` and `npm run tauri build` have not been exercised. Until that is resolved, the Tkinter app in `src/` remains the working application.
+The V2 app now builds to a signed macOS application bundle, installs to `/Applications`, and reads the same database as the Tkinter app. Both are usable; the Tkinter app in `src/` stays until parity is formally accepted.
 
 See the [design report](https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/Portfolio-Manager-Tauri-React-Python-SRS-Design-Report.md) and [implementation plan](https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/Portfolio-Manager-Tauri-React-Python-Implementation.md) for the migration scope, and the [completion report](release/completion-report.md) for verified status.
 

@@ -16,12 +16,12 @@
         <li><b>The current app</b> — written in Python with a Tkinter interface. This is the
           version that runs today, and the one every task in this guide describes.</li>
         <li><b>The V2 app</b> — a desktop application built on Tauri, React, and a Python service.
-          It is fully written and tested, but it has not yet been packaged into an installable
-          application. It is not yet available to install.</li>
+          It installs as a normal macOS application and needs no Python setup. It is available
+          now, but has not yet been through formal feature-parity acceptance.</li>
       </ul>
-      <note type="important">Everything in this guide applies to the current app. When the V2 app
-        becomes installable, the installation and troubleshooting topics will change; the concepts,
-        workflows, and reference material will not.</note>
+      <note type="important">The task steps in this guide were written against the current app.
+        The concepts, workflows, and reference material apply to both; the installation and
+        troubleshooting topics are specific to the current app.</note>
     </section>
 
     <section id="what_carries_over">

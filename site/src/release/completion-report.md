@@ -29,7 +29,8 @@ could not be verified say so explicitly._
 | Migrations and backups | Complete | Backup-before-migrate preserved |
 | Automated testing | **All four suites run green** | See below |
 | Documentation | Complete (core) | README, 11 ADRs, traceability, toolchain notes |
-| macOS packaging | **Scaffolded, never executed** | Sidecar freezes; no app bundle has been built |
+| macOS packaging | **Executed end to end** | `.app` and `.dmg` both build; signed and installed to `/Applications` |
+| Running application | **Verified** | Launches, sidecar starts, all six views load real data |
 | Windows/Linux packaging | Deferred | Phase 16 |
 
 ## Test Results
@@ -66,18 +67,28 @@ than the design guarantees. Not yet changed.
 | Renderer cannot call sidecar directly | Verified (`verify_no_renderer_http.py` passes) |
 | Protected routes reject missing/invalid token | Verified (contract tests) |
 | Production API docs disabled | Verified (`test_docs_disabled_in_production`) |
-| Sidecar terminates with app | Verified in unit tests (`SidecarHandle::shutdown`); not yet observed in a running app |
+| Sidecar terminates with app | Verified in unit tests (`SidecarHandle::shutdown`); confirmed in a running app |
 | Unexpected failures omit stack traces | Verified (sanitized `INTERNAL_ERROR`) |
+| Token absent from sidecar `argv` | Verified against the live process (`--port <n> --production` only) |
+
+## Bugs found by packaging and running the app
+
+The first end-to-end build surfaced three defects that no unit test could have
+caught, because each only exists in a packaged, running application.
+
+| Defect | Cause | Fix |
+| --- | --- | --- |
+| Sidecar died on launch | `build_sidecar.py` used `--collect-submodules`, which bundles Python modules but **not** data files, so the frozen binary shipped without `schema.sql` and crashed reading it. Every frozen sidecar ever produced was dead on arrival; invisible in development because the file is on disk. | Added a `DATA_FILES` list and `--add-data` wiring, with a hard error when a listed file is missing |
+| Dashboard showed "Could not load" on every cold start | The window opens immediately, but the frozen sidecar needs seconds to boot. The first render's queries hit a closed port, and with `retry: false` on the query client they never recovered. | `useSidecarHealth` now refetches every query on the transition into `ready`; covered by a regression test |
+| `connect-src` missing from the CSP | The production CSP had no `connect-src`, so it fell back to `default-src 'self'`. | Added `connect-src 'self' ipc: http://ipc.localhost` |
 
 ## Open Issues
 
 | Item | Impact |
 | --- | --- |
-| No app bundle has ever been built | The Tauri CLI is not installed, so `npm run tauri dev` and `npm run tauri build` are unexercised. **The V2 app has never run as an application.** |
-| `src-tauri/icons/icon.png` is a 1×1 placeholder | Converted to RGBA so the build proceeds, but any bundle will have a broken icon |
-| Signing script not exercised on a real bundle | `scripts/install_macos_app.sh` is tested against a synthetic bundle only |
-| No signing identity available | Ad-hoc signing works for local installation; notarization needs a Developer ID |
-| `npm install` fails on network mounts | `ENOTEMPTY` on rename; needs a local-disk clone or prefix |
+| No signing identity available | Ad-hoc signing works for local installation; Gatekeeper assessment returns `rejected` and notarization needs a Developer ID |
+| `npm install` fails on network mounts | `ENOTEMPTY` on rename; needs a local-disk clone or prefix. Also makes `beforeBuildCommand` fail, since it runs `npm run build` |
+| Two apps named "Portfolio Manager" | The legacy launcher in `~/Applications` and the V2 bundle in `/Applications` share a display name |
 
 ## Deviations and Deferred Work
 
@@ -101,4 +112,4 @@ than the design guarantees. Not yet changed.
 | Legacy database opens without manual conversion | Met |
 | Production API docs disabled | Met |
 | Coverage target met (backend) | Met (~85%) |
-| **End-to-end application run** | **Not met — blocked on the Tauri CLI** |
+| **End-to-end application run** | **Met** — built, signed, installed, launched; all six views load real data from the user's existing database with no errors and no auth failures |

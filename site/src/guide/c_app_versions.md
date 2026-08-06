@@ -7,9 +7,9 @@ Portfolio Manager is being rebuilt on a new technology stack. This guide describ
 The repository currently contains two applications that read the same SQLite database and apply the same rules:
 
 -   **The current app** — written in Python with a Tkinter interface. This is the version that runs today, and the one every task in this guide describes.
--   **The V2 app** — a desktop application built on Tauri, React, and a Python service. It is fully written and tested, but it has not yet been packaged into an installable application. It is not yet available to install.
+-   **The V2 app** — a desktop application built on Tauri, React, and a Python service. It installs as a normal macOS application and needs no Python setup. It is available now, but has not yet been through formal feature-parity acceptance.
 
-**Important:** Everything in this guide applies to the current app. When the V2 app becomes installable, the installation and troubleshooting topics will change; the concepts, workflows, and reference material will not.
+**Important:** The task steps in this guide were written against the current app. The concepts, workflows, and reference material apply to both; the installation and troubleshooting topics are specific to the current app.
 
 ## What carries over
 

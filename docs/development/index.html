@@ -3108,6 +3108,32 @@ scripts/install_macos_app.sh
 <p>Use <code>x86_64-apple-darwin</code> on Intel. Per
 <a href="../architecture/decisions/adr-010-macos-arch/">ADR-010</a> the sidecar is built
 per-architecture; a universal binary comes later.</p>
+<p>Add <code>--bundles dmg</code> for a distributable disk image. Build the <code>.app</code> <strong>last</strong>
+if you intend to sign it — the DMG step deletes the staged <code>.app</code> after packing
+it, so <code>install_macos_app.sh</code> will not find a bundle if <code>dmg</code> ran most recently.</p>
+<p>Three things reliably go wrong on a first build:</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>beforeBuildCommand ... failed</code>, <code>tsc: command not found</code></td>
+<td><code>npm run build</code> runs from the repository root. If npm dependencies did not install (see network mounts below), pre-build <code>frontend/dist</code> and skip the hook with <code>--config '{"build":{"beforeBuildCommand":""}}'</code></td>
+</tr>
+<tr>
+<td><code>feature 'edition2024' is required</code></td>
+<td>The Tauri CLI shells out to whichever <code>cargo</code> is on <code>PATH</code>. A non-rustup Rust will shadow the rustup toolchain — put <code>$HOME/.cargo/bin</code> first</td>
+</tr>
+<tr>
+<td><code>resource path ... doesn't exist</code></td>
+<td>The frozen sidecar has not been built for your target triple yet</td>
+</tr>
+</tbody>
+</table>
 <p><code>install_macos_app.sh</code> signs nested Mach-O code before the bundle itself,
 verifies the signature, then stages and swaps the install so a failed copy
 cannot destroy a working app. It picks a <strong>Developer ID Application</strong>
@@ -3115,11 +3141,13 @@ certificate if the keychain has one — adding the hardened runtime and the
 entitlements in <code>src-tauri/entitlements.plist</code> — and otherwise falls back to
 <strong>ad-hoc signing</strong>, which runs locally but cannot be notarized or distributed.
 Run <code>scripts/install_macos_app.sh --help</code> for the options.</p>
-<div class="admonition warning">
-<p class="admonition-title">Not yet exercised end to end</p>
-<p>The packaging path above has not been run to completion. The Tauri CLI is
-not currently installed, so no app bundle has ever been produced. The
-signing script itself is tested, but only against a synthetic bundle.</p>
+<div class="admonition note">
+<p class="admonition-title">Gatekeeper and ad-hoc signatures</p>
+<p>Without a Developer ID the app is signed ad-hoc. <code>spctl --assess</code> returns
+<code>rejected</code>, which is expected and does not stop it running. A locally built
+bundle carries no quarantine attribute, so it opens normally on the machine
+that built it. Copied to another Mac it would be quarantined and need
+right-click → Open, or <code>xattr -dr com.apple.quarantine</code>.</p>
 </div>
 <hr />
 <h2 id="legacy-tkinter-app">Legacy Tkinter app<a class="headerlink" href="#legacy-tkinter-app" title="Permanent link">&para;</a></h2>

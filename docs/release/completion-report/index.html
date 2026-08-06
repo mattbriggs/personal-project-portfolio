@@ -1360,6 +1360,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bugs-found-by-packaging-and-running-the-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugs found by packaging and running the app
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#open-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3049,8 +3060,13 @@ could not be verified say so explicitly.</em></p>
 </tr>
 <tr>
 <td>macOS packaging</td>
-<td><strong>Scaffolded, never executed</strong></td>
-<td>Sidecar freezes; no app bundle has been built</td>
+<td><strong>Executed end to end</strong></td>
+<td><code>.app</code> and <code>.dmg</code> both build; signed and installed to <code>/Applications</code></td>
+</tr>
+<tr>
+<td>Running application</td>
+<td><strong>Verified</strong></td>
+<td>Launches, sidecar starts, all six views load real data</td>
 </tr>
 <tr>
 <td>Windows/Linux packaging</td>
@@ -3162,11 +3178,44 @@ than the design guarantees. Not yet changed.</p>
 </tr>
 <tr>
 <td>Sidecar terminates with app</td>
-<td>Verified in unit tests (<code>SidecarHandle::shutdown</code>); not yet observed in a running app</td>
+<td>Verified in unit tests (<code>SidecarHandle::shutdown</code>); confirmed in a running app</td>
 </tr>
 <tr>
 <td>Unexpected failures omit stack traces</td>
 <td>Verified (sanitized <code>INTERNAL_ERROR</code>)</td>
+</tr>
+<tr>
+<td>Token absent from sidecar <code>argv</code></td>
+<td>Verified against the live process (<code>--port &lt;n&gt; --production</code> only)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bugs-found-by-packaging-and-running-the-app">Bugs found by packaging and running the app<a class="headerlink" href="#bugs-found-by-packaging-and-running-the-app" title="Permanent link">&para;</a></h2>
+<p>The first end-to-end build surfaced three defects that no unit test could have
+caught, because each only exists in a packaged, running application.</p>
+<table>
+<thead>
+<tr>
+<th>Defect</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sidecar died on launch</td>
+<td><code>build_sidecar.py</code> used <code>--collect-submodules</code>, which bundles Python modules but <strong>not</strong> data files, so the frozen binary shipped without <code>schema.sql</code> and crashed reading it. Every frozen sidecar ever produced was dead on arrival; invisible in development because the file is on disk.</td>
+<td>Added a <code>DATA_FILES</code> list and <code>--add-data</code> wiring, with a hard error when a listed file is missing</td>
+</tr>
+<tr>
+<td>Dashboard showed "Could not load" on every cold start</td>
+<td>The window opens immediately, but the frozen sidecar needs seconds to boot. The first render's queries hit a closed port, and with <code>retry: false</code> on the query client they never recovered.</td>
+<td><code>useSidecarHealth</code> now refetches every query on the transition into <code>ready</code>; covered by a regression test</td>
+</tr>
+<tr>
+<td><code>connect-src</code> missing from the CSP</td>
+<td>The production CSP had no <code>connect-src</code>, so it fell back to <code>default-src 'self'</code>.</td>
+<td>Added <code>connect-src 'self' ipc: http://ipc.localhost</code></td>
 </tr>
 </tbody>
 </table>
@@ -3180,24 +3229,16 @@ than the design guarantees. Not yet changed.</p>
 </thead>
 <tbody>
 <tr>
-<td>No app bundle has ever been built</td>
-<td>The Tauri CLI is not installed, so <code>npm run tauri dev</code> and <code>npm run tauri build</code> are unexercised. <strong>The V2 app has never run as an application.</strong></td>
-</tr>
-<tr>
-<td><code>src-tauri/icons/icon.png</code> is a 1×1 placeholder</td>
-<td>Converted to RGBA so the build proceeds, but any bundle will have a broken icon</td>
-</tr>
-<tr>
-<td>Signing script not exercised on a real bundle</td>
-<td><code>scripts/install_macos_app.sh</code> is tested against a synthetic bundle only</td>
-</tr>
-<tr>
 <td>No signing identity available</td>
-<td>Ad-hoc signing works for local installation; notarization needs a Developer ID</td>
+<td>Ad-hoc signing works for local installation; Gatekeeper assessment returns <code>rejected</code> and notarization needs a Developer ID</td>
 </tr>
 <tr>
 <td><code>npm install</code> fails on network mounts</td>
-<td><code>ENOTEMPTY</code> on rename; needs a local-disk clone or prefix</td>
+<td><code>ENOTEMPTY</code> on rename; needs a local-disk clone or prefix. Also makes <code>beforeBuildCommand</code> fail, since it runs <code>npm run build</code></td>
+</tr>
+<tr>
+<td>Two apps named "Portfolio Manager"</td>
+<td>The legacy launcher in <code>~/Applications</code> and the V2 bundle in <code>/Applications</code> share a display name</td>
 </tr>
 </tbody>
 </table>
@@ -3275,7 +3316,7 @@ than the design guarantees. Not yet changed.</p>
 </tr>
 <tr>
 <td><strong>End-to-end application run</strong></td>
-<td><strong>Not met — blocked on the Tauri CLI</strong></td>
+<td><strong>Met</strong> — built, signed, installed, launched; all six views load real data from the user's existing database with no errors and no auth failures</td>
 </tr>
 </tbody>
 </table>

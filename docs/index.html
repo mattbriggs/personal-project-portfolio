@@ -2995,17 +2995,17 @@
 </tr>
 <tr>
 <td>Status</td>
-<td><strong>Working — the one you can run today</strong></td>
-<td>Code complete, not yet packaged</td>
+<td>Working</td>
+<td><strong>Working — installed and running</strong></td>
 </tr>
 <tr>
 <td>Launch</td>
 <td><code>bash launch.sh</code></td>
-<td>not yet buildable (see below)</td>
+<td><code>/Applications/Portfolio Manager.app</code></td>
 </tr>
 </tbody>
 </table>
-<p>The V2 stack is fully implemented and unit-tested at every layer, but it has <strong>never been built into a runnable app bundle</strong>. The Tauri CLI is not installed, so <code>npm run tauri dev</code> and <code>npm run tauri build</code> have not been exercised. Until that is resolved, the Tkinter app in <code>src/</code> remains the working application.</p>
+<p>The V2 app now builds to a signed macOS application bundle, installs to <code>/Applications</code>, and reads the same database as the Tkinter app. Both are usable; the Tkinter app in <code>src/</code> stays until parity is formally accepted.</p>
 <p>See the <a href="https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/Portfolio-Manager-Tauri-React-Python-SRS-Design-Report.md">design report</a> and <a href="https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/Portfolio-Manager-Tauri-React-Python-Implementation.md">implementation plan</a> for the migration scope, and the <a href="release/completion-report/">completion report</a> for verified status.</p>
 <hr />
 <h2 id="quick-start-legacy-app">Quick Start (legacy app)<a class="headerlink" href="#quick-start-legacy-app" title="Permanent link">&para;</a></h2>

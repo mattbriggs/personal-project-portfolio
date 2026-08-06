@@ -16,14 +16,13 @@ and [implementation plan](design/Portfolio-Manager-Tauri-React-Python-Implementa
 | --- | --- | --- |
 | Stack | Python + Tkinter | Tauri (Rust) + React + FastAPI sidecar |
 | Source | `src/portfolio_manager/` | `backend/`, `frontend/`, `src-tauri/` |
-| Tests | 147 passing, 92.85% coverage | 84 backend + 11 React + 10 Rust |
-| State | **Working — run it today** | Code complete; never built as an app |
-| Launch | `bash launch.sh` | blocked (see below) |
+| Tests | 147 passing, 92.85% coverage | 84 backend + 14 React + 10 Rust |
+| State | Working | **Working — built, signed, installed, running** |
+| Launch | `bash launch.sh` | `/Applications/Portfolio Manager.app` |
 
-Every layer of the V2 stack is implemented and unit-tested, but **it has never
-been built into a runnable bundle** — the Tauri CLI is not installed, so
-`npm run tauri dev` and `npm run tauri build` are unexercised. Until then the
-Tkinter app is the one that runs. Full detail in the
+The V2 app builds to a signed `.app` and `.dmg`, installs to `/Applications`,
+and loads real data from the existing database. The Tkinter app remains until
+parity is formally accepted. Full detail in the
 [completion report](site/src/release/completion-report.md).
 
 ## Target architecture
@@ -177,8 +176,14 @@ mkdocs build --strict   # writes docs/ — the GitHub Pages root
   fails about 1 run in 10 in parallel, never under `--test-threads=1`. It
   asserts an immediate port re-bind that the module documents as racy by
   design; the production code is correct.
-- **`src-tauri/icons/icon.png` is a 1×1 placeholder** (RGBA, so it builds). Any
-  bundle produced now will have a broken icon.
+- **Ad-hoc signing only.** With no Developer ID in the keychain, `spctl` reports
+  `rejected`. That is expected and does not stop the app running locally, but it
+  cannot be notarized or opened on another Mac without clearing quarantine.
+- **Two apps share the name "Portfolio Manager"** — the legacy launcher in
+  `~/Applications` (a shell script calling `launch.sh`) and the V2 bundle in
+  `/Applications`. Spotlight and the Dock will show both.
+- **Build the `.app` last if you plan to sign it.** `--bundles dmg` deletes the
+  staged `.app` after packing it, so the install script finds nothing.
 
 ## Legacy Tkinter app
 

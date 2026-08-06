@@ -109,6 +109,18 @@ Use `x86_64-apple-darwin` on Intel. Per
 [ADR-010](architecture/decisions/adr-010-macos-arch.md) the sidecar is built
 per-architecture; a universal binary comes later.
 
+Add `--bundles dmg` for a distributable disk image. Build the `.app` **last**
+if you intend to sign it — the DMG step deletes the staged `.app` after packing
+it, so `install_macos_app.sh` will not find a bundle if `dmg` ran most recently.
+
+Three things reliably go wrong on a first build:
+
+| Symptom | Cause |
+| --- | --- |
+| `beforeBuildCommand ... failed`, `tsc: command not found` | `npm run build` runs from the repository root. If npm dependencies did not install (see network mounts below), pre-build `frontend/dist` and skip the hook with `--config '{"build":{"beforeBuildCommand":""}}'` |
+| `feature 'edition2024' is required` | The Tauri CLI shells out to whichever `cargo` is on `PATH`. A non-rustup Rust will shadow the rustup toolchain — put `$HOME/.cargo/bin` first |
+| `resource path ... doesn't exist` | The frozen sidecar has not been built for your target triple yet |
+
 `install_macos_app.sh` signs nested Mach-O code before the bundle itself,
 verifies the signature, then stages and swaps the install so a failed copy
 cannot destroy a working app. It picks a **Developer ID Application**
@@ -117,10 +129,12 @@ entitlements in `src-tauri/entitlements.plist` — and otherwise falls back to
 **ad-hoc signing**, which runs locally but cannot be notarized or distributed.
 Run `scripts/install_macos_app.sh --help` for the options.
 
-!!! warning "Not yet exercised end to end"
-    The packaging path above has not been run to completion. The Tauri CLI is
-    not currently installed, so no app bundle has ever been produced. The
-    signing script itself is tested, but only against a synthetic bundle.
+!!! note "Gatekeeper and ad-hoc signatures"
+    Without a Developer ID the app is signed ad-hoc. `spctl --assess` returns
+    `rejected`, which is expected and does not stop it running. A locally built
+    bundle carries no quarantine attribute, so it opens normally on the machine
+    that built it. Copied to another Mac it would be quarantined and need
+    right-click → Open, or `xattr -dr com.apple.quarantine`.
 
 ---
 
