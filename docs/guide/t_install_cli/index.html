@@ -1439,6 +1439,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../c_app_versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Version This Guide Describes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../t_install_macos/" class="md-nav__link">
         
   
@@ -2817,9 +2845,10 @@
 <li>macOS or Linux</li>
 <li>Python 3.11 or later with Tkinter support</li>
 <li>Git</li>
-<li>
-<p>An internet connection for the initial clone</p>
-</li>
+<li>An internet connection for the initial clone</li>
+</ul>
+<p><strong>Important:</strong> These steps install the current Python version of Portfolio Manager. The V2 desktop application will not require a virtual environment or a Tkinter-capable Python, but it is not yet available. See <a href="../c_app_versions/">Which Version This Guide Describes</a>.</p>
+<ol>
 <li>
 <p>Clone the repository:</p>
 <div class="highlight"><pre><span></span><code>git clone &lt;repository-url&gt; portfolio-manager
@@ -2845,7 +2874,7 @@ python -m portfolio_manager
 </ul>
 <p>Portfolio Manager opens and initializes the database and configuration file at <code>~/.portfolio_manager/</code> on first launch.</p>
 </li>
-</ul>
+</ol>
 <p>To update, run <code>git pull origin main</code> in the repository directory. The launch script automatically installs any new dependencies on the next run.</p>
 <p>To run the test suite:</p>
 <div class="highlight"><pre><span></span><code>source .venv/bin/activate

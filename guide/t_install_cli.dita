@@ -17,9 +17,11 @@
       </ul>
     </prereq>
 
-    <steps-unordered>
-      <!-- Two parallel procedures: Option A or Option B -->
-    </steps-unordered>
+    <context>
+      <note type="important">These steps install the current Python version of Portfolio Manager.
+        The V2 desktop application will not require a virtual environment or a Tkinter-capable
+        Python, but it is not yet available. See <xref href="c_app_versions.dita"/>.</note>
+    </context>
 
     <steps>
       <step>

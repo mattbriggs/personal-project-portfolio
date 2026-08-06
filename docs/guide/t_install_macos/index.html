@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../c_portfolio_paradigm/">
+        <link rel="prev" href="../c_app_versions/">
       
       
         <link rel="next" href="../t_install_cli/">
@@ -1436,6 +1436,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../c_app_versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Which Version This Guide Describes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2823,9 +2851,10 @@
 <li>
 <p>Git</p>
 </li>
-<li>
-<p>An internet connection for the initial clone</p>
-</li>
+<li>An internet connection for the initial clone</li>
+</ul>
+<p><strong>Important:</strong> These steps install the current Python version of Portfolio Manager, which runs from a cloned repository. The V2 desktop application installs as a signed application bundle and requires no Python setup, but it is not yet available. See <a href="../c_app_versions/">Which Version This Guide Describes</a>.</p>
+<ol>
 <li>
 <p>Open Terminal and clone the Portfolio Manager repository:</p>
 <div class="highlight"><pre><span></span><code>git clone &lt;repository-url&gt; portfolio-manager
@@ -2848,7 +2877,7 @@ cd portfolio-manager
 <p>Click the Dock icon to launch Portfolio Manager for the first time.</p>
 <p>Portfolio Manager opens, creates the database and configuration file at <code>~/.portfolio_manager/</code>, and displays the Dashboard.</p>
 </li>
-</ul>
+</ol>
 <p>To update the application, run <code>git pull origin main</code> in the repository directory. The next time you launch from the Dock, the updated code runs automatically. No reinstallation is required.</p>
 
 
