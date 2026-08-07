@@ -12,6 +12,8 @@ Install Portfolio Manager as a macOS application bundle and add it to the Dock f
 -   Git
 -   An internet connection for the initial clone
 
+**Important:** These steps install the current Python version of Portfolio Manager, which runs from a cloned repository. The V2 desktop application installs as a signed application bundle and requires no Python setup, but it is not yet available. See [Which Version This Guide Describes](c_app_versions.md).
+
 1.  Open Terminal and clone the Portfolio Manager repository:
 
     ```

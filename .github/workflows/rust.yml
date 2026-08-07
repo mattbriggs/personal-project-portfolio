@@ -1,0 +1,38 @@
+name: Rust
+
+on:
+  push:
+    branches: ["main", "mdb_*"]
+    paths: ["src-tauri/**", ".github/workflows/rust.yml"]
+  pull_request:
+    paths: ["src-tauri/**", ".github/workflows/rust.yml"]
+
+defaults:
+  run:
+    working-directory: src-tauri
+
+jobs:
+  test:
+    name: fmt, clippy, test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (>= 1.85 for Tauri 2.x edition2024 deps)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: rustfmt
+        run: cargo fmt --all -- --check
+
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Unit tests
+        # Excludes the Tauri app harness; runs security/http/sidecar unit tests.
+        run: cargo test --lib

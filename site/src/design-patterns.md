@@ -1,10 +1,34 @@
 # Design Patterns
 
-Portfolio Manager applies eight design patterns at well-defined seams. Each is documented here with the rationale and a minimal code example.
+Both applications apply patterns at well-defined seams. The V2 stack inherits
+several from the Tkinter app — the repository and strategy seams survived the
+migration unchanged, which is what made porting the domain layer verbatim
+possible ([ADR-002](architecture/decisions/adr-002-preserve-domain.md)).
 
 ---
 
-## MVC (Model-View-Controller)
+## V2 patterns (Tauri + React + FastAPI)
+
+| Pattern | Where | Rationale |
+| --- | --- | --- |
+| **Ports and adapters** | `application/ports/` define repository interfaces; `infrastructure/db/` implements them | Services depend on interfaces, so tests substitute fakes without a database |
+| **Allowlist facade** | `src-tauri/src/lib.rs` | The enumerated command list *is* the API surface. There is no generic passthrough, so the renderer cannot reach an unreviewed route |
+| **Supervisor** | `src-tauri/src/sidecar/` | Owns the sidecar's whole lifecycle — port, token, spawn, readiness, shutdown — so no other component needs the credentials |
+| **DTO / contract boundary** | `contracts/` (Pydantic), `frontend/src/contracts/generated` (TypeScript) | One schema generates both sides, so drift becomes a build failure rather than a runtime bug |
+| **Strategy** | `domain/scoring.py` | Scoring rules stay swappable and independently testable |
+| **Cache with explicit invalidation** | `frontend/src/hooks/useInvalidate.ts` | TanStack Query holds server state; mutations name the keys they invalidate ([ADR-003](architecture/decisions/adr-003-query-cache.md)) |
+
+The renderer has no HTTP client at all. `scripts/verify_no_renderer_http.py`
+enforces that as a build check rather than a convention.
+
+---
+
+## Legacy patterns (Tkinter app)
+
+The original app applies eight patterns, documented below with rationale and a
+minimal example.
+
+### MVC (Model-View-Controller)
 
 **Where:** Full application.
 
@@ -18,7 +42,7 @@ User Action → View → Controller → Service → Repository → DB
 
 ---
 
-## Repository
+### Repository
 
 **Where:** `repositories/` — one class per entity (`ProjectRepository`, `SessionRepository`, etc.).
 
@@ -35,7 +59,7 @@ class ProjectRepository(BaseRepository):
 
 ---
 
-## Strategy
+### Strategy
 
 **Where:** `services/scoring_service.py` — `ScoringStrategy` ABC + `DefaultScoringStrategy`.
 
@@ -62,7 +86,7 @@ scoring_svc = ScoringService(session_repo, milestone_repo, score_repo,
 
 ---
 
-## Observer (EventBus)
+### Observer (EventBus)
 
 **Where:** `events/event_bus.py` — used by all services and controllers.
 
@@ -83,7 +107,7 @@ Named event constants are defined in `events/event_bus.py`:
 
 ---
 
-## Singleton
+### Singleton
 
 **Where:** `DatabaseConnection` and `EventBus`.
 
@@ -99,7 +123,7 @@ db = DatabaseConnection.get()
 
 ---
 
-## Factory (implied)
+### Factory (implied)
 
 **Where:** `repositories/` row-to-domain conversion functions (`_row_to_project`, `_row_to_session`, etc.).
 
@@ -107,7 +131,7 @@ db = DatabaseConnection.get()
 
 ---
 
-## Template Method
+### Template Method
 
 **Where:** `services/plan_service.py` — `PlanService.render_html()`.
 
@@ -125,7 +149,7 @@ def render_html(self, markdown_text: str) -> str:
 
 ---
 
-## Transaction Context Manager
+### Transaction Context Manager
 
 **Where:** `db/connection.py` — `DatabaseConnection.transaction()`.
 

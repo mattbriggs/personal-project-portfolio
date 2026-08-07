@@ -57,7 +57,7 @@ You launch Portfolio Manager from the Dock icon or by running `bash launch.sh` a
 
     ```
     ls ~/.portfolio_manager/logs/
-    cat ~/.portfolio_manager/logs/portfolio_manager.log
+    cat ~/.portfolio_manager/logs/app.log
     ```
 
 2.  If a migration error is shown, see [Database Error on Launch or During Use](ts_database_error.md).

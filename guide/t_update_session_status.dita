@@ -32,7 +32,7 @@
         Done total in the weekly budget bar.</p>
     </result>
 
-    <section id="cancel_session">
+    <example id="cancel_session">
       <title>To Cancel a Session</title>
       <p>If you decide not to complete a session, select it in the Sessions table, click
         <uicontrol>Edit Session</uicontrol>, change the status to
@@ -42,7 +42,7 @@
       <note type="tip">If you cannot complete a session this week but still want to do the work,
         edit the session date to move it to a future week rather than cancelling it. This preserves
         the intent and keeps the session in your backlog.</note>
-    </section>
+    </example>
 
   </taskbody>
 </task>

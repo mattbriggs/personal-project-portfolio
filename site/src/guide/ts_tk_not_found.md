@@ -2,6 +2,8 @@
 
 Portfolio Manager requires Tkinter \(Python's standard GUI library\). This error occurs most often when Python is installed via Homebrew on macOS.
 
+**Note:** This applies to the current Python version of Portfolio Manager. The V2 desktop application bundles its own runtime and does not use Tkinter, so this error cannot occur there. See [Which Version This Guide Describes](c_app_versions.md).
+
 Launching Portfolio Manager produces one of the following errors:
 
 ```
