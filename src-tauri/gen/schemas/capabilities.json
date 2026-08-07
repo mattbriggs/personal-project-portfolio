@@ -1,1 +1,0 @@
-{"default":{"identifier":"default","description":"Default capability set for the main window. Only the explicit, allowlisted portfolio commands are exposed to the renderer; no arbitrary-path HTTP capability is granted.","local":true,"windows":["main"],"permissions":["core:default","core:window:default","core:event:default"]}}

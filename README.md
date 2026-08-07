@@ -118,7 +118,7 @@ python scripts/verify_no_renderer_http.py   # assert renderer has no direct HTTP
 
 ```bash
 pip install -e "backend[dev,package]"
-python scripts/build_sidecar.py --target-triple aarch64-apple-darwin
+python scripts/build_sidecar.py
 npm run tauri build
 scripts/install_macos_app.sh                # sign, verify, install to /Applications
 ```

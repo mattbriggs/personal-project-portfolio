@@ -3081,8 +3081,8 @@ npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </sp
 <p><code>cargo test</code> compiles the Tauri context, which requires two artifacts to exist
 before it will build at all:</p>
 <ul>
-<li><code>src-tauri/binaries/portfolio-sidecar-&lt;target-triple&gt;</code> — the frozen sidecar,
-  declared as <code>externalBin</code> in <code>tauri.conf.json</code>. Build it first (below).</li>
+<li><code>src-tauri/binaries/portfolio-sidecar/</code> — the frozen sidecar, shipped through
+  <code>bundle.resources</code> in <code>tauri.conf.json</code>. Build it first (below).</li>
 <li><code>src-tauri/icons/icon.png</code> in <strong>RGBA</strong> format. A non-RGBA PNG fails inside
   <code>tauri::generate_context!</code> with a message that does not obviously point at
   the icon.</li>
@@ -3097,7 +3097,7 @@ the renderer must reach the sidecar only through Tauri commands.</p>
 <h2 id="packaging-macos">Packaging (macOS)<a class="headerlink" href="#packaging-macos" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Freeze the sidecar for your architecture</span>
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
-python<span class="w"> </span>scripts/build_sidecar.py<span class="w"> </span>--target-triple<span class="w"> </span>aarch64-apple-darwin
+python<span class="w"> </span>scripts/build_sidecar.py
 
 <span class="c1"># 2. Build the app bundle</span>
 npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build

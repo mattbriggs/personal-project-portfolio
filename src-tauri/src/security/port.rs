@@ -24,10 +24,14 @@ mod tests {
     #[test]
     fn picks_a_nonzero_loopback_port() {
         let port = pick_free_port().expect("should find a free port");
-        assert!(port > 0);
-        // The port should be immediately bindable again after release.
-        let _l = TcpListener::bind((Ipv4Addr::LOCALHOST, port)).expect("rebind");
+        assert!(port > 0, "an ephemeral port was assigned");
     }
+
+    // Deliberately not asserted: that `port` is immediately re-bindable. The OS
+    // is free to hand the just-released port to another caller, which is the
+    // race this module documents and readiness polling exists to absorb.
+    // Asserting it made this suite fail roughly 1 run in 10 under `cargo test`,
+    // because the sibling test races for ephemeral ports on another thread.
 
     #[test]
     fn successive_calls_return_bindable_ports() {

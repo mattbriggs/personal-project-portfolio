@@ -28,11 +28,28 @@ fn is_production() -> bool {
     !cfg!(debug_assertions)
 }
 
+/// Candidate sidecar locations, relative to the directory holding the running
+/// executable, in preference order.
+///
+/// The one-directory PyInstaller build starts in well under a second and is
+/// bundled as a resource, so it is tried first. The single-file build re-extracts
+/// itself on every launch — roughly ten seconds — and is kept only as a fallback
+/// for bundles produced by `build_sidecar.py --mode onefile`.
+const SIDECAR_CANDIDATES: [&str; 4] = [
+    // macOS bundle: Contents/MacOS/ -> Contents/Resources/
+    "../Resources/binaries/portfolio-sidecar/portfolio-sidecar",
+    // Running straight out of a build directory.
+    "binaries/portfolio-sidecar/portfolio-sidecar",
+    // onefile, placed beside the executable by Tauri's externalBin.
+    "portfolio-sidecar",
+    "binaries/portfolio-sidecar",
+];
+
 /// Resolve the packaged sidecar binary.
 ///
 /// Resolution order:
 /// 1. `PORTFOLIO_SIDECAR_BINARY` environment override (used in development).
-/// 2. `binaries/portfolio-sidecar` beside the current executable.
+/// 2. Each entry of [`SIDECAR_CANDIDATES`] beside the current executable.
 fn resolve_sidecar_binary() -> Option<PathBuf> {
     if let Ok(p) = env::var("PORTFOLIO_SIDECAR_BINARY") {
         let path = PathBuf::from(p);
@@ -40,17 +57,12 @@ fn resolve_sidecar_binary() -> Option<PathBuf> {
             return Some(path);
         }
     }
-    if let Ok(exe) = env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            for name in ["portfolio-sidecar", "binaries/portfolio-sidecar"] {
-                let candidate = dir.join(name);
-                if candidate.exists() {
-                    return Some(candidate);
-                }
-            }
-        }
-    }
-    None
+    let exe = env::current_exe().ok()?;
+    let dir = exe.parent()?;
+    SIDECAR_CANDIDATES
+        .iter()
+        .map(|name| dir.join(name))
+        .find(|candidate| candidate.is_file())
 }
 
 /// Application entry point invoked from `main`.

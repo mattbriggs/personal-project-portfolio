@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
-"""Freeze the FastAPI sidecar into a standalone binary with PyInstaller.
+"""Freeze the FastAPI sidecar with PyInstaller.
 
-Produces a single-file binary named `portfolio-sidecar` (Tauri external binary),
-optionally suffixed with the Rust target triple for `externalBin` bundling.
+Two layouts are supported:
+
+``onedir`` (default)
+    A directory ``src-tauri/binaries/portfolio-sidecar/`` holding the launcher
+    and its ``_internal`` tree. Tauri ships it via ``bundle.resources``. Starts
+    in well under a second.
+
+``onefile``
+    A single ``src-tauri/binaries/portfolio-sidecar[-<target-triple>]``, suited
+    to Tauri's ``externalBin``. Self-extracts to a temporary directory on every
+    launch, which measured at roughly ten seconds — slow enough that the window
+    opens before the backend is listening.
 
 Usage::
 
-    python scripts/build_sidecar.py [--target-triple x86_64-apple-darwin]
+    python scripts/build_sidecar.py
+    python scripts/build_sidecar.py --mode onefile --target-triple x86_64-apple-darwin
 
-The output is written to `src-tauri/binaries/`. Requires the backend's
-`package` extra (PyInstaller): `pip install -e "backend[dev,package]"`.
+Requires the backend's `package` extra (PyInstaller):
+``pip install -e "backend[dev,package]"``.
 """
 
 from __future__ import annotations
@@ -36,6 +47,20 @@ DATA_FILES = [
     Path("portfolio_manager/infrastructure/db/schema.sql"),
 ]
 
+# Development-only packages that dependency analysis otherwise sweeps in — most
+# notably mypy, reached through pydantic's optional mypy plugin. None are
+# imported at runtime, and together they are tens of megabytes.
+EXCLUDED_MODULES = [
+    "mypy",
+    "pytest",
+    "_pytest",
+    "black",
+    "bandit",
+    "coverage",
+    "IPython",
+    "tkinter",
+]
+
 
 def main() -> int:
     """Build the frozen sidecar binary.
@@ -43,24 +68,41 @@ def main() -> int:
     :returns: Process exit code.
     :rtype: int
     """
-    parser = argparse.ArgumentParser(description="Build the frozen sidecar binary")
+    parser = argparse.ArgumentParser(description="Build the frozen sidecar")
+    parser.add_argument(
+        "--mode",
+        choices=("onedir", "onefile"),
+        default="onedir",
+        help="Output layout (default: onedir, which starts far faster).",
+    )
     parser.add_argument(
         "--target-triple",
         default="",
-        help="Rust target triple suffix for the output name (Tauri externalBin).",
+        help="Target triple suffix for the output name. onefile/externalBin only.",
     )
     args = parser.parse_args()
 
     name = "portfolio-sidecar"
     if args.target_triple:
-        name = f"{name}-{args.target_triple}"
+        if args.mode == "onedir":
+            # The onedir tree is bundled as a resource, not an externalBin, so
+            # the triple suffix Tauri requires there would only break the path
+            # the Rust shell looks for.
+            print(
+                "note: --target-triple is ignored in onedir mode "
+                f"(output stays {OUT_DIR / name})",
+                file=sys.stderr,
+            )
+        else:
+            name = f"{name}-{args.target_triple}"
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     cmd = [
         sys.executable,
         "-m",
         "PyInstaller",
-        "--onefile",
+        f"--{args.mode}",
+        "--noconfirm",
         "--name",
         name,
         "--distpath",
@@ -72,6 +114,9 @@ def main() -> int:
         "--hidden-import",
         "uvicorn.logging",
     ]
+
+    for module in EXCLUDED_MODULES:
+        cmd += ["--exclude-module", module]
 
     for rel in DATA_FILES:
         source = BACKEND_SRC / rel

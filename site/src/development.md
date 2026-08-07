@@ -73,8 +73,8 @@ npm run tauri dev             # from the repo root — runs the full stack
 `cargo test` compiles the Tauri context, which requires two artifacts to exist
 before it will build at all:
 
-- `src-tauri/binaries/portfolio-sidecar-<target-triple>` — the frozen sidecar,
-  declared as `externalBin` in `tauri.conf.json`. Build it first (below).
+- `src-tauri/binaries/portfolio-sidecar/` — the frozen sidecar, shipped through
+  `bundle.resources` in `tauri.conf.json`. Build it first (below).
 - `src-tauri/icons/icon.png` in **RGBA** format. A non-RGBA PNG fails inside
   `tauri::generate_context!` with a message that does not obviously point at
   the icon.
@@ -96,7 +96,7 @@ the renderer must reach the sidecar only through Tauri commands.
 ```bash
 # 1. Freeze the sidecar for your architecture
 pip install -e "backend[dev,package]"
-python scripts/build_sidecar.py --target-triple aarch64-apple-darwin
+python scripts/build_sidecar.py
 
 # 2. Build the app bundle
 npm run tauri build

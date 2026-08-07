@@ -81,6 +81,8 @@ caught, because each only exists in a packaged, running application.
 | Sidecar died on launch | `build_sidecar.py` used `--collect-submodules`, which bundles Python modules but **not** data files, so the frozen binary shipped without `schema.sql` and crashed reading it. Every frozen sidecar ever produced was dead on arrival; invisible in development because the file is on disk. | Added a `DATA_FILES` list and `--add-data` wiring, with a hard error when a listed file is missing |
 | Dashboard showed "Could not load" on every cold start | The window opens immediately, but the frozen sidecar needs seconds to boot. The first render's queries hit a closed port, and with `retry: false` on the query client they never recovered. | `useSidecarHealth` now refetches every query on the transition into `ready`; covered by a regression test |
 | `connect-src` missing from the CSP | The production CSP had no `connect-src`, so it fell back to `default-src 'self'`. | Added `connect-src 'self' ipc: http://ipc.localhost` |
+| ~10 s startup on every launch | The sidecar was frozen with PyInstaller `--onefile`, which re-extracts the whole interpreter to a temporary directory each time it runs. | Switched to `--onedir`, shipped through `bundle.resources`. Measured cold start dropped to **~1.5 s** |
+| Development tooling shipped inside the app | Dependency analysis reached `mypy` through pydantic's optional mypy plugin. | Added `EXCLUDED_MODULES` to the build script; bundle went from 90 MB to 83 MB |
 
 ## Open Issues
 

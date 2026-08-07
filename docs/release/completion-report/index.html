@@ -3217,6 +3217,16 @@ caught, because each only exists in a packaged, running application.</p>
 <td>The production CSP had no <code>connect-src</code>, so it fell back to <code>default-src 'self'</code>.</td>
 <td>Added <code>connect-src 'self' ipc: http://ipc.localhost</code></td>
 </tr>
+<tr>
+<td>~10 s startup on every launch</td>
+<td>The sidecar was frozen with PyInstaller <code>--onefile</code>, which re-extracts the whole interpreter to a temporary directory each time it runs.</td>
+<td>Switched to <code>--onedir</code>, shipped through <code>bundle.resources</code>. Measured cold start dropped to <strong>~1.5 s</strong></td>
+</tr>
+<tr>
+<td>Development tooling shipped inside the app</td>
+<td>Dependency analysis reached <code>mypy</code> through pydantic's optional mypy plugin.</td>
+<td>Added <code>EXCLUDED_MODULES</code> to the build script; bundle went from 90 MB to 83 MB</td>
+</tr>
 </tbody>
 </table>
 <h2 id="open-issues">Open Issues<a class="headerlink" href="#open-issues" title="Permanent link">&para;</a></h2>

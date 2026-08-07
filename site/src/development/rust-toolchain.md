@@ -38,7 +38,7 @@ test unless both of these exist:
 
 | Requirement | Failure if missing |
 | --- | --- |
-| `src-tauri/binaries/portfolio-sidecar-<target-triple>` | `resource path ... doesn't exist` from the build script. Create it with `python scripts/build_sidecar.py --target-triple aarch64-apple-darwin` |
+| `src-tauri/binaries/portfolio-sidecar/` | `resource path ... doesn't exist` from the build script. Create it with `python scripts/build_sidecar.py` |
 | `src-tauri/icons/icon.png` in RGBA | `proc macro panicked: icon ... is not RGBA` at `tauri::generate_context!`. The message does not name the fix — convert the PNG to RGBA |
 
 ### Building off a network volume
