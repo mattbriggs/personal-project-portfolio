@@ -36,6 +36,7 @@ export function DashboardView() {
       </p>
 
       <h3>Active projects</h3>
+      <div className="table-scroll">
       <table>
         <thead>
           <tr>
@@ -67,6 +68,7 @@ export function DashboardView() {
           )}
         </tbody>
       </table>
+      </div>
 
       <h3>Upcoming milestones</h3>
       <ul>

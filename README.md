@@ -1,195 +1,72 @@
 # Portfolio Manager
 
-A personal, **local-first desktop application** for managing, scheduling, and
-executing work across a portfolio of creative and technical projects using
-time-boxed sessions.
+Portfolio Manager is a desktop app for planning and executing work across a portfolio of creative and technical projects. The Tauri version is the intended daily-use app: download it, launch it like a normal desktop application, and use it to keep projects, milestones, sessions, plans, and weekly reviews in one local workspace.
 
-This repository is mid-migration from a Python/Tkinter desktop app to a **Tauri
-+ React + Python (FastAPI) architecture**. The new stack lives in `backend/`,
-`frontend/`, and `src-tauri/`; the original Tkinter app remains in `src/` until
-feature parity is confirmed (see [design report](design/Portfolio-Manager-Tauri-React-Python-SRS-Design-Report.md)
-and [implementation plan](design/Portfolio-Manager-Tauri-React-Python-Implementation.md)).
+## Download The Desktop App
 
-## Status
+The recommended way to use Portfolio Manager is the Tauri desktop build from the project's GitHub Releases page.
 
-| | Legacy app | V2 app |
-| --- | --- | --- |
-| Stack | Python + Tkinter | Tauri (Rust) + React + FastAPI sidecar |
-| Source | `src/portfolio_manager/` | `backend/`, `frontend/`, `src-tauri/` |
-| Tests | 147 passing, 92.85% coverage | 84 backend + 14 React + 10 Rust |
-| State | Working | **Working — built, signed, installed, running** |
-| Launch | `bash launch.sh` | `/Applications/Portfolio Manager.app` |
+1. Open **Releases** for this repository.
+2. Download the newest Portfolio Manager installer or app bundle for your
+   platform.
+3. Install it using your operating system's normal app installation flow.
+4. Launch **Portfolio Manager**.
 
-The V2 app builds to a signed `.app` and `.dmg`, installs to `/Applications`,
-and loads real data from the existing database. The Tkinter app remains until
-parity is formally accepted. Full detail in the
-[completion report](site/src/release/completion-report.md).
+Packaged desktop builds are intended to include the application UI and local
+backend sidecar, so normal users should not need to install Python, Node, Rust,
+or Tauri manually.
 
-## Target architecture
+If a packaged release is not available yet, this repository is still useful as the source and packaging workspace for the desktop app. See [DEV-AND-ROADMAP.md](DEV-AND-ROADMAP.md) for current development status and local build notes.
 
-```
-React renderer
-  → typed Tauri command client         (frontend/src/command-client)
-  → allowlisted Tauri command          (src-tauri/src/commands)
-  → authenticated Rust HTTP forwarder  (src-tauri/src/http)
-  → loopback-only FastAPI route        (backend/.../api/routes)
-  → Pydantic contract                  (backend/.../contracts)
-  → application service                (backend/.../application/services)
-  → repository port → SQLite           (backend/.../infrastructure/db)
-```
+## What The App Helps With
 
-The renderer never contacts the sidecar directly. The sidecar binds only to
-`127.0.0.1` on a dynamic port and requires a per-launch `X-API-Key` token that
-lives solely in Rust in-memory state — it is never written to disk, sent to the
-renderer, or logged.
+- **Portfolio dashboard**: see project status, scores, weekly session totals,
+  and upcoming milestones at a glance.
+- **Project management**: move projects through active, backlog, and archive
+  states with priority ordering.
+- **Session scheduling**: plan time-boxed work sessions from 15 to 480 minutes
+  and link them to projects, milestones, and weeks.
+- **Weekly budget tracking**: compare planned and completed session time against
+  your configured weekly capacity.
+- **Milestone tracking**: track outcome-based milestones from backlog through
+  planned, doing, done, or cancelled.
+- **Plan documents**: keep Markdown project plans with Mermaid diagram support.
+- **Weekly review**: capture structured reflections and revisit past reviews.
+- **Configurable scoring**: use session completion and milestone progress to
+  keep portfolio health visible.
+- **Auto-save**: changes persist immediately; there is no separate save step.
 
-## Supported platforms
+## First Launch
 
-macOS is the first release target (Apple Silicon verified; Intel supported by
-building the sidecar for `x86_64-apple-darwin`). Windows and Linux follow after
-macOS parity. Core Python logic runs on any platform.
+On first launch, Portfolio Manager creates a local configuration directory and
+SQLite database in your home folder:
 
-## Prerequisites
-
-- Python 3.11+
-- Node 18+ and npm
-- Rust **≥ 1.85** — a hard floor set by Tauri 2.x's edition-2024 dependencies.
-  Install through rustup so it stays upgradable:
-
-  ```bash
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  . "$HOME/.cargo/env"      # add to your shell profile
-  ```
-
-  See [rust-toolchain.md](site/src/development/rust-toolchain.md).
-- The Tauri CLI (`cargo install tauri-cli`, or `npm run tauri` once npm
-  dependencies install cleanly).
-
-## Development
-
-### Backend (FastAPI sidecar)
-
-```bash
-python -m venv .venv
-.venv/bin/pip install -e "backend[dev]"
-cd backend && ../.venv/bin/pytest      # 84 tests, ~85% coverage
+```text
+~/.portfolio_manager/config.toml
+~/.portfolio_manager/portfolio.db
 ```
 
-Run the sidecar directly (loopback + token auth):
+Your project data is local to your machine. The default weekly session budget is 12 hours and the default session length is 90 minutes; both can be changed from the app settings or by editing the config file.
 
-```bash
-PORTFOLIO_SIDECAR_TOKEN=dev-token \
-  .venv/bin/python -m portfolio_manager.cli.sidecar --port 8765
-curl -s 127.0.0.1:8765/health
-curl -s -H "X-API-Key: dev-token" 127.0.0.1:8765/api/v1/projects
+## Updating
+
+For packaged desktop builds, download and install the newest release from the repository's Releases page. Your local data lives outside the app bundle, so updating the app should not remove your portfolio database.
+
+Before trying pre-release builds, make a copy of:
+
+```text
+~/.portfolio_manager/portfolio.db
 ```
 
-### Frontend (React renderer)
+## Troubleshooting
 
-Run these from the **repository root**. The Vite and TypeScript configs live in
-`frontend/`, and the npm scripts pass that root through — invoking `vitest` or
-`tsc` bare from the root picks up no config and reports misleading failures.
+If the app will not open on macOS, check whether the release notes mention code signing or notarization status for that build. Early builds may require opening the app from Finder with **Open** instead of double-clicking.
 
-```bash
-npm install
-npm test            # Vitest — 11 tests
-npm run typecheck   # tsc --noEmit
-npm run build       # typecheck + production bundle
+If your projects or sessions appear to be missing, confirm that the app is using the expected database path in:
+
+```text
+~/.portfolio_manager/config.toml
 ```
 
-### Tauri shell
-
-```bash
-cd src-tauri && cargo test    # 10 unit tests: security, supervisor, forwarder
-npm run tauri dev             # from repo root — runs the full stack
-```
-
-`cargo test` compiles the Tauri context, so it needs the frozen sidecar binary
-and an **RGBA** `src-tauri/icons/icon.png` to exist before it will build.
-
-### Contract types
-
-```bash
-python scripts/generate_openapi.py          # regenerate frontend/src/contracts/generated
-python scripts/verify_no_renderer_http.py   # assert renderer has no direct HTTP
-```
-
-## Packaging (macOS)
-
-```bash
-pip install -e "backend[dev,package]"
-python scripts/build_sidecar.py
-npm run tauri build
-scripts/install_macos_app.sh                # sign, verify, install to /Applications
-```
-
-`install_macos_app.sh` signs nested Mach-O code before the bundle, verifies the
-signature, then stages and swaps the install so a failed copy cannot destroy a
-working app. It uses a **Developer ID Application** certificate when the
-keychain has one (hardened runtime + `src-tauri/entitlements.plist`) and
-otherwise falls back to **ad-hoc signing** — enough to run locally, but not
-notarizable or distributable. `--help` lists the options.
-
-## Default local paths
-
-| Purpose | Path |
-| --- | --- |
-| Config | `~/.portfolio_manager/config.toml` |
-| Database | `~/.portfolio_manager/portfolio.db` |
-| Backups | `~/.portfolio_manager/portfolio.db.bak` |
-| Logs | `~/.portfolio_manager/logs/` |
-
-Existing Tkinter-created databases (schema v1–v4) open without manual conversion;
-a backup is written before any pending migration.
-
-## Security boundary summary
-
-- Dynamic loopback port + cryptographically random per-launch token.
-- Token in Rust in-memory state only (`secrecy::SecretString`); never persisted,
-  sent to the renderer, or logged.
-- Every non-health route requires `X-API-Key`; `/health` and `/ready` are
-  unauthenticated and expose no sensitive data (ADR-007).
-- Production builds disable Swagger/ReDoc/OpenAPI and WebView devtools.
-- No generic renderer command; the Tauri command allowlist is the full surface.
-
-See [the ADRs](site/src/architecture/decisions/) and the
-[traceability matrix](site/src/requirements/traceability.md) for the
-requirement-to-test mapping.
-
-## Documentation
-
-Sources live in **`site/src/`**. `docs/` is generated output — `mkdocs.yml` sets
-`docs_dir: site/src` and `site_dir: docs`, so every build wipes and rewrites
-`docs/`. Never edit files there. The user guide under `site/src/guide/` is also
-generated, from the DITA sources in `guide/`.
-
-```bash
-mkdocs serve            # live preview
-mkdocs build --strict   # writes docs/ — the GitHub Pages root
-```
-
-## Known issues
-
-- **`npm install` fails on network mounts** with `ENOTEMPTY`, leaving a partial
-  `node_modules` and no `.bin`. Use a local-disk clone or a local prefix.
-- **One flaky Rust test.** `security::port::tests::picks_a_nonzero_loopback_port`
-  fails about 1 run in 10 in parallel, never under `--test-threads=1`. It
-  asserts an immediate port re-bind that the module documents as racy by
-  design; the production code is correct.
-- **Ad-hoc signing only.** With no Developer ID in the keychain, `spctl` reports
-  `rejected`. That is expected and does not stop the app running locally, but it
-  cannot be notarized or opened on another Mac without clearing quarantine.
-- **Two apps share the name "Portfolio Manager"** — the legacy launcher in
-  `~/Applications` (a shell script calling `launch.sh`) and the V2 bundle in
-  `/Applications`. Spotlight and the Dock will show both.
-- **Build the `.app` last if you plan to sign it.** `--bundles dmg` deletes the
-  staged `.app` after packing it, so the install script finds nothing.
-
-## Legacy Tkinter app
-
-The original app still runs from `src/` via `bash launch.sh`. It will be retired
-once the Tauri app reaches accepted parity (implementation plan, Phase 17).
-
-## License
-
-See [LICENSE](LICENSE).
+Developer setup, legacy launch scripts, architecture notes, and the release
+roadmap live in [DEV-AND-ROADMAP.md](DEV-AND-ROADMAP.md).

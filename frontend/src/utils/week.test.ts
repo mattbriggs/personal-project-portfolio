@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addWeeks, currentWeekKey, weekInfo, weekRange } from "./week";
+import { addWeeks, currentWeekKey, weekInfo, weekKeyForDate, weekRange } from "./week";
 
 describe("week utils", () => {
   it("computes the ISO date range for a key", () => {
@@ -21,5 +21,16 @@ describe("week utils", () => {
 
   it("returns a valid current week key", () => {
     expect(currentWeekKey(new Date("2026-04-07T12:00:00Z"))).toBe("2026.15");
+  });
+
+  it("derives a week key from a calendar date", () => {
+    expect(weekKeyForDate("2026-04-08")).toBe("2026.15");
+    expect(weekKeyForDate("2026-01-01")).toBe("2026.1");
+  });
+
+  it("rejects malformed or rolled-over dates", () => {
+    expect(weekKeyForDate("")).toBeNull();
+    expect(weekKeyForDate("08/04/2026")).toBeNull();
+    expect(weekKeyForDate("2026-02-30")).toBeNull();
   });
 });

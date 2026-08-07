@@ -4,6 +4,7 @@ import { reviews as api } from "@/command-client";
 import type { WeeklyReview } from "@/contracts";
 import { useInvalidate } from "@/hooks/useInvalidate";
 import { useWorkspace } from "@/state/workspace";
+import { ExpandEditor } from "./ExpandEditor";
 
 const TEXT_FIELDS: { key: keyof WeeklyReview; label: string }[] = [
   { key: "what_moved", label: "What moved" },
@@ -20,6 +21,7 @@ export function ReviewsView() {
   const { selectedWeek } = useWorkspace();
   const { afterReviewMutation } = useInvalidate();
   const [draft, setDraft] = useState<WeeklyReview | null>(null);
+  const [expanded, setExpanded] = useState<(typeof TEXT_FIELDS)[number] | null>(null);
 
   const reviewQuery = useQuery({
     queryKey: ["review", selectedWeek],
@@ -92,9 +94,21 @@ export function ReviewsView() {
         </div>
         {TEXT_FIELDS.map((f) => (
           <div className="field" key={f.key}>
-            <label htmlFor={`r-${f.key}`}>{f.label}</label>
+            <div className="field-row">
+              <label htmlFor={`r-${f.key}`}>{f.label}</label>
+              <span className="spacer" />
+              <button
+                type="button"
+                aria-label={`Expand ${f.label}`}
+                title={`Expand ${f.label}`}
+                onClick={() => setExpanded(f)}
+              >
+                ⤢
+              </button>
+            </div>
             <textarea
               id={`r-${f.key}`}
+              rows={3}
               value={String(draft[f.key] ?? "")}
               onChange={(e) => set(f.key, e.target.value as never)}
             />
@@ -125,6 +139,18 @@ export function ReviewsView() {
           </li>
         ))}
       </ul>
+
+      {expanded && draft && (
+        <ExpandEditor
+          label={expanded.label}
+          value={String(draft[expanded.key] ?? "")}
+          onCancel={() => setExpanded(null)}
+          onDone={(value) => {
+            set(expanded.key, value as never);
+            setExpanded(null);
+          }}
+        />
+      )}
     </section>
   );
 }

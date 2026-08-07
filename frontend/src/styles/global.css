@@ -48,10 +48,60 @@ body { margin: 0; background: var(--bg); }
 
 table { border-collapse: collapse; width: 100%; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+
+/* Scrollable lists ----------------------------------------------------
+   macOS hides overlay scrollbars until a scroll is already in progress, so a
+   long list looks simply truncated with no hint that it continues. The Tkinter
+   app shows a persistent trough beside every list, so scrollbars are styled
+   explicitly here to stay visible. */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--rail-bg); border-radius: 6px; }
+::-webkit-scrollbar-thumb {
+  background: #b4b9c2; border-radius: 6px; border: 3px solid var(--rail-bg);
+}
+::-webkit-scrollbar-thumb:hover { background: #969ca6; }
+.main-view, .week-rail, .table-scroll, .dialog { scrollbar-gutter: stable; }
+
+.table-scroll {
+  max-height: 22rem; overflow: auto;
+  border: 1px solid var(--border); border-radius: 4px;
+}
+.table-scroll table { margin: 0; }
+.table-scroll thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--rail-bg); border-bottom: 1px solid var(--border);
+}
+tbody tr[aria-selected="true"] { background: #e8f0fe; }
+tbody tr.row-clickable { cursor: pointer; }
+td.status-cancelled, td.status-done { color: var(--muted); }
+
+/* Sortable column heading, matching the Tkinter click-to-cycle behavior. */
+th button.sort-btn {
+  background: none; border: none; padding: 0; font: inherit; font-weight: 600;
+  cursor: pointer; color: inherit;
+}
+
+/* Toolbars and summary bars ------------------------------------------- */
+.toolbar, .action-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0;
+}
+.toolbar .spacer { flex: 1; }
+.budget-bar {
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 10px; color: var(--muted); margin-top: 8px;
+}
+
 .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
 .field label { font-weight: 600; }
+.field-row { display: flex; align-items: center; gap: 8px; }
+.field-hint { color: var(--muted); font-weight: 400; font-size: 12px; }
 .field-error { color: var(--red); font-size: 12px; }
+textarea { font: inherit; padding: 6px; border: 1px solid var(--border); border-radius: 4px; }
 .dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
-.dialog { background: #fff; padding: 20px; border-radius: 8px; min-width: 420px; max-width: 90vw; }
+.dialog {
+  background: #fff; padding: 20px; border-radius: 8px;
+  min-width: 420px; max-width: 90vw; max-height: 85vh; overflow-y: auto;
+}
+.dialog-actions { display: flex; gap: 8px; margin-top: 12px; }
 button.primary { background: var(--accent); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
 button.danger { background: var(--red); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
