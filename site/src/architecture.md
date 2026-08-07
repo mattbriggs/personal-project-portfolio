@@ -1,123 +1,143 @@
 # Architecture
 
-## Overview
+The repository contains two applications that share one SQLite database and one
+set of domain rules. The V2 stack is the migration target; the Tkinter app is
+what currently runs. See [Home](index.md) for the current status of each.
 
-Portfolio Manager uses a layered **Model-View-Controller (MVC)** architecture augmented with a **Service Layer** for business logic and a **Repository Layer** for data access. This separation ensures views contain no business logic and all SQL is confined to repositories.
+---
+
+## V2 architecture (Tauri + React + FastAPI)
+
+The renderer never contacts the sidecar directly. Every call crosses a fixed
+chain of layers, each of which can reject it.
+
+```
+React renderer
+  → typed Tauri command client        (frontend/src/command-client)
+  → allowlisted Tauri command         (src-tauri/src/commands)
+  → authenticated Rust HTTP forwarder (src-tauri/src/http)
+  → loopback-only FastAPI route       (backend/.../api/routes)
+  → Pydantic contract                 (backend/.../contracts)
+  → application service               (backend/.../application/services)
+  → repository port → SQLite          (backend/.../infrastructure/db)
+```
 
 ```mermaid
 graph TD
-    subgraph "Presentation Layer"
-        V1[DashboardView]
-        V2[SessionView]
-        V3[ProjectView]
-        V4[MilestoneView]
-        V5[WeeklyReviewView]
-        V6[SettingsView]
+    subgraph "Renderer — React / TypeScript"
+        UI[Feature views]
+        CC[Typed command client]
+        Q[TanStack Query cache]
     end
 
-    subgraph "Controller Layer"
-        C1[DashboardController]
-        C2[SessionController]
-        C3[ProjectController]
-        C4[MilestoneController]
-        C5[ReviewController]
-        C6[SettingsController]
+    subgraph "Shell — Rust / Tauri"
+        CMD[Command allowlist]
+        FWD[HTTP forwarder + X-API-Key]
+        SUP[Sidecar supervisor]
+        SEC[Port + token generation]
     end
 
-    subgraph "Service Layer"
-        S1[ProjectService]
-        S2[SessionService]
-        S3[ScoringService]
-        S4[PlanService]
-        S5[WeekService]
+    subgraph "Sidecar — Python / FastAPI"
+        RT[Routes]
+        CON[Pydantic contracts]
+        SVC[Application services]
+        DOM[Domain: scoring, week, slug]
+        REPO[Repositories]
     end
 
-    subgraph "Repository Layer"
-        R1[ProjectRepository]
-        R2[SessionRepository]
-        R3[MilestoneRepository]
-        R4[ReviewRepository]
-        R5[ScoreRepository]
-    end
+    DB[(SQLite)]
 
-    subgraph "Infrastructure"
-        DB[(SQLite Database)]
-        LOG[Logger]
-        CFG[Config / Settings]
-        BUS[EventBus]
-    end
-
-    V1 --> C1
-    V2 --> C2
-    V3 --> C3
-    V4 --> C4
-    V5 --> C5
-    V6 --> C6
-
-    C1 --> S1
-    C1 --> S3
-    C2 --> S2
-    C3 --> S1
-    C3 --> S4
-    C4 --> R3
-    C5 --> R4
-    C6 --> CFG
-
-    S1 --> R1
-    S2 --> R2
-    S3 --> R2
-    S3 --> R3
-    S3 --> R5
-    S4 --> R1
-    S5 -.-> BUS
-
-    R1 --> DB
-    R2 --> DB
-    R3 --> DB
-    R4 --> DB
-    R5 --> DB
+    UI --> CC --> CMD --> FWD --> RT
+    Q -.invalidation.-> CC
+    SUP --> SEC
+    SUP -.spawns.-> RT
+    RT --> CON --> SVC --> DOM
+    SVC --> REPO --> DB
 ```
 
----
-
-## Layer Responsibilities
+### Layer responsibilities
 
 | Layer | Responsibility |
-|-------|---------------|
-| **Views** | Render Tkinter widgets; fire user events; call controller methods |
-| **Controllers** | Translate UI actions to service calls; bind views to event bus |
-| **Services** | Enforce business rules; orchestrate repositories; emit domain events |
-| **Repositories** | Execute SQL; map rows to domain objects; enforce transaction boundaries |
-| **Infrastructure** | Singleton DB connection; logging setup; TOML config; event bus |
+| --- | --- |
+| **Renderer views** | Render accessible React components; no direct HTTP (enforced by a build check) |
+| **Command client** | Typed wrapper over Tauri `invoke`; the renderer's only way out |
+| **Tauri commands** | Explicit allowlist in `lib.rs` — the complete API surface |
+| **HTTP forwarder** | Attaches the `X-API-Key` token; the only component that knows it |
+| **Supervisor** | Spawns the sidecar, allocates a port and token, shuts it down with the app |
+| **Routes / contracts** | Validate and shape requests and responses |
+| **Services** | Enforce business rules and orchestrate repositories |
+| **Domain** | Scoring, week keys, slugs — ported verbatim from the Tkinter app |
+| **Repositories** | Execute SQL; map rows to domain objects; own transaction boundaries |
 
----
-
-## Application Startup Sequence
+### Startup sequence
 
 ```mermaid
 sequenceDiagram
-    participant L as launch.sh
-    participant A as app.py
-    participant CFG as Settings
-    participant DB as DatabaseConnection
-    participant MIG as migrations.py
-    participant GUI as MainWindow
+    participant T as Tauri shell
+    participant S as Security
+    participant P as Sidecar process
+    participant R as Readiness poll
+    participant U as Renderer
 
-    L->>A: python -m portfolio_manager
-    A->>CFG: load_settings()
-    CFG-->>A: Settings object (or defaults)
-    A->>DB: DatabaseConnection.initialise(path)
-    DB-->>A: connection ready
-    A->>MIG: run_migrations(db)
-    MIG-->>A: schema up to date
-    A->>GUI: build MainWindow(controllers)
-    GUI->>GUI: DashboardView.refresh()
-    GUI-->>A: Tk mainloop
+    T->>S: pick free loopback port + generate token
+    S-->>T: port, SecretString token
+    T->>P: spawn sidecar (token via env, not argv)
+    P->>P: bind 127.0.0.1:<port>, run migrations
+    T->>R: poll /ready
+    R-->>T: ready
+    T->>U: show window
+    U->>T: invoke("list_projects")
+    T->>P: GET /api/v1/projects + X-API-Key
+```
+
+### Security boundary
+
+- Dynamic loopback port and a cryptographically random per-launch token.
+- The token lives only in Rust in-memory state (`secrecy::SecretString`). It is
+  never persisted, sent to the renderer, or logged (redaction filters cover both
+  the Rust and Python sides).
+- Every route except `/health` and `/ready` requires `X-API-Key`; those two are
+  unauthenticated because they expose no sensitive data (ADR-007).
+- Production builds disable Swagger, ReDoc, the OpenAPI schema, and WebView
+  devtools.
+- There is no generic "call the API" command — the Tauri allowlist *is* the
+  full surface.
+
+### Source structure
+
+```
+backend/src/portfolio_manager/
+├── domain/           # Scoring, week keys, slugs, migrations (ported verbatim)
+├── application/      # Services, DTOs, repository ports
+├── infrastructure/   # SQLite, config, logging, security
+├── contracts/        # Pydantic request/response models
+├── api/              # FastAPI app, routes, middleware, error handlers
+└── cli/              # Sidecar entry point
+
+frontend/src/
+├── command-client/   # Typed wrappers over Tauri invoke (no direct HTTP)
+├── contracts/        # Generated TypeScript types from OpenAPI
+├── features/         # One module per workspace view
+├── components/       # Shared accessible components
+├── hooks/            # Query invalidation, sidecar health
+└── state/            # Workspace context (selected week, etc.)
+
+src-tauri/src/
+├── lib.rs            # Command allowlist and app wiring
+├── commands/         # One module per domain area
+├── http/             # Authenticated forwarder to the sidecar
+├── security/         # Port selection, token generation
+├── sidecar/          # Supervisor, launcher, readiness, shutdown
+└── logging.rs        # Secret-redacting log setup
 ```
 
 ---
 
-## Project Lifecycle
+## Domain lifecycles
+
+These are enforced by the shared domain layer and apply to both applications.
+
+### Project lifecycle
 
 ```mermaid
 stateDiagram-v2
@@ -129,9 +149,7 @@ stateDiagram-v2
     Archive --> [*] : read-only history
 ```
 
----
-
-## Session Lifecycle
+### Session lifecycle
 
 ```mermaid
 stateDiagram-v2
@@ -147,9 +165,7 @@ stateDiagram-v2
     Cancelled --> [*] : delete
 ```
 
----
-
-## Milestone Lifecycle
+### Milestone lifecycle
 
 ```mermaid
 stateDiagram-v2
@@ -164,24 +180,39 @@ stateDiagram-v2
     Done --> [*] : (remains in history)
 ```
 
+!!! note "One deliberate behavior change"
+    The V2 scoring denominator excludes cancelled milestones; the Tkinter app
+    counted them. This follows the SRS rule and is recorded in
+    [ADR-002](architecture/decisions/adr-002-preserve-domain.md).
+
 ---
 
-## Source Structure
+## Legacy architecture (Tkinter)
+
+The original app uses layered **MVC** with a service layer for business logic
+and a repository layer for data access. Views contain no business logic and all
+SQL is confined to repositories.
+
+```
+User action → View → Controller → Service → Repository → SQLite
+                                         ← Model ←
+```
+
+| Layer | Responsibility |
+| --- | --- |
+| **Views** | Render Tkinter widgets; fire user events; call controller methods |
+| **Controllers** | Translate UI actions to service calls; bind views to the event bus |
+| **Services** | Enforce business rules; orchestrate repositories; emit domain events |
+| **Repositories** | Execute SQL; map rows to domain objects; enforce transaction boundaries |
+| **Infrastructure** | Singleton DB connection; logging setup; TOML config; event bus |
 
 ```
 src/portfolio_manager/
 ├── __main__.py          # python -m portfolio_manager entry point
 ├── app.py               # Bootstrap: wires all layers, returns MainWindow
 ├── exceptions.py        # Custom exception hierarchy
-│
-├── config/
-│   └── settings.py      # Settings dataclass + TOML loader
-│
-├── db/
-│   ├── connection.py    # Singleton DatabaseConnection
-│   ├── migrations.py    # Versioned migration runner
-│   └── schema.sql       # Initial DDL
-│
+├── config/settings.py   # Settings dataclass + TOML loader
+├── db/                  # Singleton connection, migrations, schema.sql
 ├── models/              # Dataclass domain objects (no DB logic)
 ├── repositories/        # SQL access (one per entity)
 ├── services/            # Business logic (one per domain)
@@ -190,3 +221,5 @@ src/portfolio_manager/
 ├── events/              # EventBus (Observer pattern)
 └── utils/               # Date helpers, logging setup
 ```
+
+See [Design Patterns](design-patterns.md) for the patterns used in each stack.

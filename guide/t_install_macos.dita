@@ -19,6 +19,13 @@
       </ul>
     </prereq>
 
+    <context>
+      <note type="important">These steps install the current Python version of Portfolio Manager,
+        which runs from a cloned repository. The V2 desktop application installs as a signed
+        application bundle and requires no Python setup, but it is not yet available. See
+        <xref href="c_app_versions.dita"/>.</note>
+    </context>
+
     <steps>
       <step>
         <cmd>Open Terminal and clone the Portfolio Manager repository:</cmd>

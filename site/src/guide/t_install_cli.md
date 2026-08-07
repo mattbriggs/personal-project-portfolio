@@ -7,6 +7,7 @@ Install and launch Portfolio Manager using the shell launch script or a manual v
 -   Git
 -   An internet connection for the initial clone
 
+**Important:** These steps install the current Python version of Portfolio Manager. The V2 desktop application will not require a virtual environment or a Tkinter-capable Python, but it is not yet available. See [Which Version This Guide Describes](c_app_versions.md).
 
 1.  Clone the repository:
 

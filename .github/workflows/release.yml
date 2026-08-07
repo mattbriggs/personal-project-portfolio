@@ -1,0 +1,45 @@
+name: Release
+
+# Manual/tag-triggered macOS packaging. Signing and notarization are added
+# once Apple credentials are provisioned (see docs/architecture/decisions/
+# adr-010-macos-arch.md). This lane builds the frozen sidecar and the Tauri app.
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  macos:
+    name: Build macOS app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install backend + PyInstaller
+        run: pip install -e "./backend[dev,package]"
+
+      - name: Build sidecar binary
+        run: python scripts/build_sidecar.py --target-triple $(rustc -Vv | grep host | cut -d' ' -f2)
+
+      - name: Install frontend deps
+        run: npm install --no-audit --no-fund
+
+      - name: Build Tauri app
+        run: npm run tauri build
+
+      - name: Upload app bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-manager-macos
+          path: src-tauri/target/release/bundle/**

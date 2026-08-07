@@ -8,6 +8,7 @@
        ============================================================ -->
   <topichead navtitle="Getting Started">
     <topicref href="c_portfolio_paradigm.dita" type="concept"/>
+    <topicref href="c_app_versions.dita"       type="concept"/>
     <topicref href="t_install_macos.dita"      type="task"/>
     <topicref href="t_install_cli.dita"         type="task"/>
     <topicref href="t_first_launch.dita"        type="task"/>

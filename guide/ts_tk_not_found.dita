@@ -8,6 +8,9 @@
   <troublebody>
 
     <condition>
+      <note type="note">This applies to the current Python version of Portfolio Manager. The V2
+        desktop application bundles its own runtime and does not use Tkinter, so this error cannot
+        occur there. See <xref href="c_app_versions.dita"/>.</note>
       <p>Launching Portfolio Manager produces one of the following errors:</p>
       <codeblock>ModuleNotFoundError: No module named '_tkinter'
 ModuleNotFoundError: No module named 'tkinter'</codeblock>

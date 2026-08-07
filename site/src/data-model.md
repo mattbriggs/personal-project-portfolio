@@ -2,6 +2,13 @@
 
 All data is stored in a single SQLite file at `~/.portfolio_manager/portfolio.db`.
 
+**Both applications share this schema.** The V2 sidecar ports the migration
+runner from the Tkinter app verbatim
+([ADR-002](architecture/decisions/adr-002-preserve-domain.md)), so a database
+created by either app opens in the other. Schema versions v1–v4 upgrade
+automatically, and a backup is written to `<name>.db.bak` before any migration
+runs.
+
 ---
 
 ## Entity-Relationship Diagram

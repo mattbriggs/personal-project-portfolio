@@ -1,0 +1,51 @@
+name: Integration
+
+on:
+  push:
+    branches: ["main", "mdb_*"]
+    paths: ["backend/**", "frontend/**", "scripts/**", ".github/workflows/integration.yml"]
+  pull_request:
+    paths: ["backend/**", "frontend/**", "scripts/**", ".github/workflows/integration.yml"]
+
+jobs:
+  contract-drift:
+    name: OpenAPI → TypeScript drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install backend
+        run: pip install -e "./backend[dev]"
+
+      - name: Regenerate contract types
+        run: python scripts/generate_openapi.py
+
+      - name: Fail on drift
+        run: |
+          if ! git diff --quiet -- frontend/src/contracts/generated; then
+            echo "::error::Generated contract types are stale. Run scripts/generate_openapi.py and commit."
+            git --no-pager diff -- frontend/src/contracts/generated
+            exit 1
+          fi
+
+  legacy-db-smoke:
+    name: Sidecar HTTP smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install backend
+        run: pip install -e "./backend[dev]"
+
+      - name: Sidecar smoke test
+        run: BACKEND_PY=python bash tests/smoke/sidecar_smoke.sh

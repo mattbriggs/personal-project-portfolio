@@ -22,8 +22,11 @@
     <section id="week_navigator">
       <title>Left Panel — Week Navigator</title>
       <p>The left panel displays a scrollable list of week keys in YYYY.W format. The list shows
-        the 12 preceding weeks, the current week (highlighted), and the 4 following weeks. Clicking
-        a week navigates the Sessions and Weekly Review tabs to that week.</p>
+        the 12 preceding weeks, the current week (highlighted), and at least 4 following weeks.
+        Clicking a week navigates the Sessions and Weekly Review tabs to that week.</p>
+      <p>The <uicontrol>More Weeks ▼</uicontrol> button at the bottom of the list appends 4
+        additional future weeks each time it is clicked, allowing the timeline to extend as far
+        forward as needed.</p>
     </section>
 
     <section id="tab_dashboard">
@@ -140,7 +143,12 @@
         </strow>
         <strow>
           <stentry>Milestone table</stentry>
-          <stentry>Columns: Description, Status, Target Date, Notes. Sorted by sort_order.</stentry>
+          <stentry>Columns: Milestone, Target, Week, Total Min, Status.</stentry>
+        </strow>
+        <strow>
+          <stentry>Milestone heading</stentry>
+          <stentry>Click to cycle sort: ascending ▲ → descending ▼ → original order. The arrow
+            indicator reflects the active sort direction.</stentry>
         </strow>
         <strow>
           <stentry>New Milestone</stentry>
@@ -148,7 +156,13 @@
         </strow>
         <strow>
           <stentry>Edit Milestone</stentry>
-          <stentry>Opens the Milestone dialog for the selected milestone.</stentry>
+          <stentry>Double-click a row to open the Milestone dialog for the selected
+            milestone.</stentry>
+        </strow>
+        <strow>
+          <stentry>Set Status / Apply</stentry>
+          <stentry>Changes the status of the selected milestone without opening the
+            dialog.</stentry>
         </strow>
         <strow>
           <stentry>Delete Milestone</stentry>
@@ -178,7 +192,16 @@
         </strow>
         <strow>
           <stentry>Review form</stentry>
-          <stentry>Eight text fields for reflection (what moved, what stalled, signals, decision for next week) and planning (primary focus, project to deprioritize, risk to watch, first session target).</stentry>
+          <stentry>Eight text fields for reflection (what moved, what stalled, signals, decision
+            for next week) and planning (primary focus, project to deprioritize, risk to watch,
+            first session target). Each field displays three lines of text.</stentry>
+        </strow>
+        <strow>
+          <stentry>Expand button (⤢)</stentry>
+          <stentry>Each field label row has a ⤢ button on the right. Clicking it opens a resizable
+            popup editor pre-filled with the field's current content. Click
+            <uicontrol>Done</uicontrol> to apply changes or <uicontrol>Cancel</uicontrol> (or press
+            Escape) to discard them.</stentry>
         </strow>
         <strow>
           <stentry>Save Review</stentry>

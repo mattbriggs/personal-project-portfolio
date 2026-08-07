@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!--
+    Hardened-runtime exceptions required by the PyInstaller sidecar.
+
+    A one-file PyInstaller binary unpacks CPython and its extension modules to a
+    temporary directory at launch and dlopen()s them from there. Under the
+    hardened runtime that is blocked by default: the loaded dylibs are not
+    signed by us, and CPython allocates writable-executable pages for ctypes.
+
+    These only take effect when signing with a real Developer ID (see
+    scripts/install_macos_app.sh). Ad-hoc signing does not enable the hardened
+    runtime, so they are inert for a local install.
+  -->
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+</dict>
+</plist>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="c_app_versions" xml:lang="en-US">
+  <title>Which Version This Guide Describes</title>
+  <shortdesc>Portfolio Manager is being rebuilt on a new technology stack. This guide describes the
+    version you can install and run today; this topic explains what is changing and what is
+    not.</shortdesc>
+
+  <conbody>
+
+    <section id="two_versions">
+      <title>Two versions, one database</title>
+      <p>The repository currently contains two applications that read the same SQLite database and
+        apply the same rules:</p>
+      <ul>
+        <li><b>The current app</b> — written in Python with a Tkinter interface. This is the
+          version that runs today, and the one every task in this guide describes.</li>
+        <li><b>The V2 app</b> — a desktop application built on Tauri, React, and a Python service.
+          It installs as a normal macOS application and needs no Python setup. It is available
+          now, but has not yet been through formal feature-parity acceptance.</li>
+      </ul>
+      <note type="important">The task steps in this guide were written against the current app.
+        The concepts, workflows, and reference material apply to both; the installation and
+        troubleshooting topics are specific to the current app.</note>
+    </section>
+
+    <section id="what_carries_over">
+      <title>What carries over</title>
+      <p>The parts of this guide that describe how Portfolio Manager <i>thinks</i> apply to both
+        versions without change, because the V2 app reuses the same domain logic:</p>
+      <ul>
+        <li>Project, session, and milestone lifecycles and their states</li>
+        <li>The scoring model and the weekly review cycle</li>
+        <li>Week numbering, the weekly budget, and the planning workflow</li>
+        <li>Configuration keys and the project plan Markdown syntax</li>
+      </ul>
+      <p>Your data carries over as well. A database created by the current app opens in the V2 app
+        with no manual conversion, and a backup is written before any upgrade runs.</p>
+    </section>
+
+    <section id="what_changes">
+      <title>What changes</title>
+      <p>Only the surrounding mechanics change:</p>
+      <ul>
+        <li><b>Installation.</b> The current app runs from a cloned repository and a Python virtual
+          environment. The V2 app will install as a signed macOS application bundle, with no
+          Python setup required.</li>
+        <li><b>Python and Tkinter requirements.</b> The V2 app bundles everything it needs, so the
+          Tkinter troubleshooting in this guide will no longer apply.</li>
+        <li><b>One scoring detail.</b> The V2 app excludes cancelled milestones when calculating a
+          project score; the current app counts them. A project with cancelled milestones may
+          therefore score slightly differently after the switch.</li>
+      </ul>
+    </section>
+
+  </conbody>
+</concept>

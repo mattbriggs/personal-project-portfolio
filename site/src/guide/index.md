@@ -2,6 +2,7 @@
 
 -   Getting Started
     -   [The Portfolio Paradigm](c_portfolio_paradigm.md)
+    -   [Which Version This Guide Describes](c_app_versions.md)
     -   [Install Portfolio Manager on macOS \(Dock Shortcut\)](t_install_macos.md)
     -   [Install Portfolio Manager via the Command Line](t_install_cli.md)
     -   [Set Up Portfolio Manager for the First Time](t_first_launch.md)
