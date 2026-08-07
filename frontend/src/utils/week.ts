@@ -82,6 +82,28 @@ export function currentWeekKey(now: Date = new Date()): string {
   return `${year}.${week}`;
 }
 
+/**
+ * Week key for a `YYYY-MM-DD` calendar date, or `null` when unparseable.
+ *
+ * The string is read as a plain calendar date with no timezone applied, so a
+ * milestone's target date lands in the same week the backend assigns it.
+ */
+export function weekKeyForDate(iso: string): string | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+  if (!match) return null;
+  const [, y, m, d] = match;
+  const date = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+  if (
+    date.getUTCFullYear() !== Number(y) ||
+    date.getUTCMonth() !== Number(m) - 1 ||
+    date.getUTCDate() !== Number(d)
+  ) {
+    return null; // rolled over, e.g. 2026-02-30
+  }
+  const { year, week } = isoWeek(date);
+  return `${year}.${week}`;
+}
+
 /** Add (or subtract) whole weeks to a `YYYY.W` key. */
 export function addWeeks(key: string, delta: number): string {
   const info = weekInfo(key);

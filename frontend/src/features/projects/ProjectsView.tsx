@@ -14,6 +14,7 @@ export function ProjectsView() {
   const [filter, setFilter] = useState<Filter>("active");
   const [editing, setEditing] = useState<Project | "new" | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Project | null>(null);
+  const [confirmArchive, setConfirmArchive] = useState<Project | null>(null);
   const [planFor, setPlanFor] = useState<Project | null>(null);
   const { afterProjectMutation } = useInvalidate();
 
@@ -64,12 +65,14 @@ export function ProjectsView() {
       {isLoading ? (
         <p>Loading…</p>
       ) : (
+        <div className="table-scroll">
         <table>
           <thead>
             <tr>
               <th>Name</th>
               <th>Status</th>
               <th>Priority</th>
+              <th>Started</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -81,13 +84,14 @@ export function ProjectsView() {
                   <td>{p.name}</td>
                   <td>{p.status}</td>
                   <td>{p.priority}</td>
+                  <td>{p.started_date ?? ""}</td>
                   <td>
                     <button onClick={() => setPlanFor(p)}>Plan</button>{" "}
                     <button onClick={() => setEditing(p)} disabled={archived}>
                       {archived ? "View" : "Edit"}
                     </button>{" "}
                     {!archived && (
-                      <button onClick={() => archiveMut.mutate(p.id)}>Archive</button>
+                      <button onClick={() => setConfirmArchive(p)}>Archive</button>
                     )}{" "}
                     <button className="danger" onClick={() => setConfirmDelete(p)}>
                       Delete
@@ -98,6 +102,7 @@ export function ProjectsView() {
             })}
           </tbody>
         </table>
+        </div>
       )}
 
       {editing === "new" && (
@@ -138,6 +143,19 @@ export function ProjectsView() {
             />
           )}
         </Dialog>
+      )}
+
+      {confirmArchive && (
+        <ConfirmDialog
+          title="Archive project"
+          message={`Move "${confirmArchive.name}" to Archive? Archived projects become read-only.`}
+          confirmLabel="Archive"
+          onCancel={() => setConfirmArchive(null)}
+          onConfirm={() => {
+            archiveMut.mutate(confirmArchive.id);
+            setConfirmArchive(null);
+          }}
+        />
       )}
 
       {confirmDelete && (

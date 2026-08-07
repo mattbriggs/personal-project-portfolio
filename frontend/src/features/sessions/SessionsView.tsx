@@ -1,33 +1,40 @@
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import {
   sessions as api,
+  milestones as milestoneApi,
   projects as projectApi,
   settings as settingsApi,
 } from "@/command-client";
-import type { SessionStatus } from "@/contracts";
+import type { Session, SessionStatus } from "@/contracts";
 import { isCommandError, type CommandError } from "@/command-client";
+import { Dialog } from "@/components/dialogs/Dialog";
+import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
 import { useInvalidate } from "@/hooks/useInvalidate";
 import { useWorkspace } from "@/state/workspace";
 import { weekInfo } from "@/utils/week";
+import { SessionForm, type SessionFormValues } from "./SessionForm";
 
 const STATUSES: SessionStatus[] = ["backlog", "planned", "doing", "done", "cancelled"];
+
+function hours(minutes: number): string {
+  return `${(minutes / 60).toFixed(1)}h`;
+}
 
 export function SessionsView() {
   const { selectedWeek } = useWorkspace();
   const info = weekInfo(selectedWeek);
   const { afterSessionMutation } = useInvalidate();
 
-  // Form draft state, preserved across validation failures.
-  const [projectId, setProjectId] = useState<number | "">("");
-  const [date, setDate] = useState(info.monday.toISOString().slice(0, 10));
-  const [duration, setDuration] = useState<string>("");
-  const [description, setDescription] = useState("");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [editing, setEditing] = useState<Session | "new" | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Session | null>(null);
+  const [bulkStatus, setBulkStatus] = useState<SessionStatus>("planned");
   const [formError, setFormError] = useState<CommandError | null>(null);
 
   const projectsQuery = useQuery({
-    queryKey: ["projects", "active"],
-    queryFn: () => projectApi.list("active"),
+    queryKey: ["projects", "all"],
+    queryFn: () => projectApi.list(),
   });
   const settingsQuery = useQuery({
     queryKey: ["settings"],
@@ -38,17 +45,49 @@ export function SessionsView() {
     queryFn: () => api.forWeek(selectedWeek),
   });
 
+  const sessionList = useMemo(
+    () => sessionsQuery.data?.sessions ?? [],
+    [sessionsQuery.data],
+  );
+  const projectNames = useMemo(() => {
+    const map = new Map<number, string>();
+    projectsQuery.data?.projects.forEach((p) => map.set(p.id, p.name));
+    return map;
+  }, [projectsQuery.data]);
+
+  // The session list carries milestone_id but not its description, so fetch the
+  // milestones of exactly the projects present this week to label the column.
+  const projectIdsInWeek = useMemo(
+    () => [...new Set(sessionList.map((s) => s.project_id))].sort(),
+    [sessionList],
+  );
+  const milestoneQueries = useQueries({
+    queries: projectIdsInWeek.map((pid) => ({
+      queryKey: ["milestones", pid],
+      queryFn: () => milestoneApi.forProject(pid),
+    })),
+  });
+  const milestoneNames = useMemo(() => {
+    const map = new Map<number, string>();
+    milestoneQueries.forEach((q) =>
+      q.data?.milestones.forEach((m) => map.set(m.id, m.description)),
+    );
+    return map;
+  }, [milestoneQueries]);
+
   const createMut = useMutation({
-    mutationFn: () =>
-      api.create({
-        project_id: Number(projectId),
-        scheduled_date: date,
-        duration_minutes: duration ? Number(duration) : null,
-        description,
-        status: "planned",
-      }),
+    mutationFn: (v: SessionFormValues) => api.create(v),
     onSuccess: () => {
-      setDescription("");
+      setEditing(null);
+      setFormError(null);
+      return afterSessionMutation();
+    },
+    onError: (err) => setFormError(isCommandError(err) ? err : null),
+  });
+  const updateMut = useMutation({
+    mutationFn: ({ id, v }: { id: number; v: SessionFormValues }) => api.update(id, v),
+    onSuccess: () => {
+      setEditing(null);
       setFormError(null);
       return afterSessionMutation();
     },
@@ -59,12 +98,23 @@ export function SessionsView() {
       api.setStatus(id, status),
     onSuccess: afterSessionMutation,
   });
+  const deleteMut = useMutation({
+    mutationFn: (id: number) => api.remove(id),
+    onSuccess: () => {
+      setSelectedId(null);
+      return afterSessionMutation();
+    },
+  });
 
+  // Cancelled sessions are excluded from both totals, matching the Tkinter view.
+  const counted = sessionList.filter((s) => s.status !== "cancelled");
+  const totalMinutes = counted.reduce((sum, s) => sum + s.duration_minutes, 0);
+  const doneMinutes = counted
+    .filter((s) => s.status === "done")
+    .reduce((sum, s) => sum + s.duration_minutes, 0);
   const budgetMinutes = (settingsQuery.data?.weekly_budget_hours ?? 0) * 60;
-  const plannedMinutes =
-    sessionsQuery.data?.sessions
-      .filter((s) => s.status !== "cancelled" && s.status !== "backlog")
-      .reduce((sum, s) => sum + s.duration_minutes, 0) ?? 0;
+
+  const selected = sessionList.find((s) => s.id === selectedId) ?? null;
 
   return (
     <section aria-label="Sessions">
@@ -72,112 +122,144 @@ export function SessionsView() {
         Sessions — {selectedWeek} <small>({info.label})</small>
       </h2>
 
-      <p>
-        Weekly budget: {(plannedMinutes / 60).toFixed(1)}h planned of{" "}
-        {(budgetMinutes / 60).toFixed(1)}h
+      <div className="toolbar">
+        <span className="spacer" />
+        <button
+          className="primary"
+          onClick={() => {
+            setFormError(null);
+            setEditing("new");
+          }}
+        >
+          New Session
+        </button>
+      </div>
+
+      <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Milestone</th>
+              <th>Date</th>
+              <th>Min</th>
+              <th>Status</th>
+              <th>Session</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sessionList.map((s) => (
+              <tr
+                key={s.id}
+                className="row-clickable"
+                aria-selected={s.id === selectedId}
+                onClick={() => setSelectedId(s.id)}
+                onDoubleClick={() => {
+                  setFormError(null);
+                  setEditing(s);
+                }}
+              >
+                <td>{projectNames.get(s.project_id) ?? `#${s.project_id}`}</td>
+                <td>
+                  {s.milestone_id
+                    ? (milestoneNames.get(s.milestone_id) ?? `#${s.milestone_id}`)
+                    : ""}
+                </td>
+                <td>{s.scheduled_date}</td>
+                <td>{s.duration_minutes}</td>
+                <td className={`status-${s.status}`}>{s.status}</td>
+                <td>{s.description}</td>
+              </tr>
+            ))}
+            {sessionList.length === 0 && (
+              <tr>
+                <td colSpan={6}>No sessions this week.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="action-bar">
+        <label htmlFor="s-bulk-status">Set Status:</label>
+        <select
+          id="s-bulk-status"
+          value={bulkStatus}
+          onChange={(e) => setBulkStatus(e.target.value as SessionStatus)}
+        >
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <button
+          disabled={!selected}
+          onClick={() => selected && statusMut.mutate({ id: selected.id, status: bulkStatus })}
+        >
+          Apply
+        </button>
+        <button
+          disabled={!selected}
+          onClick={() => selected && setEditing(selected)}
+        >
+          Edit
+        </button>
+        <button
+          className="danger"
+          disabled={!selected}
+          onClick={() => selected && setConfirmDelete(selected)}
+        >
+          Delete
+        </button>
+      </div>
+
+      <p className="budget-bar">
+        Planned {hours(totalMinutes)} · Done {hours(doneMinutes)} · Remaining{" "}
+        {hours(Math.max(0, budgetMinutes - doneMinutes))} of {hours(budgetMinutes)} budget
       </p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Duration</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sessionsQuery.data?.sessions.map((s) => (
-            <tr key={s.id}>
-              <td>{s.scheduled_date}</td>
-              <td>{s.description}</td>
-              <td>{s.duration_minutes}m</td>
-              <td>
-                <select
-                  aria-label={`Status for session ${s.id}`}
-                  value={s.status}
-                  onChange={(e) =>
-                    statusMut.mutate({ id: s.id, status: e.target.value as SessionStatus })
-                  }
-                >
-                  {STATUSES.map((st) => (
-                    <option key={st} value={st}>
-                      {st}
-                    </option>
-                  ))}
-                </select>
-              </td>
-            </tr>
-          ))}
-          {sessionsQuery.data?.sessions.length === 0 && (
-            <tr>
-              <td colSpan={4}>No sessions this week.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      <h3>Add session</h3>
-      {formError && (
-        <p className="field-error" role="alert">
-          {formError.message}
-        </p>
+      {editing === "new" && (
+        <Dialog title="New Session" onClose={() => setEditing(null)}>
+          <SessionForm
+            projects={projectsQuery.data?.projects ?? []}
+            defaultDuration={settingsQuery.data?.default_duration_minutes ?? 90}
+            defaultDate={info.monday.toISOString().slice(0, 10)}
+            submitLabel="Save"
+            error={formError?.message ?? null}
+            onCancel={() => setEditing(null)}
+            onSubmit={(v) => createMut.mutate(v)}
+          />
+        </Dialog>
       )}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createMut.mutate();
-        }}
-      >
-        <div className="field">
-          <label htmlFor="s-project">Project</label>
-          <select
-            id="s-project"
-            value={projectId}
-            onChange={(e) => setProjectId(e.target.value ? Number(e.target.value) : "")}
-            required
-          >
-            <option value="">Select…</option>
-            {projectsQuery.data?.projects.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="s-date">Date</label>
-          <input
-            id="s-date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+
+      {editing && editing !== "new" && (
+        <Dialog title="Edit Session" onClose={() => setEditing(null)}>
+          <SessionForm
+            projects={projectsQuery.data?.projects ?? []}
+            initial={editing}
+            defaultDuration={settingsQuery.data?.default_duration_minutes ?? 90}
+            defaultDate={editing.scheduled_date}
+            submitLabel="Save"
+            error={formError?.message ?? null}
+            onCancel={() => setEditing(null)}
+            onSubmit={(v) => updateMut.mutate({ id: editing.id, v })}
           />
-        </div>
-        <div className="field">
-          <label htmlFor="s-duration">Duration (minutes, 15–480; blank = default)</label>
-          <input
-            id="s-duration"
-            type="number"
-            min={15}
-            max={480}
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            placeholder={String(settingsQuery.data?.default_duration_minutes ?? 90)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="s-desc">Description</label>
-          <input
-            id="s-desc"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="primary" disabled={!projectId}>
-          Add session
-        </button>
-      </form>
+        </Dialog>
+      )}
+
+      {confirmDelete && (
+        <ConfirmDialog
+          title="Delete session"
+          message={`Delete this session? This cannot be undone.`}
+          confirmLabel="Delete"
+          onCancel={() => setConfirmDelete(null)}
+          onConfirm={() => {
+            deleteMut.mutate(confirmDelete.id);
+            setConfirmDelete(null);
+          }}
+        />
+      )}
     </section>
   );
 }
