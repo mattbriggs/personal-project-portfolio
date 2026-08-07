@@ -1,6 +1,8 @@
 # Development And Roadmap
 
-Portfolio Manager is a local-first desktop application for managing creative and technical project portfolios. The current state includes a Python application with MVC architecture, SQLite persistence, and various domain models. The roadmap outlines the transition to a Tauri desktop application, with a focus on packaging, distribution, and expanding features like import/export, backup workflows, and dashboard enhancements.
+This document keeps the source-oriented notes that used to live in the README.
+The README now targets people who want to download and use the Tauri desktop
+app.
 
 ## Current State
 
