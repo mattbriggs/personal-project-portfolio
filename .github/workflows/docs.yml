@@ -1,0 +1,29 @@
+name: Docs
+
+on:
+  push:
+    branches: ["main", "mdb_*"]
+    paths: ["docs/**", ".github/workflows/docs.yml"]
+  pull_request:
+    paths: ["docs/**", ".github/workflows/docs.yml"]
+
+jobs:
+  links:
+    name: Validate docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check ADR + traceability presence
+        run: |
+          set -e
+          test -f docs/architecture/decisions/README.md
+          test -f docs/requirements/traceability.md
+          test -f docs/release/completion-report.md
+          # Every ADR referenced in the index must exist.
+          missing=0
+          while read -r adr; do
+            f="docs/architecture/decisions/$adr"
+            if [ ! -f "$f" ]; then echo "Missing $f"; missing=1; fi
+          done < <(grep -oE 'adr-[0-9]+-[a-z-]+\.md' docs/architecture/decisions/README.md | sort -u)
+          exit $missing

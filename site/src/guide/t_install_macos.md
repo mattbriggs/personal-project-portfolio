@@ -1,8 +1,32 @@
-# Install Portfolio Manager on macOS \(Dock Shortcut\)
+# Install Portfolio Manager on macOS
 
-Install Portfolio Manager as a macOS application bundle and add it to the Dock for one-click daily access.
+Install the current Tauri desktop app as a macOS application bundle.
+
+**Prerequisite:** Build the app locally or download a release DMG. Developer local build instructions live in `design/2026.08-07-Build-Local-App-Dev.md`.
+
+## Current Tauri app
 
 -   macOS 12 \(Monterey\) or later
+-   A built `Portfolio Manager.app` bundle or DMG
+
+1.  If you have a DMG, open it and drag `Portfolio Manager.app` to `/Applications`.
+
+2.  If you built locally, run the helper from the repository root:
+
+    ```
+    scripts/install_macos_app.sh
+    ```
+
+    The helper signs the bundle, verifies it, and installs it into `/Applications`.
+
+3.  Open Portfolio Manager from `/Applications`.
+
+    Portfolio Manager opens, creates the database and configuration file at `~/.portfolio_manager/`, and displays the Dashboard.
+
+## Legacy Tkinter Dock shortcut
+
+Use this only if you intentionally want the older Python/Tkinter app.
+
 -   Python 3.11 or later from [python.org](https://python.org). The python.org installer includes Tkinter.
 
     **CAUTION:**
@@ -36,5 +60,4 @@ Install Portfolio Manager as a macOS application bundle and add it to the Dock f
     Portfolio Manager opens, creates the database and configuration file at `~/.portfolio_manager/`, and displays the Dashboard.
 
 
-To update the application, run `git pull origin main` in the repository directory. The next time you launch from the Dock, the updated code runs automatically. No reinstallation is required.
-
+To update the legacy application, run `git pull origin main` in the repository directory. The next time you launch from the Dock, the updated code runs automatically. No reinstallation is required.

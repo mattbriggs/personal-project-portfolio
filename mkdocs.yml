@@ -52,8 +52,29 @@ extra_javascript:
 nav:
   - Home: index.md
   - Guide: guide/index.md
-  - Architecture: architecture.md
-  - Data Model: data-model.md
-  - Design Patterns: design-patterns.md
-  - Development Guide: development.md
+  - Architecture:
+      - Overview: architecture.md
+      - Data Model: data-model.md
+      - Design Patterns: design-patterns.md
+      - Decision Records:
+          - Index: architecture/decisions/README.md
+          - 001 Tauri-mediated sidecar: architecture/decisions/adr-001-tauri-mediated-sidecar.md
+          - 002 Preserve Python domain: architecture/decisions/adr-002-preserve-domain.md
+          - 003 Query and cache library: architecture/decisions/adr-003-query-cache.md
+          - 004 UI and accessibility: architecture/decisions/adr-004-ui-accessibility.md
+          - 005 OpenAPI to TypeScript: architecture/decisions/adr-005-openapi-typescript.md
+          - 006 Startup credentials: architecture/decisions/adr-006-startup-credentials.md
+          - 007 Readiness endpoint auth: architecture/decisions/adr-007-readiness-auth.md
+          - 008 Blank weekly review: architecture/decisions/adr-008-blank-review.md
+          - 009 Zero-project portfolio score: architecture/decisions/adr-009-zero-project-score.md
+          - 010 macOS sidecar architecture: architecture/decisions/adr-010-macos-arch.md
+          - 011 Markdown and Mermaid: architecture/decisions/adr-011-markdown-rendering.md
+  - Development:
+      - Development Guide: development.md
+      - Rust Toolchain: development/rust-toolchain.md
   - Testing: testing.md
+  - Requirements:
+      - Traceability Matrix: requirements/traceability.md
+  - Release:
+      - Completion Report: release/completion-report.md
+      - Docs Quality Review: release/docs-quality-review.md

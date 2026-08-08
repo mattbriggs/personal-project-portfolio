@@ -2,6 +2,13 @@
 
 All data is stored in a single SQLite file at `~/.portfolio_manager/portfolio.db`.
 
+**Both applications share this schema.** The Tauri sidecar ports the migration
+runner from the Tkinter app
+([ADR-002](architecture/decisions/adr-002-preserve-domain.md)), so a database
+created by either app opens in the other. Schema versions v1–v4 upgrade
+automatically, and a backup is written to `<name>.db.bak` before any migration
+runs.
+
 ---
 
 ## Entity-Relationship Diagram
@@ -108,7 +115,7 @@ erDiagram
 | `name` | TEXT | NOT NULL | Display name |
 | `slug` | TEXT | NOT NULL UNIQUE | URL-safe folder name |
 | `status` | TEXT | CHECK IN ('active','backlog','archive') | |
-| `priority` | INTEGER | DEFAULT 3, CHECK 1–3 | 1 = highest |
+| `priority` | INTEGER | DEFAULT 3, CHECK 1–5 | 1 = highest |
 | `started_date` | DATE | | ISO 8601 |
 | `end_date` | DATE | | Optional target completion date |
 | `owner` | TEXT | DEFAULT 'Matt Briggs' | |
@@ -182,15 +189,23 @@ Week 1 is the week containing the first Thursday of the year. The week always st
 
 ## Migrations
 
-Schema changes are tracked in `schema_migration`. Each migration is a `(version, description, sql)` triple defined in `db/migrations.py`. The current schema is at **v4**. The migration runner:
+Schema changes are tracked in `schema_migration`. Each sidecar migration is a
+`(version, description, sql)` triple defined in
+`backend/src/portfolio_manager/infrastructure/db/migrations/versions.py`.
+The legacy Tkinter app keeps the equivalent migration history in
+`src/portfolio_manager/db/migrations.py`. The current schema is at **v4**.
+The migration runner:
 
 1. Reads `schema_migration` to find applied versions.
 2. Backs up the database to `<name>.db.bak` before the first change.
 3. Applies each pending migration's SQL via `executescript`.
 4. Records the version in `schema_migration`.
 
-To add a migration, append to the `_build_migrations()` list:
+To add a sidecar migration, append to the `build_migrations()` list:
 
 ```python
 ("v5", "Add color column to project", "ALTER TABLE project ADD COLUMN color TEXT;"),
 ```
+
+If the legacy app must remain able to open the same database after that change,
+add the same migration to the legacy migration registry as well.

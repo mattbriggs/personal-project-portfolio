@@ -1,6 +1,8 @@
 # Tkinter Not Found
 
-Portfolio Manager requires Tkinter \(Python's standard GUI library\). This error occurs most often when Python is installed via Homebrew on macOS.
+The legacy Tkinter app requires Tkinter \(Python's standard GUI library\). This error occurs most often when Python is installed via Homebrew on macOS.
+
+**Note:** This applies only to the legacy Python/Tkinter app. The current Tauri desktop application bundles its sidecar runtime and does not use Tkinter, so this error cannot occur there. See [Which Version This Guide Describes](c_app_versions.md).
 
 Launching Portfolio Manager produces one of the following errors:
 
@@ -65,5 +67,4 @@ ModuleNotFoundError: No module named 'tkinter'
     ```
     bash launch.sh
     ```
-
 

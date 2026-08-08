@@ -85,7 +85,7 @@ bash launch.sh</codeblock>
           <step>
             <cmd>Check the application log for migration errors:</cmd>
             <info><codeblock>ls ~/.portfolio_manager/logs/
-cat ~/.portfolio_manager/logs/portfolio_manager.log</codeblock></info>
+cat ~/.portfolio_manager/logs/app.log</codeblock></info>
           </step>
           <step>
             <cmd>If a migration error is shown, see <xref href="ts_database_error.dita"/>.</cmd>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="t_install_cli" xml:lang="en-US">
-  <title>Install Portfolio Manager via the Command Line</title>
-  <shortdesc>Install and launch Portfolio Manager using the shell launch script or a manual
-    virtual-environment setup. This method is suited for development, testing, or Linux
-    systems.</shortdesc>
+  <title>Install the Legacy App via the Command Line</title>
+  <shortdesc>Install and launch the legacy Python/Tkinter Portfolio Manager using the shell
+    launch script or a manual virtual-environment setup. This method is suited for
+    compatibility testing, Linux systems, and historical workflows that still use the Tkinter
+    interface.</shortdesc>
 
   <taskbody>
 
@@ -17,9 +18,12 @@
       </ul>
     </prereq>
 
-    <steps-unordered>
-      <!-- Two parallel procedures: Option A or Option B -->
-    </steps-unordered>
+    <context>
+      <note type="important">These steps install the legacy Python/Tkinter app. The current
+        desktop app is the Tauri/React/FastAPI application; install it with the macOS app
+        instructions or build it with the developer build guide. See
+        <xref href="c_app_versions.dita"/>.</note>
+    </context>
 
     <steps>
       <step>
@@ -44,8 +48,8 @@ pip install -e .[dev]
 python -m portfolio_manager</codeblock>
           </choice>
         </choices>
-        <stepresult>Portfolio Manager opens and initializes the database and configuration file
-          at <filepath>~/.portfolio_manager/</filepath> on first launch.</stepresult>
+        <stepresult>The legacy app opens and initializes the database and configuration file at
+          <filepath>~/.portfolio_manager/</filepath> on first launch.</stepresult>
       </step>
     </steps>
 

@@ -1,114 +1,90 @@
 # Portfolio Manager
 
-A personal desktop application for managing, scheduling, and executing work across a portfolio of creative and technical projects using time-boxed sessions.
+Portfolio Manager is a desktop app for planning and executing work across a
+portfolio of creative and technical projects. The Tauri version is the intended
+daily-use app: download it, launch it like a normal desktop application, and use
+it to keep projects, milestones, sessions, plans, and weekly reviews in one
+local workspace.
 
-## Features
+## Download The Desktop App
 
-- **Portfolio dashboard** — traffic-light status indicators, scores, weekly session totals, and upcoming milestones at a glance
-- **Project management** — active / backlog / archive lifecycle with priority 1–5 ordering
-- **Session scheduling** — time-boxed work units (15–480 min, default 90 min) linked to projects, milestones, and weeks
-- **Weekly budget tracking** — configurable weekly hour budget with a live planned/done/remaining summary in the Sessions tab
-- **Milestone tracking** — outcome-based milestones with full status lifecycle (backlog → planned → doing → done / cancelled)
-- **Plan documents** — per-project Markdown editor with live Mermaid diagram preview
-- **Weekly review** — structured reflection form with a browsable history of past reviews
-- **Scoring** — configurable algorithm (session completion + milestone ratio)
-- **Auto-save** — all changes commit immediately; no explicit save required
-- **macOS Dock shortcut** — one-click launch via a native `.app` bundle
+The recommended way to use Portfolio Manager is the Tauri desktop build from the
+project's GitHub Releases page.
 
-## Requirements
+1. Open **Releases** for this repository.
+2. Download the newest Portfolio Manager installer or app bundle for your
+   platform.
+3. Install it using your operating system's normal app installation flow.
+4. Launch **Portfolio Manager**.
 
-- Python 3.11 or later
-- macOS (primary) — core logic runs on Linux too
+Packaged desktop builds are intended to include the application UI and local
+backend sidecar, so normal users should not need to install Python, Node, Rust,
+or Tauri manually.
 
-## Quick Start
+If a packaged release is not available yet, this repository is still useful as
+the source and packaging workspace for the desktop app. See
+[DEV-AND-ROADMAP.md](DEV-AND-ROADMAP.md) for current development status and
+local build notes.
 
-### Option 1 — Dock shortcut (recommended for daily use)
+## What The App Helps With
 
-```bash
-git clone <repo-url> portfolio-manager
-cd portfolio-manager
-bash create_shortcut.sh
+- **Portfolio dashboard**: see project status, scores, weekly session totals,
+  and upcoming milestones at a glance.
+- **Project management**: move projects through active, backlog, and archive
+  states with priority ordering.
+- **Session scheduling**: plan time-boxed work sessions from 15 to 480 minutes
+  and link them to projects, milestones, and weeks.
+- **Weekly budget tracking**: compare planned and completed session time against
+  your configured weekly capacity.
+- **Milestone tracking**: track outcome-based milestones from backlog through
+  planned, doing, done, or cancelled.
+- **Plan documents**: keep Markdown project plans with Mermaid diagram support.
+- **Weekly review**: capture structured reflections and revisit past reviews.
+- **Configurable scoring**: use session completion and milestone progress to
+  keep portfolio health visible.
+- **Auto-save**: changes persist immediately; there is no separate save step.
+
+## First Launch
+
+On first launch, Portfolio Manager creates a local configuration directory and
+SQLite database in your home folder:
+
+```text
+~/.portfolio_manager/config.toml
+~/.portfolio_manager/portfolio.db
 ```
 
-The script creates `.venv`, installs dependencies, and writes
-`~/Applications/Portfolio Manager.app`. Drag it to the Dock.
-
-### Option 2 — Shell script
-
-```bash
-git clone <repo-url> portfolio-manager
-cd portfolio-manager
-bash launch.sh
-```
-
-`launch.sh` creates the venv on first run and launches the app every time.
-
-### Option 3 — Command line (development)
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .[dev]
-python -m portfolio_manager
-```
+Your project data is local to your machine. The default weekly session budget is
+12 hours and the default session length is 90 minutes; both can be changed from
+the app settings or by editing the config file.
 
 ## Updating
 
-```bash
-git pull origin main
-.venv/bin/pip install -e .[dev] --quiet
+For packaged desktop builds, download and install the newest release from the
+repository's Releases page. Your local data lives outside the app bundle, so
+updating the app should not remove your portfolio database.
+
+Before trying pre-release builds, make a copy of:
+
+```text
+~/.portfolio_manager/portfolio.db
 ```
 
-No rebuild of the `.app` bundle is required — it calls `launch.sh` which always uses the current source.
+## Troubleshooting
 
-## Development
+If the app will not open on macOS, check whether the release notes mention code
+signing or notarization status for that build. Early builds may require opening
+the app from Finder with **Open** instead of double-clicking.
 
-```bash
-# Install with dev dependencies
-pip install -e .[dev]
+If your projects or sessions appear to be missing, confirm that the app is using
+the expected database path in:
 
-# Run tests
-pytest
-
-# Lint
-ruff check src/ tests/
-
-# Format
-black src/ tests/
-
-# Build docs
-mkdocs build --config-file site/mkdocs.yml       # output → docs/ (GitHub Pages)
-mkdocs serve --config-file site/mkdocs.yml       # live preview at http://127.0.0.1:8000
+```text
+~/.portfolio_manager/config.toml
 ```
 
-## Configuration
-
-On first launch the application writes defaults to `~/.portfolio_manager/config.toml`.
-Edit that file to override settings:
-
-```toml
-[app]
-log_level = "INFO"
-theme = "light"
-
-[session]
-default_duration_minutes = 90
-weekly_budget_hours = 12
-
-[database]
-path = "~/.portfolio_manager/portfolio.db"
-```
-
-## Project Structure
-
-```
-src/portfolio_manager/   # Application source
-tests/                   # Unit, integration, and e2e tests
-docs/                    # MkDocs documentation site
-launch.sh                # Daily-use launcher
-create_shortcut.sh       # macOS .app bundle creator
-pyproject.toml           # Build config and dependencies
-```
+Developer setup, legacy launch scripts, architecture notes, and the release
+roadmap live in [DEV-AND-ROADMAP.md](DEV-AND-ROADMAP.md).
 
 ## License
 

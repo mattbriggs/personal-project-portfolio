@@ -210,3 +210,11 @@ __marimo__/
 guide/out/
 guide/temp
 .DS_Store
+# Tauri build artifacts
+# The frozen sidecar is a build output (tens of MB) — rebuild it with
+# scripts/build_sidecar.py rather than committing it.
+src-tauri/binaries/
+src-tauri/gen/
+src-tauri/target/
+node_modules/.vite/
+node_modules/
