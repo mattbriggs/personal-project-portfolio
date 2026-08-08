@@ -1408,6 +1408,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2952,8 +2980,10 @@
 
 
 <h1 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h1>
-<p>Four suites cover the two applications. All figures below were measured on
-macOS with Python 3.12, Node 22, and Rust 1.97.</p>
+<p>Four suites cover the two applications. The counts below reflect the current
+codebase. Python and frontend counts were rechecked on 2026-08-08 from this
+checkout; Rust still requires a Cargo/Rust toolchain new enough for edition
+2024 dependencies.</p>
 <table>
 <thead>
 <tr>
@@ -2966,27 +2996,27 @@ macOS with Python 3.12, Node 22, and Rust 1.97.</p>
 <tbody>
 <tr>
 <td>Sidecar backend</td>
-<td><code>cd backend &amp;&amp; pytest</code></td>
-<td style="text-align: right;">84</td>
-<td>~85% line</td>
+<td><code>cd backend &amp;&amp; ../.venv/bin/pytest</code></td>
+<td style="text-align: right;">84 collected</td>
+<td>~85% line when run with coverage</td>
 </tr>
 <tr>
 <td>React renderer</td>
 <td><code>npm test</code></td>
-<td style="text-align: right;">11</td>
+<td style="text-align: right;">22</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Tauri shell</td>
-<td><code>cd src-tauri &amp;&amp; cargo test</code></td>
-<td style="text-align: right;">10</td>
+<td><code>cd src-tauri &amp;&amp; cargo test -- --test-threads=1</code></td>
+<td style="text-align: right;">10 expected</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Legacy Tkinter app</td>
-<td><code>pytest tests</code></td>
-<td style="text-align: right;">147</td>
-<td>92.85%</td>
+<td><code>.venv/bin/pytest</code></td>
+<td style="text-align: right;">144</td>
+<td>92.34%</td>
 </tr>
 </tbody>
 </table>
@@ -3046,7 +3076,7 @@ would be blocked.</p>
 a production build — Swagger, ReDoc, and the OpenAPI schema all return 404.</p>
 <hr />
 <h2 id="react-renderer">React renderer<a class="headerlink" href="#react-renderer" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span><span class="nb">test</span><span class="w">                </span><span class="c1"># Vitest, jsdom</span>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span><span class="nb">test</span><span class="w">                </span><span class="c1"># Vitest, jsdom: 22 tests across 7 files</span>
 npm<span class="w"> </span>run<span class="w"> </span>test:watch
 npm<span class="w"> </span>run<span class="w"> </span>test:coverage
 npm<span class="w"> </span>run<span class="w"> </span>typecheck<span class="w">       </span><span class="c1"># tsc --noEmit, strict</span>
@@ -3082,6 +3112,13 @@ sidecar launch plan (asserting the token never appears in <code>argv</code>), re
 timeout, and child-process shutdown.</p>
 <p>The build requires a frozen sidecar binary and an RGBA icon to exist before it
 will compile at all — see <a href="../development/#tauri-shell">Development</a>.</p>
+<p>On the current machine, <code>cargo test -- --test-threads=1</code> still fails under
+Cargo 1.83 while parsing <code>serde_spanned 1.1.1</code> because that dependency requires
+the stabilized edition 2024 feature. Fix the local toolchain first:</p>
+<div class="highlight"><pre><span></span><code>rustup<span class="w"> </span>update<span class="w"> </span>stable
+.<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.cargo/env&quot;</span>
+rustc<span class="w"> </span>--version<span class="w">   </span><span class="c1"># expect &gt;= 1.85</span>
+</code></pre></div>
 <div class="admonition bug">
 <p class="admonition-title">Known flaky test</p>
 <p><code>security::port::tests::picks_a_nonzero_loopback_port</code> fails roughly 1 run
@@ -3093,7 +3130,7 @@ stronger than the design guarantees.</p>
 </div>
 <hr />
 <h2 id="legacy-tkinter-app">Legacy Tkinter app<a class="headerlink" href="#legacy-tkinter-app" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests<span class="w">                       </span><span class="c1"># 147 tests, 92.85% coverage</span>
+<div class="highlight"><pre><span></span><code>.venv/bin/pytest<span class="w">                  </span><span class="c1"># 144 tests, 92.34% coverage</span>
 pytest<span class="w"> </span>tests/unit
 pytest<span class="w"> </span>tests/integration
 pytest<span class="w"> </span>tests/e2e<span class="w">                   </span><span class="c1"># requires a Tk-capable Python</span>

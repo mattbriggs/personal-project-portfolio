@@ -1368,6 +1368,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2929,7 +2957,7 @@ rustc<span class="w"> </span>--version<span class="w">               </span><spa
 cargo<span class="w"> </span><span class="nb">test</span><span class="w">                    </span><span class="c1"># security/http/sidecar unit tests</span>
 cargo<span class="w"> </span>build<span class="w">                   </span><span class="c1"># debug shell build</span>
 </code></pre></div>
-<p>Verified on <strong>Rust 1.97.1</strong>: the shell compiles and 10 unit tests run
+<p>Previously verified on <strong>Rust 1.97.1</strong>: the shell compiles and 10 unit tests run
 (<code>security::token</code>, <code>security::port</code>, <code>sidecar::readiness</code>, <code>sidecar::launcher</code>,
 <code>sidecar::shutdown</code>, <code>sidecar::supervisor</code>, <code>logging</code>). On Rust 1.83 the build
 fails while parsing the <code>serde_spanned 1.1.1</code> manifest with "feature

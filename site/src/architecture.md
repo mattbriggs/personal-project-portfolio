@@ -1,12 +1,14 @@
 # Architecture
 
-The repository contains two applications that share one SQLite database and one
-set of domain rules. The V2 stack is the migration target; the Tkinter app is
-what currently runs. See [Home](index.md) for the current status of each.
+The repository contains the current Tauri desktop application and the legacy
+Tkinter application. They share one SQLite database and a preserved set of
+domain rules. New desktop work targets the Tauri stack; the Tkinter app remains
+for compatibility and regression comparison. See [Home](index.md) for the
+current status of each.
 
 ---
 
-## V2 architecture (Tauri + React + FastAPI)
+## Current architecture (Tauri + React + FastAPI)
 
 The renderer never contacts the sidecar directly. Every call crosses a fixed
 chain of layers, each of which can reject it.
@@ -107,9 +109,9 @@ sequenceDiagram
 
 ```
 backend/src/portfolio_manager/
-├── domain/           # Scoring, week keys, slugs, migrations (ported verbatim)
+├── domain/           # Scoring, week keys, slugs, domain models
 ├── application/      # Services, DTOs, repository ports
-├── infrastructure/   # SQLite, config, logging, security
+├── infrastructure/   # SQLite, migrations, config, logging, security
 ├── contracts/        # Pydantic request/response models
 ├── api/              # FastAPI app, routes, middleware, error handlers
 └── cli/              # Sidecar entry point

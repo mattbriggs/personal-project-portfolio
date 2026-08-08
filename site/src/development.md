@@ -10,7 +10,7 @@ working on; the [Architecture](architecture.md) page explains how they relate.
 | Tool | Version | Needed for |
 | --- | --- | --- |
 | Python | 3.11+ | Sidecar backend, legacy app |
-| Node + npm | 18+ | React renderer |
+| Node + npm | 20 recommended | React renderer |
 | Rust | **≥ 1.85** | Tauri shell |
 | Tauri CLI | 2.x | Building and running the desktop app |
 
@@ -33,8 +33,8 @@ rustc --version          # expect >= 1.85
 
 ```bash
 python -m venv .venv
-.venv/bin/pip install -e "backend[dev]"
-cd backend && ../.venv/bin/pytest        # 84 tests, ~85% coverage
+.venv/bin/pip install -e "backend[dev,package]"
+cd backend && ../.venv/bin/pytest        # 84 tests collected
 ```
 
 `backend/pyproject.toml` sets `pythonpath = ["src"]`, so no editable install is
@@ -58,7 +58,7 @@ through; running `vite` or `tsc` bare from the root picks up no config.
 
 ```bash
 npm install
-npm test              # Vitest — 11 tests
+npm test              # Vitest — 22 tests across 7 files
 npm run typecheck     # tsc --noEmit
 npm run build         # typecheck + production bundle
 ```
@@ -66,12 +66,13 @@ npm run build         # typecheck + production bundle
 ### Tauri shell
 
 ```bash
-cd src-tauri && cargo test    # 10 unit tests: security, supervisor, forwarder
+cd src-tauri && cargo test -- --test-threads=1
 npm run tauri dev             # from the repo root — runs the full stack
 ```
 
-`cargo test` compiles the Tauri context, which requires two artifacts to exist
-before it will build at all:
+Use `--test-threads=1` for deterministic local validation. `cargo test`
+compiles the Tauri context, which requires two artifacts to exist before it
+will build at all:
 
 - `src-tauri/binaries/portfolio-sidecar/` — the frozen sidecar, shipped through
   `bundle.resources` in `tauri.conf.json`. Build it first (below).
@@ -95,8 +96,8 @@ the renderer must reach the sidecar only through Tauri commands.
 
 ```bash
 # 1. Freeze the sidecar for your architecture
-pip install -e "backend[dev,package]"
-python scripts/build_sidecar.py
+.venv/bin/python -m pip install -e "backend[dev,package]"
+.venv/bin/python scripts/build_sidecar.py
 
 # 2. Build the app bundle
 npm run tauri build
@@ -105,9 +106,13 @@ npm run tauri build
 scripts/install_macos_app.sh
 ```
 
-Use `x86_64-apple-darwin` on Intel. Per
-[ADR-010](architecture/decisions/adr-010-macos-arch.md) the sidecar is built
-per-architecture; a universal binary comes later.
+The default `scripts/build_sidecar.py` mode is `onedir`. That output is bundled
+as a Tauri resource and starts much faster than the PyInstaller `onefile`
+layout. Use `onefile` only when deliberately testing the fallback path.
+
+Use `x86_64-apple-darwin` on Intel when building architecture-specific
+artifacts. Per [ADR-010](architecture/decisions/adr-010-macos-arch.md) the
+sidecar is built per-architecture; a universal binary comes later.
 
 Add `--bundles dmg` for a distributable disk image. Build the `.app` **last**
 if you intend to sign it — the DMG step deletes the staged `.app` after packing
@@ -149,19 +154,22 @@ python -m portfolio_manager      # or: bash launch.sh
 `create_shortcut.sh` builds a `.app` wrapper for the Dock that calls
 `launch.sh` from the repo, so it never needs rebuilding after a `git pull`.
 
-### Adding a migration
+### Adding a database migration
 
-1. Open `src/portfolio_manager/db/migrations.py`.
-2. Append a tuple to `_build_migrations()`:
+The current Tauri app uses the FastAPI sidecar migration registry:
+
+1. Open `backend/src/portfolio_manager/infrastructure/db/migrations/versions.py`.
+2. Append a tuple to `build_migrations()`:
 
 ```python
 ("v2", "Add color column to project", "ALTER TABLE project ADD COLUMN color TEXT;")
 ```
 
-3. Run the app — the migration is applied on next startup, after a backup is
-   written to `<name>.db.bak`.
+3. Run the sidecar or desktop app. The migration is applied on next startup,
+   after a backup is written to `<name>.db.bak`.
 
-The V2 sidecar runs the same migration set against the same database.
+If the legacy Tkinter app must remain compatible with the same database shape,
+mirror the migration in `src/portfolio_manager/db/migrations.py` and its tests.
 
 ---
 

@@ -1,32 +1,31 @@
 # Which Version This Guide Describes
 
-Portfolio Manager is being rebuilt on a new technology stack. This guide describes the version you can install and run today; this topic explains what is changing and what is not.
+Portfolio Manager has both a current Tauri desktop app and a legacy Tkinter app in the repository. This guide focuses on the concepts and workflows that apply to both, and calls out version-specific installation or troubleshooting where the two apps differ.
 
 ## Two versions, one database
 
 The repository currently contains two applications that read the same SQLite database and apply the same rules:
 
--   **The current app** — written in Python with a Tkinter interface. This is the version that runs today, and the one every task in this guide describes.
--   **The V2 app** — a desktop application built on Tauri, React, and a Python service. It installs as a normal macOS application and needs no Python setup. It is available now, but has not yet been through formal feature-parity acceptance.
+-   **The current desktop app** — built with Tauri, React, Rust, and a local FastAPI sidecar. It installs as a normal macOS application and bundles its backend runtime.
+-   **The legacy app** — written in Python with a Tkinter interface. It still runs from a cloned repository and remains useful for compatibility checks.
 
-**Important:** The task steps in this guide were written against the current app. The concepts, workflows, and reference material apply to both; the installation and troubleshooting topics are specific to the current app.
+**Important:** The concepts, workflows, and reference material apply to both apps. Installation and troubleshooting topics identify the app they apply to.
 
 ## What carries over
 
-The parts of this guide that describe how Portfolio Manager *thinks* apply to both versions without change, because the V2 app reuses the same domain logic:
+The parts of this guide that describe how Portfolio Manager *thinks* apply to both versions without change, because the Tauri app preserves the same domain logic:
 
 -   Project, session, and milestone lifecycles and their states
 -   The scoring model and the weekly review cycle
 -   Week numbering, the weekly budget, and the planning workflow
 -   Configuration keys and the project plan Markdown syntax
 
-Your data carries over as well. A database created by the current app opens in the V2 app with no manual conversion, and a backup is written before any upgrade runs.
+Your data carries over as well. A database created by the legacy app opens in the Tauri app with no manual conversion, and a backup is written before any upgrade runs.
 
 ## What changes
 
 Only the surrounding mechanics change:
 
--   **Installation.** The current app runs from a cloned repository and a Python virtual environment. The V2 app will install as a signed macOS application bundle, with no Python setup required.
--   **Python and Tkinter requirements.** The V2 app bundles everything it needs, so the Tkinter troubleshooting in this guide will no longer apply.
--   **One scoring detail.** The V2 app excludes cancelled milestones when calculating a project score; the current app counts them. A project with cancelled milestones may therefore score slightly differently after the switch.
-
+-   **Installation.** The Tauri app installs as a macOS application bundle. The legacy app runs from a cloned repository and Python virtual environment.
+-   **Python and Tkinter requirements.** The Tauri app bundles the sidecar, so Tkinter troubleshooting applies only to the legacy app.
+-   **One scoring detail.** The Tauri app excludes cancelled milestones when calculating a project score; older legacy behavior counted them. A project with cancelled milestones may therefore score slightly differently after switching.

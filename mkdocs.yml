@@ -77,3 +77,4 @@ nav:
       - Traceability Matrix: requirements/traceability.md
   - Release:
       - Completion Report: release/completion-report.md
+      - Docs Quality Review: release/docs-quality-review.md

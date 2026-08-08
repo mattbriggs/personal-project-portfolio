@@ -1165,10 +1165,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#adding-a-migration" class="md-nav__link">
+  <a href="#adding-a-database-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding a migration
+        Adding a database migration
       
     </span>
   </a>
@@ -1449,6 +1449,34 @@
     
   
     Completion Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
   
 
     
@@ -3026,7 +3054,7 @@ working on; the <a href="../architecture/">Architecture</a> page explains how th
 </tr>
 <tr>
 <td>Node + npm</td>
-<td>18+</td>
+<td>20 recommended</td>
 <td>React renderer</td>
 </tr>
 <tr>
@@ -3053,8 +3081,8 @@ rustc<span class="w"> </span>--version<span class="w">          </span><span cla
 <h2 id="v2-stack">V2 stack<a class="headerlink" href="#v2-stack" title="Permanent link">&para;</a></h2>
 <h3 id="backend-fastapi-sidecar">Backend (FastAPI sidecar)<a class="headerlink" href="#backend-fastapi-sidecar" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-.venv/bin/pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev]&quot;</span>
-<span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>../.venv/bin/pytest<span class="w">        </span><span class="c1"># 84 tests, ~85% coverage</span>
+.venv/bin/pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
+<span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>../.venv/bin/pytest<span class="w">        </span><span class="c1"># 84 tests collected</span>
 </code></pre></div>
 <p><code>backend/pyproject.toml</code> sets <code>pythonpath = ["src"]</code>, so no editable install is
 strictly required to run the tests.</p>
@@ -3070,16 +3098,17 @@ curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span>
 TypeScript configs live in <code>frontend/</code>. The scripts pass the correct root
 through; running <code>vite</code> or <code>tsc</code> bare from the root picks up no config.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
-npm<span class="w"> </span><span class="nb">test</span><span class="w">              </span><span class="c1"># Vitest — 11 tests</span>
+npm<span class="w"> </span><span class="nb">test</span><span class="w">              </span><span class="c1"># Vitest — 22 tests across 7 files</span>
 npm<span class="w"> </span>run<span class="w"> </span>typecheck<span class="w">     </span><span class="c1"># tsc --noEmit</span>
 npm<span class="w"> </span>run<span class="w"> </span>build<span class="w">         </span><span class="c1"># typecheck + production bundle</span>
 </code></pre></div>
 <h3 id="tauri-shell">Tauri shell<a class="headerlink" href="#tauri-shell" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>src-tauri<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cargo<span class="w"> </span><span class="nb">test</span><span class="w">    </span><span class="c1"># 10 unit tests: security, supervisor, forwarder</span>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>src-tauri<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cargo<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--<span class="w"> </span>--test-threads<span class="o">=</span><span class="m">1</span>
 npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>dev<span class="w">             </span><span class="c1"># from the repo root — runs the full stack</span>
 </code></pre></div>
-<p><code>cargo test</code> compiles the Tauri context, which requires two artifacts to exist
-before it will build at all:</p>
+<p>Use <code>--test-threads=1</code> for deterministic local validation. <code>cargo test</code>
+compiles the Tauri context, which requires two artifacts to exist before it
+will build at all:</p>
 <ul>
 <li><code>src-tauri/binaries/portfolio-sidecar/</code> — the frozen sidecar, shipped through
   <code>bundle.resources</code> in <code>tauri.conf.json</code>. Build it first (below).</li>
@@ -3096,8 +3125,8 @@ the renderer must reach the sidecar only through Tauri commands.</p>
 <hr />
 <h2 id="packaging-macos">Packaging (macOS)<a class="headerlink" href="#packaging-macos" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Freeze the sidecar for your architecture</span>
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
-python<span class="w"> </span>scripts/build_sidecar.py
+.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
+.venv/bin/python<span class="w"> </span>scripts/build_sidecar.py
 
 <span class="c1"># 2. Build the app bundle</span>
 npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build
@@ -3105,9 +3134,12 @@ npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </sp
 <span class="c1"># 3. Sign it and install into /Applications</span>
 scripts/install_macos_app.sh
 </code></pre></div>
-<p>Use <code>x86_64-apple-darwin</code> on Intel. Per
-<a href="../architecture/decisions/adr-010-macos-arch/">ADR-010</a> the sidecar is built
-per-architecture; a universal binary comes later.</p>
+<p>The default <code>scripts/build_sidecar.py</code> mode is <code>onedir</code>. That output is bundled
+as a Tauri resource and starts much faster than the PyInstaller <code>onefile</code>
+layout. Use <code>onefile</code> only when deliberately testing the fallback path.</p>
+<p>Use <code>x86_64-apple-darwin</code> on Intel when building architecture-specific
+artifacts. Per <a href="../architecture/decisions/adr-010-macos-arch/">ADR-010</a> the
+sidecar is built per-architecture; a universal binary comes later.</p>
 <p>Add <code>--bundles dmg</code> for a distributable disk image. Build the <code>.app</code> <strong>last</strong>
 if you intend to sign it — the DMG step deletes the staged <code>.app</code> after packing
 it, so <code>install_macos_app.sh</code> will not find a bundle if <code>dmg</code> ran most recently.</p>
@@ -3157,18 +3189,20 @@ python<span class="w"> </span>-m<span class="w"> </span>portfolio_manager<span c
 </code></pre></div>
 <p><code>create_shortcut.sh</code> builds a <code>.app</code> wrapper for the Dock that calls
 <code>launch.sh</code> from the repo, so it never needs rebuilding after a <code>git pull</code>.</p>
-<h3 id="adding-a-migration">Adding a migration<a class="headerlink" href="#adding-a-migration" title="Permanent link">&para;</a></h3>
+<h3 id="adding-a-database-migration">Adding a database migration<a class="headerlink" href="#adding-a-database-migration" title="Permanent link">&para;</a></h3>
+<p>The current Tauri app uses the FastAPI sidecar migration registry:</p>
 <ol>
-<li>Open <code>src/portfolio_manager/db/migrations.py</code>.</li>
-<li>Append a tuple to <code>_build_migrations()</code>:</li>
+<li>Open <code>backend/src/portfolio_manager/infrastructure/db/migrations/versions.py</code>.</li>
+<li>Append a tuple to <code>build_migrations()</code>:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="s2">&quot;v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Add color column to project&quot;</span><span class="p">,</span> <span class="s2">&quot;ALTER TABLE project ADD COLUMN color TEXT;&quot;</span><span class="p">)</span>
 </code></pre></div>
 <ol>
-<li>Run the app — the migration is applied on next startup, after a backup is
-   written to <code>&lt;name&gt;.db.bak</code>.</li>
+<li>Run the sidecar or desktop app. The migration is applied on next startup,
+   after a backup is written to <code>&lt;name&gt;.db.bak</code>.</li>
 </ol>
-<p>The V2 sidecar runs the same migration set against the same database.</p>
+<p>If the legacy Tkinter app must remain compatible with the same database shape,
+mirror the migration in <code>src/portfolio_manager/db/migrations.py</code> and its tests.</p>
 <hr />
 <h2 id="code-style">Code style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h2>
 <table>
