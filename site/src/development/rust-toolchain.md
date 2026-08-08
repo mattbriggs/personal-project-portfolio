@@ -25,7 +25,7 @@ cargo test                    # security/http/sidecar unit tests
 cargo build                   # debug shell build
 ```
 
-Verified on **Rust 1.97.1**: the shell compiles and 10 unit tests run
+Previously verified on **Rust 1.97.1**: the shell compiles and 10 unit tests run
 (`security::token`, `security::port`, `sidecar::readiness`, `sidecar::launcher`,
 `sidecar::shutdown`, `sidecar::supervisor`, `logging`). On Rust 1.83 the build
 fails while parsing the `serde_spanned 1.1.1` manifest with "feature

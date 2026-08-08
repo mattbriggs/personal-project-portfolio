@@ -13,6 +13,7 @@ could not be verified say so explicitly._
 | Tauri version | 2.x (requires Rust ≥ 1.85; verified on 1.97.1) |
 | React version | 18.3 |
 | Database schema version | v4 |
+| Latest docs refresh | 2026-08-08 |
 
 ## Executive Status
 
@@ -42,10 +43,10 @@ could not be verified say so explicitly._
 | API contract | Pass | Auth (missing/invalid/valid), workflow, production hardening |
 | Legacy DB compatibility | Pass | v2 → v4 upgrade preserves data across restart |
 | **Backend total** | **84 passed**, ~85% line coverage | Target ≥ 80% met |
-| **React unit/component** | **11 passed** (4 files) | Vitest 2.x + Testing Library, jsdom |
+| **React unit/component** | **22 passed** (7 files) | Vitest + Testing Library, jsdom |
 | **TypeScript typecheck** | **0 errors** | `tsc --noEmit`, strict |
 | **Rust unit** | **9 passed, 1 flaky** | See below |
-| Legacy Tkinter suite | **147 passed**, 92.85% coverage | Unchanged by the migration |
+| Legacy Tkinter suite | **144 passed**, 92.34% coverage | Root suite for the legacy app |
 
 ### Known flaky test
 

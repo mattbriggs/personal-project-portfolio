@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#install-portfolio-manager-on-macos-dock-shortcut" class="md-skip">
+        <a href="#install-portfolio-manager-on-macos" class="md-skip">
           Skip to content
         </a>
       
@@ -1255,6 +1255,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1476,6 +1504,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install Portfolio Manager on macOS (Dock Shortcut)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1492,6 +1538,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-tauri-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Tauri app
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legacy-tkinter-dock-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy Tkinter Dock shortcut
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2839,10 +2926,32 @@
 
 
 
-<h1 id="install-portfolio-manager-on-macos-dock-shortcut">Install Portfolio Manager on macOS (Dock Shortcut)<a class="headerlink" href="#install-portfolio-manager-on-macos-dock-shortcut" title="Permanent link">&para;</a></h1>
-<p>Install Portfolio Manager as a macOS application bundle and add it to the Dock for one-click daily access.</p>
+<h1 id="install-portfolio-manager-on-macos">Install Portfolio Manager on macOS<a class="headerlink" href="#install-portfolio-manager-on-macos" title="Permanent link">&para;</a></h1>
+<p>Install the current Tauri desktop app as a macOS application bundle.</p>
+<p><strong>Prerequisite:</strong> Build the app locally or download a release DMG. Developer local build instructions live in <code>design/2026.08-07-Build-Local-App-Dev.md</code>.</p>
+<h2 id="current-tauri-app">Current Tauri app<a class="headerlink" href="#current-tauri-app" title="Permanent link">&para;</a></h2>
 <ul>
 <li>macOS 12 (Monterey) or later</li>
+<li>
+<p>A built <code>Portfolio Manager.app</code> bundle or DMG</p>
+</li>
+<li>
+<p>If you have a DMG, open it and drag <code>Portfolio Manager.app</code> to <code>/Applications</code>.</p>
+</li>
+<li>
+<p>If you built locally, run the helper from the repository root:</p>
+<div class="highlight"><pre><span></span><code>scripts/install_macos_app.sh
+</code></pre></div>
+<p>The helper signs the bundle, verifies it, and installs it into <code>/Applications</code>.</p>
+</li>
+<li>
+<p>Open Portfolio Manager from <code>/Applications</code>.</p>
+<p>Portfolio Manager opens, creates the database and configuration file at <code>~/.portfolio_manager/</code>, and displays the Dashboard.</p>
+</li>
+</ul>
+<h2 id="legacy-tkinter-dock-shortcut">Legacy Tkinter Dock shortcut<a class="headerlink" href="#legacy-tkinter-dock-shortcut" title="Permanent link">&para;</a></h2>
+<p>Use this only if you intentionally want the older Python/Tkinter app.</p>
+<ul>
 <li>
 <p>Python 3.11 or later from <a href="https://python.org">python.org</a>. The python.org installer includes Tkinter.</p>
 <p><strong>CAUTION:</strong></p>
@@ -2851,10 +2960,9 @@
 <li>
 <p>Git</p>
 </li>
-<li>An internet connection for the initial clone</li>
-</ul>
-<p><strong>Important:</strong> These steps install the current Python version of Portfolio Manager, which runs from a cloned repository. The V2 desktop application installs as a signed application bundle and requires no Python setup, but it is not yet available. See <a href="../c_app_versions/">Which Version This Guide Describes</a>.</p>
-<ol>
+<li>
+<p>An internet connection for the initial clone</p>
+</li>
 <li>
 <p>Open Terminal and clone the Portfolio Manager repository:</p>
 <div class="highlight"><pre><span></span><code>git clone &lt;repository-url&gt; portfolio-manager
@@ -2877,8 +2985,8 @@ cd portfolio-manager
 <p>Click the Dock icon to launch Portfolio Manager for the first time.</p>
 <p>Portfolio Manager opens, creates the database and configuration file at <code>~/.portfolio_manager/</code>, and displays the Dashboard.</p>
 </li>
-</ol>
-<p>To update the application, run <code>git pull origin main</code> in the repository directory. The next time you launch from the Dock, the updated code runs automatically. No reinstallation is required.</p>
+</ul>
+<p>To update the legacy application, run <code>git pull origin main</code> in the repository directory. The next time you launch from the Dock, the updated code runs automatically. No reinstallation is required.</p>
 
 
 

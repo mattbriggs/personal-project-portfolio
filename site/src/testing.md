@@ -1,14 +1,16 @@
 # Testing
 
-Four suites cover the two applications. All figures below were measured on
-macOS with Python 3.12, Node 22, and Rust 1.97.
+Four suites cover the two applications. The counts below reflect the current
+codebase. Python and frontend counts were rechecked on 2026-08-08 from this
+checkout; Rust still requires a Cargo/Rust toolchain new enough for edition
+2024 dependencies.
 
 | Suite | Command | Tests | Coverage |
 | --- | --- | ---: | --- |
-| Sidecar backend | `cd backend && pytest` | 84 | ~85% line |
-| React renderer | `npm test` | 11 | — |
-| Tauri shell | `cd src-tauri && cargo test` | 10 | — |
-| Legacy Tkinter app | `pytest tests` | 147 | 92.85% |
+| Sidecar backend | `cd backend && ../.venv/bin/pytest` | 84 collected | ~85% line when run with coverage |
+| React renderer | `npm test` | 22 | — |
+| Tauri shell | `cd src-tauri && cargo test -- --test-threads=1` | 10 expected | — |
+| Legacy Tkinter app | `.venv/bin/pytest` | 144 | 92.34% |
 
 Coverage target is **80%** for Python, enforced with `--cov-fail-under=80` on
 the legacy suite.
@@ -49,7 +51,7 @@ a production build — Swagger, ReDoc, and the OpenAPI schema all return 404.
 ## React renderer
 
 ```bash
-npm test                # Vitest, jsdom
+npm test                # Vitest, jsdom: 22 tests across 7 files
 npm run test:watch
 npm run test:coverage
 npm run typecheck       # tsc --noEmit, strict
@@ -96,6 +98,16 @@ timeout, and child-process shutdown.
 The build requires a frozen sidecar binary and an RGBA icon to exist before it
 will compile at all — see [Development](development.md#tauri-shell).
 
+On the current machine, `cargo test -- --test-threads=1` still fails under
+Cargo 1.83 while parsing `serde_spanned 1.1.1` because that dependency requires
+the stabilized edition 2024 feature. Fix the local toolchain first:
+
+```bash
+rustup update stable
+. "$HOME/.cargo/env"
+rustc --version   # expect >= 1.85
+```
+
 !!! bug "Known flaky test"
     `security::port::tests::picks_a_nonzero_loopback_port` fails roughly 1 run
     in 10 under parallel execution, and never under `--test-threads=1`. It
@@ -109,7 +121,7 @@ will compile at all — see [Development](development.md#tauri-shell).
 ## Legacy Tkinter app
 
 ```bash
-pytest tests                       # 147 tests, 92.85% coverage
+.venv/bin/pytest                  # 144 tests, 92.34% coverage
 pytest tests/unit
 pytest tests/integration
 pytest tests/e2e                   # requires a Tk-capable Python

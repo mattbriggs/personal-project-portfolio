@@ -531,15 +531,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v2-architecture-tauri-react-fastapi" class="md-nav__link">
+  <a href="#current-architecture-tauri-react-fastapi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        V2 architecture (Tauri + React + FastAPI)
+        Current architecture (Tauri + React + FastAPI)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="V2 architecture (Tauri + React + FastAPI)">
+    <nav class="md-nav" aria-label="Current architecture (Tauri + React + FastAPI)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1419,6 +1419,34 @@
     
   
     Completion Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
   
 
     
@@ -2976,11 +3004,13 @@
 
 
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
-<p>The repository contains two applications that share one SQLite database and one
-set of domain rules. The V2 stack is the migration target; the Tkinter app is
-what currently runs. See <a href="../">Home</a> for the current status of each.</p>
+<p>The repository contains the current Tauri desktop application and the legacy
+Tkinter application. They share one SQLite database and a preserved set of
+domain rules. New desktop work targets the Tauri stack; the Tkinter app remains
+for compatibility and regression comparison. See <a href="../">Home</a> for the
+current status of each.</p>
 <hr />
-<h2 id="v2-architecture-tauri-react-fastapi">V2 architecture (Tauri + React + FastAPI)<a class="headerlink" href="#v2-architecture-tauri-react-fastapi" title="Permanent link">&para;</a></h2>
+<h2 id="current-architecture-tauri-react-fastapi">Current architecture (Tauri + React + FastAPI)<a class="headerlink" href="#current-architecture-tauri-react-fastapi" title="Permanent link">&para;</a></h2>
 <p>The renderer never contacts the sidecar directly. Every call crosses a fixed
 chain of layers, each of which can reject it.</p>
 <div class="highlight"><pre><span></span><code>React renderer
@@ -3101,9 +3131,9 @@ chain of layers, each of which can reject it.</p>
 </ul>
 <h3 id="source-structure">Source structure<a class="headerlink" href="#source-structure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>backend/src/portfolio_manager/
-├── domain/           # Scoring, week keys, slugs, migrations (ported verbatim)
+├── domain/           # Scoring, week keys, slugs, domain models
 ├── application/      # Services, DTOs, repository ports
-├── infrastructure/   # SQLite, config, logging, security
+├── infrastructure/   # SQLite, migrations, config, logging, security
 ├── contracts/        # Pydantic request/response models
 ├── api/              # FastAPI app, routes, middleware, error handlers
 └── cli/              # Sidecar entry point

@@ -456,10 +456,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-applications-one-database" class="md-nav__link">
+  <a href="#current-app-and-legacy-app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two applications, one database
+        Current App And Legacy App
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-current-desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start (current desktop app)
       
     </span>
   </a>
@@ -1403,6 +1414,34 @@
     
   
     Completion Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
   
 
     
@@ -2960,9 +2999,13 @@
 
 
 <h1 id="portfolio-manager">Portfolio Manager<a class="headerlink" href="#portfolio-manager" title="Permanent link">&para;</a></h1>
-<p>A personal, <strong>local-first desktop application</strong> for managing, scheduling, and executing work across a portfolio of creative and technical projects using time-boxed sessions.</p>
+<p>A personal, <strong>local-first desktop application</strong> for managing, scheduling, and
+executing work across a portfolio of creative and technical projects using
+time-boxed sessions.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Portfolio Manager is a single-user desktop app backed by SQLite. It gives you one place to:</p>
+<p>Portfolio Manager is a single-user desktop app backed by SQLite. The current
+desktop application is the Tauri stack: a React renderer, Rust shell, and local
+FastAPI sidecar packaged into a macOS app. It gives you one place to:</p>
 <ul>
 <li>Track active projects with traffic-light status indicators and priority 1–5 ordering</li>
 <li>Schedule and log time-boxed work sessions (15–480 min, default 90 min) against a configurable weekly hour budget</li>
@@ -2972,42 +3015,62 @@
 </ul>
 <p>The design philosophy is <strong>low-friction and forgiving</strong>: no required save actions, no failure messages for missed sessions, and a dashboard you can understand after four weeks away.</p>
 <hr />
-<h2 id="two-applications-one-database">Two applications, one database<a class="headerlink" href="#two-applications-one-database" title="Permanent link">&para;</a></h2>
-<p>The project is mid-migration. Both apps read the same SQLite database and the same domain rules.</p>
+<h2 id="current-app-and-legacy-app">Current App And Legacy App<a class="headerlink" href="#current-app-and-legacy-app" title="Permanent link">&para;</a></h2>
+<p>The repository still contains the legacy Tkinter app for compatibility and
+comparison, but the current desktop target is the Tauri app. Both apps read the
+same SQLite database and use the same core domain rules.</p>
 <table>
 <thead>
 <tr>
 <th></th>
+<th>Current desktop app</th>
 <th>Legacy app</th>
-<th>V2 app</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Stack</td>
-<td>Python + Tkinter</td>
 <td>Tauri (Rust) + React + FastAPI sidecar</td>
+<td>Python + Tkinter</td>
 </tr>
 <tr>
 <td>Source</td>
-<td><code>src/portfolio_manager/</code></td>
 <td><code>backend/</code>, <code>frontend/</code>, <code>src-tauri/</code></td>
+<td><code>src/portfolio_manager/</code></td>
 </tr>
 <tr>
 <td>Status</td>
-<td>Working</td>
-<td><strong>Working — installed and running</strong></td>
+<td>Current app; builds to <code>.app</code> and DMG</td>
+<td>Maintained as legacy/developer path</td>
 </tr>
 <tr>
 <td>Launch</td>
+<td><code>/Applications/Portfolio Manager.app</code> or a local Tauri build</td>
 <td><code>bash launch.sh</code></td>
-<td><code>/Applications/Portfolio Manager.app</code></td>
 </tr>
 </tbody>
 </table>
-<p>The V2 app now builds to a signed macOS application bundle, installs to <code>/Applications</code>, and reads the same database as the Tkinter app. Both are usable; the Tkinter app in <code>src/</code> stays until parity is formally accepted.</p>
+<p>The Tauri app builds to a macOS application bundle and DMG, supervises the
+FastAPI sidecar automatically, and reads the same database as the Tkinter app.
+The Tkinter app remains useful for legacy troubleshooting and domain
+comparison, but new desktop work should target the Tauri stack.</p>
 <p>See the <a href="https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/Portfolio-Manager-Tauri-React-Python-SRS-Design-Report.md">design report</a> and <a href="https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/Portfolio-Manager-Tauri-React-Python-Implementation.md">implementation plan</a> for the migration scope, and the <a href="release/completion-report/">completion report</a> for verified status.</p>
 <hr />
+<h2 id="quick-start-current-desktop-app">Quick Start (current desktop app)<a class="headerlink" href="#quick-start-current-desktop-app" title="Permanent link">&para;</a></h2>
+<p>For a local developer build:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/Users/mattbriggs/Git/personal-project-portfolio
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+.<span class="w"> </span>.venv/bin/activate
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
+npm<span class="w"> </span>install
+.venv/bin/python<span class="w"> </span>scripts/build_sidecar.py
+npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build
+scripts/install_macos_app.sh
+</code></pre></div>
+<p>For detailed build instructions, see the
+<a href="development/#packaging-macos">Development Guide</a> and the developer local
+build runbook in
+<a href="https://github.com/mattbriggs/personal-project-portfolio/blob/main/design/2026.08-07-Build-Local-App-Dev.md"><code>design/2026.08-07-Build-Local-App-Dev.md</code></a>.</p>
 <h2 id="quick-start-legacy-app">Quick Start (legacy app)<a class="headerlink" href="#quick-start-legacy-app" title="Permanent link">&para;</a></h2>
 <h3 id="option-1-macos-dock-shortcut">Option 1 — macOS Dock shortcut<a class="headerlink" href="#option-1-macos-dock-shortcut" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>&lt;repo-url&gt;<span class="w"> </span>portfolio-manager
@@ -3024,7 +3087,8 @@ bash<span class="w"> </span>create_shortcut.sh
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
 python<span class="w"> </span>-m<span class="w"> </span>portfolio_manager
 </code></pre></div>
-<p>For the V2 stack, see the <a href="development/">Development Guide</a>.</p>
+<p>Use the legacy app when you specifically need the old Tkinter launcher or are
+debugging behavior shared with earlier databases.</p>
 <hr />
 <h2 id="first-launch">First Launch<a class="headerlink" href="#first-launch" title="Permanent link">&para;</a></h2>
 <p>On first launch with no existing data:</p>
@@ -3079,10 +3143,16 @@ python<span class="w"> </span>-m<span class="w"> </span>portfolio_manager
 </table>
 <hr />
 <h2 id="updating">Updating<a class="headerlink" href="#updating" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-.venv/bin/pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span><span class="w"> </span>--quiet
+<p>For the current Tauri app, rebuild after pulling source changes:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull<span class="w"> </span>--rebase<span class="w"> </span>origin<span class="w"> </span>main
+.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
+npm<span class="w"> </span>install
+.venv/bin/python<span class="w"> </span>scripts/build_sidecar.py
+npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build
+scripts/install_macos_app.sh
 </code></pre></div>
-<p>No rebuild required — the macOS <code>.app</code> always calls <code>launch.sh</code> from the repo.</p>
+<p>For the legacy app, <code>git pull</code> plus <code>.venv/bin/pip install -e .[dev]</code> is enough
+because the Dock wrapper calls <code>launch.sh</code> from the checkout.</p>
 
 
 

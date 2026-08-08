@@ -1415,6 +1415,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/docs-quality-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Quality Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2960,8 +2988,8 @@
 
 <h1 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h1>
 <p>All data is stored in a single SQLite file at <code>~/.portfolio_manager/portfolio.db</code>.</p>
-<p><strong>Both applications share this schema.</strong> The V2 sidecar ports the migration
-runner from the Tkinter app verbatim
+<p><strong>Both applications share this schema.</strong> The Tauri sidecar ports the migration
+runner from the Tkinter app
 (<a href="../architecture/decisions/adr-002-preserve-domain/">ADR-002</a>), so a database
 created by either app opens in the other. Schema versions v1–v4 upgrade
 automatically, and a backup is written to <code>&lt;name&gt;.db.bak</code> before any migration
@@ -3095,7 +3123,7 @@ runs.</p>
 <tr>
 <td><code>priority</code></td>
 <td>INTEGER</td>
-<td>DEFAULT 3, CHECK 1–3</td>
+<td>DEFAULT 3, CHECK 1–5</td>
 <td>1 = highest</td>
 </tr>
 <tr>
@@ -3333,16 +3361,23 @@ runs.</p>
 <p>Week 1 is the week containing the first Thursday of the year. The week always starts on Monday.</p>
 <hr />
 <h2 id="migrations">Migrations<a class="headerlink" href="#migrations" title="Permanent link">&para;</a></h2>
-<p>Schema changes are tracked in <code>schema_migration</code>. Each migration is a <code>(version, description, sql)</code> triple defined in <code>db/migrations.py</code>. The current schema is at <strong>v4</strong>. The migration runner:</p>
+<p>Schema changes are tracked in <code>schema_migration</code>. Each sidecar migration is a
+<code>(version, description, sql)</code> triple defined in
+<code>backend/src/portfolio_manager/infrastructure/db/migrations/versions.py</code>.
+The legacy Tkinter app keeps the equivalent migration history in
+<code>src/portfolio_manager/db/migrations.py</code>. The current schema is at <strong>v4</strong>.
+The migration runner:</p>
 <ol>
 <li>Reads <code>schema_migration</code> to find applied versions.</li>
 <li>Backs up the database to <code>&lt;name&gt;.db.bak</code> before the first change.</li>
 <li>Applies each pending migration's SQL via <code>executescript</code>.</li>
 <li>Records the version in <code>schema_migration</code>.</li>
 </ol>
-<p>To add a migration, append to the <code>_build_migrations()</code> list:</p>
+<p>To add a sidecar migration, append to the <code>build_migrations()</code> list:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="s2">&quot;v5&quot;</span><span class="p">,</span> <span class="s2">&quot;Add color column to project&quot;</span><span class="p">,</span> <span class="s2">&quot;ALTER TABLE project ADD COLUMN color TEXT;&quot;</span><span class="p">),</span>
 </code></pre></div>
+<p>If the legacy app must remain able to open the same database after that change,
+add the same migration to the legacy migration registry as well.</p>
 
 
 
