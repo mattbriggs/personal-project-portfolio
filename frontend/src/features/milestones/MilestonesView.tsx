@@ -5,6 +5,7 @@ import { isCommandError, type CommandError } from "@/command-client";
 import type { Milestone, MilestoneStatus } from "@/contracts";
 import { Dialog } from "@/components/dialogs/Dialog";
 import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
+import { WorkStatusTag } from "@/components/status/StatusTag";
 import { useInvalidate } from "@/hooks/useInvalidate";
 import { weekKeyForDate } from "@/utils/week";
 import { MilestoneForm, type MilestoneFormValues } from "./MilestoneForm";
@@ -88,6 +89,8 @@ export function MilestonesView() {
         <label htmlFor="ms-project">Project</label>
         <select
           id="ms-project"
+          className="input-auto"
+          style={{ minWidth: 220 }}
           value={projectId ?? ""}
           onChange={(e) => {
             setProjectId(e.target.value ? Number(e.target.value) : null);
@@ -103,21 +106,21 @@ export function MilestonesView() {
         </select>
         <span className="spacer" />
         <button
-          className="primary"
+          className="btn btn-primary"
           disabled={projectId == null}
           onClick={() => {
             setFormError(null);
             setEditing("new");
           }}
         >
-          New Milestone
+          + New milestone
         </button>
       </div>
 
       {projectId != null && (
         <>
           <div className="table-scroll">
-            <table>
+            <table className="table">
               <thead>
                 <tr>
                   <th>
@@ -149,10 +152,12 @@ export function MilestonesView() {
                     }}
                   >
                     <td>{m.description}</td>
-                    <td>{m.target_date ?? ""}</td>
-                    <td>{(m.target_date && weekKeyForDate(m.target_date)) || ""}</td>
-                    <td>{m.total_session_minutes || ""}</td>
-                    <td className={`status-${m.status}`}>{m.status}</td>
+                    <td>{m.target_date ?? "—"}</td>
+                    <td>{(m.target_date && weekKeyForDate(m.target_date)) || "—"}</td>
+                    <td>{m.total_session_minutes || "—"}</td>
+                    <td>
+                      <WorkStatusTag status={m.status} />
+                    </td>
                   </tr>
                 ))}
                 {rows.length === 0 && (
@@ -165,9 +170,10 @@ export function MilestonesView() {
           </div>
 
           <div className="action-bar">
-            <label htmlFor="ms-bulk-status">Set Status:</label>
+            <label htmlFor="ms-bulk-status">Set status</label>
             <select
               id="ms-bulk-status"
+              className="input-auto"
               value={bulkStatus}
               onChange={(e) => setBulkStatus(e.target.value as MilestoneStatus)}
             >
@@ -178,6 +184,7 @@ export function MilestonesView() {
               ))}
             </select>
             <button
+              className="btn btn-secondary"
               disabled={!selected}
               onClick={() =>
                 selected && statusMut.mutate({ id: selected.id, status: bulkStatus })
@@ -185,11 +192,15 @@ export function MilestonesView() {
             >
               Apply
             </button>
-            <button disabled={!selected} onClick={() => selected && setEditing(selected)}>
+            <button
+              className="btn btn-secondary"
+              disabled={!selected}
+              onClick={() => selected && setEditing(selected)}
+            >
               Edit
             </button>
             <button
-              className="danger"
+              className="btn btn-ghost"
               disabled={!selected}
               onClick={() => selected && setConfirmDelete(selected)}
             >

@@ -1,25 +1,20 @@
 import type { ScoreStatus } from "@/contracts";
 
-// Non-color-only status indicator: pairs a colored dot with a text label and an
-// icon glyph so status is perceivable without relying on color alone.
-const ICON: Record<ScoreStatus, string> = {
-  green: "●",
-  yellow: "◐",
-  red: "○",
-};
-
-const LABEL: Record<ScoreStatus, string> = {
-  green: "On track",
-  yellow: "At risk",
-  red: "Behind",
+// Non-color-only score indicator, rendered as a Modernist tag: the tag variant
+// carries the color, an icon glyph and a text label carry the meaning without
+// relying on color alone. Metadata mirrors SCORE_META in the design prototype.
+const SCORE_META: Record<ScoreStatus, { cls: string; icon: string; label: string }> = {
+  green: { cls: "tag tag-neutral", icon: "●", label: "On track" },
+  yellow: { cls: "tag tag-outline", icon: "◐", label: "At risk" },
+  red: { cls: "tag tag-accent", icon: "○", label: "Behind" },
 };
 
 export function StatusIndicator({ status }: { status: ScoreStatus }) {
+  const meta = SCORE_META[status];
   return (
-    <span aria-label={LABEL[status]} title={LABEL[status]}>
-      <span className={`status-dot status-${status}`} aria-hidden="true" />
-      <span aria-hidden="true"> {ICON[status]} </span>
-      <span>{LABEL[status]}</span>
+    <span className={meta.cls} aria-label={meta.label} title={meta.label}>
+      <span aria-hidden="true">{meta.icon}</span>
+      {meta.label}
     </span>
   );
 }

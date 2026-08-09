@@ -26,10 +26,10 @@ export function ExpandEditor({ label, value, onDone, onCancel }: ExpandEditorPro
         onChange={(e) => setDraft(e.target.value)}
       />
       <div className="dialog-actions">
-        <button type="button" className="primary" onClick={() => onDone(draft)}>
+        <button type="button" className="btn btn-primary" onClick={() => onDone(draft)}>
           Done
         </button>
-        <button type="button" onClick={onCancel}>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Cancel
         </button>
       </div>

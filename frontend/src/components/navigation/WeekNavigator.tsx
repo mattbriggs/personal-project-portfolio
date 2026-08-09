@@ -16,13 +16,12 @@ export function WeekNavigator() {
 
   return (
     <nav className="week-rail" aria-label="Week navigator">
-      <h2 style={{ fontSize: 12, textTransform: "uppercase", color: "var(--muted)" }}>
-        Weeks
-      </h2>
-      <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+      <h2>Weeks</h2>
+      <ul className="week-list">
         {keys.map((key) => {
           const info = weekInfo(key);
           const isCurrent = key === selectedWeek;
+          const week = String(info.week).padStart(2, "0");
           return (
             <li key={key}>
               <button
@@ -31,9 +30,9 @@ export function WeekNavigator() {
                 aria-current={isCurrent}
                 onClick={() => setSelectedWeek(key)}
               >
-                <span>
-                  {info.year}.W{info.week}
-                  {key === current ? " (now)" : ""}
+                <span className="title">
+                  {info.year} · W{week}
+                  {key === current ? " · Now" : ""}
                 </span>
                 <span className="range">{info.label}</span>
               </button>
@@ -43,8 +42,8 @@ export function WeekNavigator() {
       </ul>
       <button
         type="button"
+        className="btn btn-ghost btn-block"
         onClick={() => setFuture((f) => f + FUTURE_STEP)}
-        style={{ marginTop: 8 }}
       >
         Load more weeks
       </button>

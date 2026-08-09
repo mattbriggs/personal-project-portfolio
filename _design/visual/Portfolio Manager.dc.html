@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-33834df4-72b7-4b93-828e-497b462795a8/styles.css">
+<script src="_ds/modernist-33834df4-72b7-4b93-828e-497b462795a8/_ds_bundle.js"></script>
+<style>
+body{margin:0;}
+a{color:var(--color-accent);}
+a:hover{color:var(--color-accent-700);}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--color-neutral-900);padding:32px;font-family:var(--font-body);">
+<div style="width:1500px;height:920px;border-radius:10px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.25);display:flex;flex-direction:column;background:var(--color-bg);position:relative;">
+
+<div style="flex:none;height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--color-surface);border-bottom:2px solid var(--color-divider);">
+  <div style="display:flex;gap:8px;">
+    <span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;display:block;"></span>
+    <span style="width:12px;height:12px;border-radius:50%;background:#febc2e;display:block;"></span>
+    <span style="width:12px;height:12px;border-radius:50%;background:#28c840;display:block;"></span>
+  </div>
+  <span style="width:8px;height:8px;background:var(--color-accent);display:inline-block;"></span>
+  <span style="font-family:var(--font-heading);font-weight:800;font-size:14px;letter-spacing:-0.01em;">Portfolio Manager</span>
+  <span style="flex:1;"></span>
+  <span class="{{ sidecarTagClass }}">{{ sidecarLabel }}</span>
+</div>
+
+<sc-if value="{{ isDegraded }}" hint-placeholder-val="{{ false }}">
+  <div role="alert" style="flex:none;padding:10px 16px;background:var(--color-accent-100);color:var(--color-accent-800);border-bottom:2px solid var(--color-divider);font-size:13px;">{{ degradedMessage }}</div>
+</sc-if>
+
+<div style="flex:1;min-height:0;display:grid;grid-template-columns:220px 1fr;grid-template-rows:auto 1fr;grid-template-areas:'tabs tabs' 'rail main';">
+
+  <div style="grid-area:tabs;display:flex;align-items:center;gap:2px;padding:0 12px;border-bottom:2px solid var(--color-divider);height:52px;overflow-x:auto;">
+    <button type="button" style="{{ tabDashboardStyle }}" onClick="{{ goDashboard }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>Dashboard</button>
+    <button type="button" style="{{ tabSessionsStyle }}" onClick="{{ goSessions }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l4 2"></path></svg>Sessions</button>
+    <button type="button" style="{{ tabProjectsStyle }}" onClick="{{ goProjects }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"></path></svg>Projects</button>
+    <button type="button" style="{{ tabMilestonesStyle }}" onClick="{{ goMilestones }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3v18"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg>Milestones</button>
+    <button type="button" style="{{ tabReviewsStyle }}" onClick="{{ goReviews }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="17" rx="1"></rect><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"></path><path d="m9 13 2 2 4-4"></path></svg>Weekly Review</button>
+    <button type="button" style="{{ tabSettingsStyle }}" onClick="{{ goSettings }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>Settings</button>
+  </div>
+
+  <nav style="grid-area:rail;background:var(--color-surface);border-right:2px solid var(--color-divider);overflow-y:auto;padding:16px 12px;">
+    <h6 style="margin:0 0 8px 4px;font-weight:600;">Weeks</h6>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <sc-for list="{{ weeks }}" as="wk" hint-placeholder-count="10">
+        <button type="button" style="{{ wk.style }}" onClick="{{ wk.onClick }}">
+          <span style="display:block;font-weight:600;">{{ wk.title }}</span>
+          <span style="display:block;font-size:11px;opacity:.65;">{{ wk.range }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <button type="button" class="btn btn-ghost btn-block" onClick="{{ loadMoreWeeks }}" style="margin-top:8px;">Load more weeks</button>
+  </nav>
+
+  <main style="grid-area:main;overflow-y:auto;padding:28px 32px;">
+
+    <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="Dashboard">
+        <h2 style="margin:0 0 4px;font-weight:600;">Dashboard</h2>
+        <p style="margin:0 0 20px;color:color-mix(in srgb, var(--color-text) 60%, transparent);font-size:13px;">{{ selectedWeekKey }} · {{ selectedWeekLabel }}</p>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-8);">
+          <div class="card elev-sm">
+            <span class="card-kicker">Portfolio score</span>
+            <span class="card-title" style="font-weight:600;">{{ portfolioScore }}</span>
+            <span class="{{ portfolioStatusMeta.cls }}" style="align-self:flex-start;">{{ portfolioStatusMeta.icon }} {{ portfolioStatusMeta.label }}</span>
+          </div>
+          <div class="card elev-sm">
+            <span class="card-kicker">Weekly budget</span>
+            <span class="card-title" style="font-weight:600;">{{ weekDoneHours }} / {{ weekBudgetHours }}</span>
+            <span class="card-body">{{ weekPlannedHours }} planned · {{ weekRemainingHours }} remaining</span>
+          </div>
+          <div class="card elev-sm">
+            <span class="card-kicker">Projects</span>
+            <span class="card-title" style="font-weight:600;">{{ activeProjectCount }} active</span>
+            <span class="card-body">{{ backlogProjectCount }} backlog · {{ archiveProjectCount }} archived</span>
+          </div>
+        </div>
+
+        <h3 style="margin:0 0 12px;font-weight:600;">Active projects</h3>
+        <div style="{{ densityVars }};overflow:auto;border:2px solid var(--color-divider);margin-bottom:var(--space-8);">
+          <table class="table">
+            <thead><tr><th>Project</th><th>Score</th><th>Status</th><th>Planned</th><th>Done</th><th>Remaining</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ dashboardRows }}" as="prow" hint-placeholder-count="3">
+                <tr>
+                  <td>{{ prow.name }}</td>
+                  <td>{{ prow.score }}</td>
+                  <td><span class="{{ prow.statusMeta.cls }}">{{ prow.statusMeta.icon }} {{ prow.statusMeta.label }}</span></td>
+                  <td>{{ prow.planned }}</td>
+                  <td>{{ prow.completed }}</td>
+                  <td>{{ prow.remaining }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="margin:0 0 12px;font-weight:600;">Upcoming milestones</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <sc-for list="{{ upcomingMilestones }}" as="m" hint-placeholder-count="3">
+            <div style="display:flex;gap:12px;align-items:baseline;border-bottom:1px solid var(--color-divider);padding-bottom:8px;">
+              <span class="tag tag-outline" style="flex:none;">{{ m.target_date }}</span>
+              <span><strong style="font-weight:600;">{{ m.projectName }}</strong> — {{ m.description }}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noUpcomingMilestones }}" hint-placeholder-val="{{ false }}"><p style="color:color-mix(in srgb, var(--color-text) 55%, transparent);">No upcoming milestones.</p></sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isSessions }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Sessions">
+        <h2 style="margin:0 0 4px;font-weight:600;">Sessions</h2>
+        <p style="margin:0 0 16px;color:color-mix(in srgb, var(--color-text) 60%, transparent);font-size:13px;">{{ selectedWeekKey }} · {{ selectedWeekLabel }}</p>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+          <button type="button" class="btn btn-primary" onClick="{{ openNewSession }}">+ New session</button>
+        </div>
+        <div style="{{ densityVars }};overflow:auto;border:2px solid var(--color-divider);">
+          <table class="table">
+            <thead><tr><th>Project</th><th>Milestone</th><th>Date</th><th>Min</th><th>Status</th><th>Session</th><th></th></tr></thead>
+            <tbody>
+              <sc-for list="{{ sessionRows }}" as="srow" hint-placeholder-count="6">
+                <tr style="{{ srow.rowStyle }}" onClick="{{ srow.onSelect }}" onDoubleClick="{{ srow.onEdit }}">
+                  <td>{{ srow.projectName }}</td>
+                  <td>{{ srow.milestoneName }}</td>
+                  <td>{{ srow.date }}</td>
+                  <td>{{ srow.minutes }}</td>
+                  <td><span class="{{ srow.statusCls }}" style="{{ srow.statusStyle }}">{{ srow.statusLabel }}</span></td>
+                  <td>{{ srow.description }}</td>
+                  <td><button type="button" class="btn btn-ghost" onClick="{{ srow.onEdit }}" style="padding:2px 8px;">Edit</button></td>
+                </tr>
+              </sc-for>
+              <sc-if value="{{ noSessionsThisWeek }}" hint-placeholder-val="{{ false }}"><tr><td colspan="7">No sessions this week.</td></tr></sc-if>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0;flex-wrap:wrap;">
+          <label for="s-bulk" style="font-size:12px;font-weight:600;">Set status</label>
+          <select id="s-bulk" class="input" style="width:auto;" value="{{ bulkSessionStatus }}" onChange="{{ setBulkSessionStatus }}">
+            <option value="backlog">Backlog</option><option value="planned">Planned</option><option value="doing">Doing</option><option value="done">Done</option><option value="cancelled">Cancelled</option>
+          </select>
+          <button type="button" class="btn btn-secondary" disabled="{{ sessionActionsDisabled }}" onClick="{{ applySessionBulkStatus }}">Apply</button>
+          <button type="button" class="btn btn-secondary" disabled="{{ sessionActionsDisabled }}" onClick="{{ editSelectedSession }}">Edit</button>
+          <button type="button" class="btn btn-ghost" disabled="{{ sessionActionsDisabled }}" onClick="{{ deleteSelectedSession }}">Delete</button>
+        </div>
+        <p class="card" style="display:inline-flex;gap:14px;font-size:13px;">
+          <span>Planned {{ sessionsPlannedHours }}</span><span>·</span><span>Done {{ sessionsDoneHours }}</span><span>·</span><span>Remaining {{ sessionsRemainingHours }} of {{ sessionsBudgetHours }} budget</span>
+        </p>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isProjects }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Projects">
+        <h2 style="margin:0 0 16px;font-weight:600;">Projects</h2>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+          <div class="seg">
+            <button type="button" class="seg-opt" style="{{ filterActiveStyle }}" onClick="{{ setFilterActive }}">Active</button>
+            <button type="button" class="seg-opt" style="{{ filterBacklogStyle }}" onClick="{{ setFilterBacklog }}">Backlog</button>
+            <button type="button" class="seg-opt" style="{{ filterArchiveStyle }}" onClick="{{ setFilterArchive }}">Archive</button>
+            <button type="button" class="seg-opt" style="{{ filterAllStyle }}" onClick="{{ setFilterAll }}">All</button>
+          </div>
+          <span style="flex:1;"></span>
+          <button type="button" class="btn btn-primary" onClick="{{ openNewProject }}">+ New project</button>
+        </div>
+        <div style="{{ densityVars }};overflow:auto;border:2px solid var(--color-divider);">
+          <table class="table">
+            <thead><tr><th>Name</th><th>Status</th><th>Priority</th><th>Started</th><th>Actions</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ projectRows }}" as="pjrow" hint-placeholder-count="4">
+                <tr onDoubleClick="{{ pjrow.onEdit }}" style="cursor:pointer;">
+                  <td>{{ pjrow.name }}</td>
+                  <td><span class="{{ pjrow.statusCls }}">{{ pjrow.statusLabel }}</span></td>
+                  <td><sc-for list="{{ pjrow.squares }}" as="sq" hint-placeholder-count="5"><span style="{{ sq.style }}"></span></sc-for></td>
+                  <td>{{ pjrow.started }}</td>
+                  <td style="display:flex;gap:6px;">
+                    <button type="button" class="btn btn-ghost" onClick="{{ pjrow.onPlan }}" style="padding:2px 8px;">Plan</button>
+                    <button type="button" class="btn btn-ghost" onClick="{{ pjrow.onEdit }}" style="padding:2px 8px;">{{ pjrow.editLabel }}</button>
+                    <sc-if value="{{ pjrow.showArchive }}" hint-placeholder-val="{{ true }}"><button type="button" class="btn btn-ghost" onClick="{{ pjrow.onArchive }}" style="padding:2px 8px;">Archive</button></sc-if>
+                    <button type="button" class="btn btn-ghost" onClick="{{ pjrow.onDelete }}" style="padding:2px 8px;">Delete</button>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isMilestones }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Milestones">
+        <h2 style="margin:0 0 16px;font-weight:600;">Milestones</h2>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+          <label for="ms-project" style="font-size:12px;font-weight:600;">Project</label>
+          <select id="ms-project" class="input" style="width:auto;min-width:220px;" value="{{ milestoneProjectId }}" onChange="{{ setMilestoneProject }}">
+            <option value="">Select a project…</option>
+            <sc-for list="{{ projectOptions }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.id }}">{{ opt.name }}</option></sc-for>
+          </select>
+          <span style="flex:1;"></span>
+          <button type="button" class="btn btn-primary" disabled="{{ milestoneProjectMissing }}" onClick="{{ openNewMilestone }}">+ New milestone</button>
+        </div>
+
+        <sc-if value="{{ hasMilestoneProject }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ densityVars }};overflow:auto;border:2px solid var(--color-divider);">
+            <table class="table">
+              <thead><tr>
+                <th><button type="button" onClick="{{ cycleMilestoneSort }}" style="background:none;border:none;padding:0;font:inherit;font-weight:600;cursor:pointer;color:inherit;text-transform:uppercase;letter-spacing:.08em;font-size:11px;">Milestone{{ sortIndicator }}</button></th>
+                <th>Target</th><th>Week</th><th>Total min</th><th>Status</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ milestoneRows }}" as="mrow" hint-placeholder-count="4">
+                  <tr style="{{ mrow.rowStyle }}" onClick="{{ mrow.onSelect }}" onDoubleClick="{{ mrow.onEdit }}">
+                    <td>{{ mrow.description }}</td>
+                    <td>{{ mrow.target }}</td>
+                    <td>{{ mrow.week }}</td>
+                    <td>{{ mrow.totalMin }}</td>
+                    <td><span class="{{ mrow.statusCls }}" style="{{ mrow.statusStyle }}">{{ mrow.statusLabel }}</span></td>
+                  </tr>
+                </sc-for>
+                <sc-if value="{{ noMilestonesForProject }}" hint-placeholder-val="{{ false }}"><tr><td colspan="5">No milestones for this project.</td></tr></sc-if>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin:14px 0;flex-wrap:wrap;">
+            <label for="m-bulk" style="font-size:12px;font-weight:600;">Set status</label>
+            <select id="m-bulk" class="input" style="width:auto;" value="{{ bulkMilestoneStatus }}" onChange="{{ setBulkMilestoneStatus }}">
+              <option value="backlog">Backlog</option><option value="planned">Planned</option><option value="doing">Doing</option><option value="done">Done</option><option value="cancelled">Cancelled</option>
+            </select>
+            <button type="button" class="btn btn-secondary" disabled="{{ milestoneActionsDisabled }}" onClick="{{ applyMilestoneBulkStatus }}">Apply</button>
+            <button type="button" class="btn btn-secondary" disabled="{{ milestoneActionsDisabled }}" onClick="{{ editSelectedMilestone }}">Edit</button>
+            <button type="button" class="btn btn-ghost" disabled="{{ milestoneActionsDisabled }}" onClick="{{ deleteSelectedMilestone }}">Delete</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ milestoneProjectMissing }}" hint-placeholder-val="{{ true }}"><p style="color:color-mix(in srgb, var(--color-text) 55%, transparent);">Select a project to view its milestones.</p></sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isReviews }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Weekly Review">
+        <h2 style="margin:0 0 4px;font-weight:600;">Weekly review</h2>
+        <p style="margin:0 0 20px;color:color-mix(in srgb, var(--color-text) 60%, transparent);font-size:13px;">{{ reviewWeekLabel }} · {{ reviewDateFrom }} to {{ reviewDateTo }}</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);max-width:480px;margin-bottom:var(--space-4);">
+          <div class="field"><label for="r-hours">Hours invested</label><input id="r-hours" class="input" type="number" step="0.5" value="{{ reviewHours }}" onChange="{{ setReviewHours }}"></input></div>
+          <div class="field"><label for="r-sessions">Sessions completed</label><input id="r-sessions" class="input" type="number" value="{{ reviewSessions }}" onChange="{{ setReviewSessions }}"></input></div>
+        </div>
+
+        <sc-for list="{{ reviewFields }}" as="f" hint-placeholder-count="8">
+          <div class="field">
+            <div style="display:flex;align-items:baseline;gap:8px;">
+              <label>{{ f.label }}</label>
+              <span style="flex:1;"></span>
+              <button type="button" class="btn btn-ghost" onClick="{{ f.onExpand }}" style="padding:0 4px;" aria-label="Expand">⤢</button>
+            </div>
+            <textarea class="input" rows="3" value="{{ f.value }}" onChange="{{ f.onChange }}"></textarea>
+          </div>
+        </sc-for>
+
+        <div class="field" style="flex-direction:row;align-items:center;gap:8px;">
+          <input id="r-written" type="checkbox" checked="{{ reviewWrittenToRepo }}" onChange="{{ setReviewWritten }}"></input>
+          <label for="r-written" style="margin:0;">Written to repository</label>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+          <button type="button" class="btn btn-primary" onClick="{{ saveReview }}">Save review</button>
+          <sc-if value="{{ reviewSaved }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size:13px;">Saved.</span></sc-if>
+        </div>
+
+        <h3 style="margin:32px 0 12px;font-weight:600;">History</h3>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <sc-for list="{{ reviewHistoryRows }}" as="r" hint-placeholder-count="2"><p style="margin:0;font-size:13px;">{{ r.label }}</p></sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Settings">
+        <h2 style="margin:0 0 20px;font-weight:600;">Settings</h2>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3);max-width:480px;">
+          <div class="field">
+            <label for="set-log">Log level</label>
+            <select id="set-log" class="input" value="{{ settingsDraft.log_level }}" onChange="{{ setLogLevel }}">
+              <option value="DEBUG">Debug</option><option value="INFO">Info</option><option value="WARNING">Warning</option><option value="ERROR">Error</option><option value="CRITICAL">Critical</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="set-theme">Theme</label>
+            <select id="set-theme" class="input" value="{{ settingsDraft.theme }}" onChange="{{ setTheme }}">
+              <option value="light">Light</option><option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="set-dur">Default session duration, minutes (15–480)</label>
+            <input id="set-dur" class="input" type="number" min="15" max="480" value="{{ settingsDraft.default_duration_minutes }}" onChange="{{ setDefaultDuration }}"></input>
+          </div>
+          <div class="field">
+            <label for="set-budget">Weekly budget, hours (1–100)</label>
+            <input id="set-budget" class="input" type="number" min="1" max="100" value="{{ settingsDraft.weekly_budget_hours }}" onChange="{{ setWeeklyBudget }}"></input>
+          </div>
+          <div class="field">
+            <label for="set-db">Database path</label>
+            <input id="set-db" class="input" value="{{ settingsDraft.database_path }}" onChange="{{ setDbPath }}"></input>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" class="btn btn-primary" onClick="{{ saveSettings }}">Save settings</button>
+            <sc-if value="{{ settingsSaved }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size:13px;">Saved.</span></sc-if>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+  </main>
+</div>
+
+<sc-if value="{{ isDialogProjectForm }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">{{ projectDialogTitle }}</h2>
+      <sc-if value="{{ projectIsReadOnly }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <p><strong>{{ projectReadOnlyName }}</strong> is archived and read-only.</p>
+          <p class="dialog-body">{{ projectReadOnlyDescription }}</p>
+          <div class="dialog-actions"><button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Close</button></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ projectIsEditable }}" hint-placeholder-val="{{ true }}">
+        <div class="field"><label for="pf-name">Name</label><input id="pf-name" class="input" value="{{ projectDraft.name }}" onChange="{{ setProjectName }}"></input></div>
+        <div class="field">
+          <label for="pf-status">Status</label>
+          <select id="pf-status" class="input" value="{{ projectDraft.status }}" onChange="{{ setProjectStatus }}">
+            <option value="active">Active</option><option value="backlog">Backlog</option><option value="archive">Archive</option>
+          </select>
+        </div>
+        <div class="field"><label for="pf-priority">Priority (1–5)</label><input id="pf-priority" class="input" type="number" min="1" max="5" value="{{ projectDraft.priority }}" onChange="{{ setProjectPriority }}"></input></div>
+        <div class="field"><label for="pf-desc">Description</label><textarea id="pf-desc" class="input" rows="4" value="{{ projectDraft.description }}" onChange="{{ setProjectDescription }}"></textarea></div>
+        <div class="dialog-actions">
+          <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+          <button type="button" class="btn btn-primary" onClick="{{ saveProject }}">Save</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogConfirmArchiveProject }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">Archive project</h2>
+      <p class="dialog-body">{{ confirmArchiveMessage }}</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="{{ confirmArchiveProject }}">Archive</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogConfirmDeleteProject }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">Delete project</h2>
+      <p class="dialog-body">{{ confirmDeleteProjectMessage }}</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="{{ confirmDeleteProject }}">Delete</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogPlan }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" style="width:min(820px,92vw);max-height:80vh;" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">Plan — {{ planProjectName }}</h2>
+      <div class="seg" style="align-self:flex-start;">
+        <button type="button" class="seg-opt" style="{{ planModeEditStyle }}" onClick="{{ setPlanEdit }}">Edit</button>
+        <button type="button" class="seg-opt" style="{{ planModePreviewStyle }}" onClick="{{ setPlanPreview }}">Preview</button>
+        <button type="button" class="seg-opt" style="{{ planModeSplitStyle }}" onClick="{{ setPlanSplit }}">Split</button>
+      </div>
+      <sc-if value="{{ planSaved }}" hint-placeholder-val="{{ false }}"><p role="status" class="dialog-body">Plan saved.</p></sc-if>
+      <div style="display:flex;gap:16px;min-height:280px;">
+        <sc-if value="{{ showPlanEdit }}" hint-placeholder-val="{{ true }}">
+          <textarea class="input" style="flex:1;min-height:280px;font-family:monospace;font-size:13px;" value="{{ planContent }}" onChange="{{ updatePlanDraft }}"></textarea>
+        </sc-if>
+        <sc-if value="{{ showPlanPreview }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;border-left:2px solid var(--color-divider);padding-left:16px;overflow-y:auto;">
+            <sc-for list="{{ planLines }}" as="line" hint-placeholder-count="6">
+              <sc-if value="{{ line.isH1 }}" hint-placeholder-val="{{ false }}"><h3 style="margin:12px 0 6px;">{{ line.text }}</h3></sc-if>
+              <sc-if value="{{ line.isH2 }}" hint-placeholder-val="{{ false }}"><h4 style="margin:10px 0 4px;">{{ line.text }}</h4></sc-if>
+              <sc-if value="{{ line.isLi }}" hint-placeholder-val="{{ false }}"><p style="margin:2px 0 2px 14px;">— {{ line.text }}</p></sc-if>
+              <sc-if value="{{ line.isP }}" hint-placeholder-val="{{ true }}"><p style="margin:2px 0;">{{ line.text }}</p></sc-if>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Close</button>
+        <sc-if value="{{ planEditable }}" hint-placeholder-val="{{ true }}"><button type="button" class="btn btn-primary" onClick="{{ savePlan }}">Save plan</button></sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogMilestoneForm }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">{{ milestoneDialogTitle }}</h2>
+      <sc-if value="{{ milestoneFormError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="color:var(--color-accent-700);font-size:13px;">{{ milestoneFormError }}</p></sc-if>
+      <div class="field"><label for="mf-name">Milestone</label><input id="mf-name" class="input" value="{{ milestoneDraft.description }}" onChange="{{ setMilestoneDescription }}"></input></div>
+      <div class="field">
+        <label for="mf-target">Target</label>
+        <div class="field-row">
+          <input id="mf-target" class="input" type="date" value="{{ milestoneDraft.target_date }}" onChange="{{ setMilestoneTarget }}"></input>
+          <button type="button" class="btn btn-secondary" onClick="{{ setMilestoneTargetToday }}">Today</button>
+          <button type="button" class="btn btn-secondary" onClick="{{ clearMilestoneTarget }}">Clear</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="mf-status">Status</label>
+        <select id="mf-status" class="input" value="{{ milestoneDraft.status }}" onChange="{{ setMilestoneStatus }}">
+          <option value="backlog">Backlog</option><option value="planned">Planned</option><option value="doing">Doing</option><option value="done">Done</option><option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <p class="field-hint">Week: {{ milestoneWeekHint }} &nbsp;&nbsp; Total min: {{ milestoneTotalMinHint }}</p>
+      <div class="field"><label for="mf-notes">Description</label><textarea id="mf-notes" class="input" rows="5" value="{{ milestoneDraft.notes }}" onChange="{{ setMilestoneNotes }}"></textarea></div>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="{{ saveMilestone }}">Save</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogConfirmDeleteMilestone }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">Delete milestone</h2>
+      <p class="dialog-body">{{ confirmDeleteMilestoneMessage }}</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="{{ confirmDeleteMilestone }}">Delete</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogSessionForm }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">{{ sessionDialogTitle }}</h2>
+      <sc-if value="{{ sessionFormError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="color:var(--color-accent-700);font-size:13px;">{{ sessionFormError }}</p></sc-if>
+      <div class="field">
+        <label for="sf-project">Project</label>
+        <select id="sf-project" class="input" value="{{ sessionDraft.project_id }}" onChange="{{ setSessionProject }}">
+          <sc-for list="{{ projectSelectOptions }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.id }}">{{ opt.name }}</option></sc-for>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sf-milestone">Milestone</label>
+        <select id="sf-milestone" class="input" value="{{ sessionDraft.milestone_id }}" onChange="{{ setSessionMilestone }}">
+          <option value="">— none —</option>
+          <sc-for list="{{ sessionMilestoneOptions }}" as="opt" hint-placeholder-count="3"><option value="{{ opt.id }}">{{ opt.description }}</option></sc-for>
+        </select>
+      </div>
+      <div class="field"><label for="sf-name">Session</label><input id="sf-name" class="input" value="{{ sessionDraft.description }}" onChange="{{ setSessionDescription }}"></input></div>
+      <div class="field">
+        <label for="sf-date">Date</label>
+        <div class="field-row">
+          <input id="sf-date" class="input" type="date" value="{{ sessionDraft.scheduled_date }}" onChange="{{ setSessionDate }}"></input>
+          <button type="button" class="btn btn-secondary" onClick="{{ setSessionToday }}">Today</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="sf-status">Status</label>
+        <div class="field-row">
+          <select id="sf-status" class="input" value="{{ sessionDraft.status }}" onChange="{{ setSessionStatus }}">
+            <option value="backlog">Backlog</option><option value="planned">Planned</option><option value="doing">Doing</option><option value="done">Done</option><option value="cancelled">Cancelled</option>
+          </select>
+          <label for="sf-duration" class="field-hint">Min</label>
+          <input id="sf-duration" class="input" type="number" min="15" max="480" step="15" value="{{ sessionDraft.duration_minutes }}" onChange="{{ setSessionDuration }}" style="width:90px;"></input>
+        </div>
+      </div>
+      <div class="field"><label for="sf-notes">Description</label><textarea id="sf-notes" class="input" rows="4" value="{{ sessionDraft.notes }}" onChange="{{ setSessionNotes }}"></textarea></div>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="{{ saveSession }}">Save</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogConfirmDeleteSession }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">Delete session</h2>
+      <p class="dialog-body">{{ confirmDeleteSessionMessage }}</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+        <button type="button" class="btn btn-primary" onClick="{{ confirmDeleteSession }}">Delete</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDialogExpandReview }}" hint-placeholder-val="{{ false }}">
+  <div class="dialog-backdrop" style="position:absolute;z-index:20;" onMouseDown="{{ closeDialog }}">
+    <div class="dialog" onMouseDown="{{ stop }}">
+      <h2 class="dialog-title" style="font-weight:600;">{{ expandLabel }}</h2>
+      <textarea class="input" rows="14" style="width:34rem;max-width:80vw;" value="{{ expandDraft }}" onChange="{{ setExpandDraft }}"></textarea>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-primary" onClick="{{ doneExpand }}">Done</button>
+        <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Cancel</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:960},&quot;sidecarState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;ready&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;degraded&quot;,&quot;failed&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dashboard&quot;,&quot;options&quot;:[&quot;dashboard&quot;,&quot;sessions&quot;,&quot;projects&quot;,&quot;milestones&quot;,&quot;reviews&quot;,&quot;settings&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;tableDensity&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;compact&quot;,&quot;options&quot;:[&quot;comfortable&quot;,&quot;compact&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
+function pad2(n){return String(n).padStart(2,'0');}
+function toISO(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function mondayOf(date){const d=new Date(date);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);d.setHours(0,0,0,0);return d;}
+function isoWeekNum(date){const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));const dayNum=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-dayNum+3);const firstThu=new Date(Date.UTC(d.getUTCFullYear(),0,4));return 1+Math.round((d-firstThu)/604800000);}
+function weekInfo(date){const monday=mondayOf(date);const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);const wk=isoWeekNum(monday);const yr=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+3).getFullYear();const key=yr+'-W'+pad2(wk);const fmt=(d)=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});return {key,monday,sunday,year:yr,week:wk,label:fmt(monday)+' – '+fmt(sunday)};}
+function weekKeyToMonday(key){const parts=key.split('-W');const year=Number(parts[0]);const week=Number(parts[1]);const jan4=new Date(year,0,4);const jan4Monday=mondayOf(jan4);const monday=new Date(jan4Monday);monday.setDate(jan4Monday.getDate()+(week-1)*7);return monday;}
+function weekInfoForKey(key){return weekInfo(weekKeyToMonday(key));}
+function dateToKey(dateStr){return weekInfo(new Date(dateStr+'T00:00:00')).key;}
+function hoursLabel(min){return (min/60).toFixed(1)+'h';}
+function weekRangeAround(anchorDate,past,future){const centerMonday=mondayOf(anchorDate);const list=[];for(let i=-past;i<=future;i++){const d=new Date(centerMonday);d.setDate(centerMonday.getDate()+7*i);list.push(weekInfo(d));}return list;}
+
+const TODAY = new Date(2026,7,9);
+const CURRENT_WEEK = weekInfo(TODAY);
+function dayOfWeek(offset){const d=new Date(CURRENT_WEEK.monday.getFullYear(),CURRENT_WEEK.monday.getMonth(),CURRENT_WEEK.monday.getDate()+offset);return toISO(d);}
+
+const SCORE_META = {green:{label:'On track',icon:'●',cls:'tag tag-neutral'},yellow:{label:'At risk',icon:'◐',cls:'tag tag-outline'},red:{label:'Behind',icon:'○',cls:'tag tag-accent'}};
+const WORK_META = {
+  backlog:{label:'Backlog',cls:'tag tag-neutral',style:''},
+  planned:{label:'Planned',cls:'tag tag-outline',style:''},
+  doing:{label:'Doing',cls:'tag tag-accent',style:''},
+  done:{label:'Done',cls:'tag tag-neutral',style:'opacity:.65'},
+  cancelled:{label:'Cancelled',cls:'tag tag-neutral',style:'opacity:.5;text-decoration:line-through'},
+};
+const PROJECT_META = {active:{label:'Active',cls:'tag tag-accent'},backlog:{label:'Backlog',cls:'tag tag-outline'},archive:{label:'Archived',cls:'tag tag-neutral'}};
+const NEXT_SORT = {none:'asc',asc:'desc',desc:'none'};
+const REVIEW_FIELD_DEFS = [
+  {key:'what_moved',label:'What moved'},{key:'what_stalled',label:'What stalled'},{key:'signals',label:'Signals'},
+  {key:'decision_next_week',label:'Decision next week'},{key:'primary_focus',label:'Primary focus'},
+  {key:'project_to_deprioritize',label:'Project to deprioritize'},{key:'risk_to_watch',label:'Risk to watch'},
+  {key:'first_session_target',label:'First session target'},
+];
+
+const SEED_PROJECTS = [
+  {id:1,name:'Structured Markdown',slug:'structured-markdown',status:'active',priority:1,started_date:'2026-02-03',description:'An open semantic layer for Markdown. A parser uses the standard as a semantic contract, parsing constrained Markdown into a stable, validated object model with provenance.'},
+  {id:2,name:'Portfolio Manager',slug:'portfolio-manager',status:'active',priority:1,started_date:'2026-03-10',description:'Desktop app for planning and executing work across a portfolio of creative and technical projects using time-boxed sessions.'},
+  {id:3,name:'Fiction Generator Engine',slug:'fiction-generator-engine',status:'active',priority:2,started_date:'2026-01-15',description:'A layered content-generation and validation system that transforms narrative specifications into DITA-compliant fiction content, validated through ISO Schematron.'},
+  {id:4,name:'Pattern Miner',slug:'pattern-miner',status:'backlog',priority:3,started_date:null,description:'Identifies repeated structural patterns in text across six hierarchical levels, from phrase to document.'},
+  {id:5,name:'SaaS Runbook',slug:'saas-runbook',status:'backlog',priority:3,started_date:null,description:'A pattern library for operating a solo-developer SaaS on a FastAPI / Astro / PostgreSQL / Neo4j stack.'},
+  {id:6,name:'KWIC',slug:'kwic',status:'archive',priority:5,started_date:'2025-06-01',description:'A keyword-in-context tool built with Python and the Natural Language Toolkit.'},
+];
+const SEED_MILESTONES = [
+  {id:1,project_id:1,description:'Ship provenance tracking for nested lists',status:'doing',target_date:'2026-08-14',notes:'',total_session_minutes:240},
+  {id:2,project_id:1,description:'Publish v1.0 to PyPI',status:'planned',target_date:'2026-08-28',notes:'',total_session_minutes:0},
+  {id:3,project_id:2,description:'Tauri packaging MVP release',status:'doing',target_date:'2026-08-21',notes:'Sidecar smoke test passing.',total_session_minutes:180},
+  {id:4,project_id:2,description:'Add Windows build target',status:'backlog',target_date:null,notes:'',total_session_minutes:0},
+  {id:5,project_id:3,description:'Validate Schematron ruleset against test corpus',status:'planned',target_date:'2026-08-18',notes:'',total_session_minutes:60},
+  {id:6,project_id:3,description:'Publish HTML5 output sample',status:'backlog',target_date:null,notes:'',total_session_minutes:0},
+];
+const SEED_SESSIONS_RAW = [
+  {id:1,project_id:1,milestone_id:1,offset:0,duration_minutes:90,status:'done',description:'Implement list provenance parser',notes:''},
+  {id:2,project_id:2,milestone_id:3,offset:0,duration_minutes:120,status:'done',description:'Wire sidecar health check to UI banner',notes:''},
+  {id:3,project_id:3,milestone_id:5,offset:1,duration_minutes:60,status:'planned',description:'Draft Schematron test cases',notes:''},
+  {id:4,project_id:1,milestone_id:1,offset:2,duration_minutes:90,status:'planned',description:'Write provenance unit tests',notes:''},
+  {id:5,project_id:2,milestone_id:null,offset:3,duration_minutes:60,status:'backlog',description:'Review release checklist',notes:''},
+  {id:6,project_id:3,milestone_id:5,offset:4,duration_minutes:90,status:'doing',description:'Run corpus validation pass',notes:''},
+];
+const SEED_SESSIONS = SEED_SESSIONS_RAW.map(s=>{const scheduled_date=dayOfWeek(s.offset);return {id:s.id,project_id:s.project_id,milestone_id:s.milestone_id,scheduled_date,week_key:dateToKey(scheduled_date),duration_minutes:s.duration_minutes,status:s.status,description:s.description,notes:s.notes};});
+const SEED_REVIEWS = {};
+SEED_REVIEWS[CURRENT_WEEK.key] = {week_key:CURRENT_WEEK.key,date_from:toISO(CURRENT_WEEK.monday),date_to:toISO(CURRENT_WEEK.sunday),hours_invested:9.5,sessions_completed:4,what_moved:'Provenance parser landed and passed the corpus regression suite.',what_stalled:'Windows sidecar packaging is blocked on a code-signing certificate.',signals:'The Fiction Generator validation pass surfaced twelve schema violations to triage.',decision_next_week:'Prioritize the Tauri release checklist over new milestone work.',primary_focus:'Ship the Tauri desktop MVP.',project_to_deprioritize:'KWIC',risk_to_watch:'Schematron ruleset drift against the next DITA-OT upgrade.',first_session_target:'Draft the release checklist document.',written_to_repo:false};
+const REVIEW_HISTORY = [{week_key:'2026-W31',hours_invested:11,sessions_completed:6},{week_key:'2026-W30',hours_invested:8.5,sessions_completed:5}];
+const SEED_SETTINGS = {log_level:'INFO',theme:'light',default_duration_minutes:90,weekly_budget_hours:12,database_path:'~/.portfolio_manager/portfolio.db',resolved_database_path:'~/.portfolio_manager/portfolio.db',active_database_path:'~/.portfolio_manager/portfolio.db'};
+const SEED_PLANS = {
+  1:'# Structured Markdown — Plan\n\n## Now\n- Finish provenance tracking for nested lists\n- Land unit tests for parser edge cases\n\n## Next\n- Publish v1.0 to PyPI\n- Write a migration guide from plain Markdown\n\n## Later\n- JSON-LD export target',
+  2:'# Portfolio Manager — Plan\n\n## Now\n- Tauri packaging MVP\n- Sidecar health banner\n\n## Next\n- Code signing and notarization\n- Windows build target',
+};
+
+class Component extends DCLogic {
+  state = {
+    view: 'dashboard',
+    selectedWeekKey: CURRENT_WEEK.key,
+    futureWeeks: 4,
+    projects: SEED_PROJECTS,
+    milestones: SEED_MILESTONES,
+    sessions: SEED_SESSIONS,
+    reviews: SEED_REVIEWS,
+    settings: SEED_SETTINGS,
+    settingsDraft: {...SEED_SETTINGS},
+    settingsSaved: false,
+    planDrafts: {...SEED_PLANS},
+    planMode: 'split',
+    planSaved: false,
+    activeDialog: null,
+    editingProjectId: null,
+    projectDraft: null,
+    confirmArchiveProjectId: null,
+    confirmDeleteProjectId: null,
+    planProjectId: null,
+    projectFilter: 'active',
+    milestoneProjectId: null,
+    selectedMilestoneId: null,
+    editingMilestoneId: null,
+    milestoneDraft: null,
+    milestoneFormError: null,
+    confirmDeleteMilestoneId: null,
+    bulkMilestoneStatus: 'planned',
+    milestoneSort: 'none',
+    selectedSessionId: null,
+    editingSessionId: null,
+    sessionDraft: null,
+    sessionFormError: null,
+    confirmDeleteSessionId: null,
+    bulkSessionStatus: 'planned',
+    expandedReviewKey: null,
+    expandedReviewLabel: '',
+    expandDraft: '',
+    reviewSaved: false,
+  };
+
+  componentDidMount(){
+    if(this.props.defaultView && this.props.defaultView!==this.state.view){
+      this.setState({view:this.props.defaultView});
+    }
+  }
+
+  goTo = (view) => () => this.setState({view, activeDialog:null});
+  selectWeek = (key) => () => this.setState({selectedWeekKey:key, selectedSessionId:null});
+  loadMoreWeeks = () => this.setState(s=>({futureWeeks:s.futureWeeks+4}));
+  closeDialog = () => this.setState({activeDialog:null});
+  stop = (e) => e.stopPropagation();
+
+  segStyle(active){
+    return 'padding:7px 14px;font-size:12px;font-weight:600;font-family:var(--font-heading);cursor:pointer;border:none;background:'+(active?'var(--color-accent)':'transparent')+';color:'+(active?'var(--color-bg)':'var(--color-text)')+';';
+  }
+
+  openNewProject = () => this.setState({activeDialog:'projectForm', editingProjectId:null, projectDraft:{name:'',status:'active',priority:3,description:''}});
+  openEditProject = (p) => () => this.setState({activeDialog:'projectForm', editingProjectId:p.id, projectDraft:{name:p.name,status:p.status,priority:p.priority,description:p.description}});
+  setProjectField = (field) => (e) => { const value = field==='priority' ? Number(e.target.value) : e.target.value; this.setState(s=>({projectDraft:{...s.projectDraft,[field]:value}})); };
+  saveProject = () => this.setState(s=>{
+    const draft = s.projectDraft;
+    if(!draft || !draft.name || !draft.name.trim()) return s;
+    let projects;
+    if(s.editingProjectId==null){
+      const id = s.projects.length? Math.max(...s.projects.map(p=>p.id))+1 : 1;
+      const slug = draft.name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+      projects = [...s.projects, {id, slug, started_date: draft.status==='active' ? toISO(TODAY) : null, name:draft.name.trim(), status:draft.status, priority:draft.priority, description:draft.description}];
+    } else {
+      projects = s.projects.map(p=> p.id===s.editingProjectId ? {...p, name:draft.name.trim(), status:draft.status, priority:draft.priority, description:draft.description} : p);
+    }
+    return {projects, activeDialog:null};
+  });
+  askArchiveProject = (p) => () => this.setState({activeDialog:'confirmArchiveProject', confirmArchiveProjectId:p.id});
+  confirmArchiveProject = () => this.setState(s=>({projects:s.projects.map(p=>p.id===s.confirmArchiveProjectId?{...p,status:'archive'}:p), activeDialog:null}));
+  askDeleteProject = (p) => () => this.setState({activeDialog:'confirmDeleteProject', confirmDeleteProjectId:p.id});
+  confirmDeleteProject = () => this.setState(s=>({
+    projects: s.projects.filter(p=>p.id!==s.confirmDeleteProjectId),
+    sessions: s.sessions.filter(x=>x.project_id!==s.confirmDeleteProjectId),
+    milestones: s.milestones.filter(m=>m.project_id!==s.confirmDeleteProjectId),
+    activeDialog:null,
+  }));
+  openPlan = (p) => () => this.setState({activeDialog:'planEditor', planProjectId:p.id, planMode:'split', planSaved:false});
+  setPlanMode = (mode) => () => this.setState({planMode:mode});
+  updatePlanDraft = (e) => this.setState(s=>({planDrafts:{...s.planDrafts,[s.planProjectId]:e.target.value}, planSaved:false}));
+  savePlan = () => this.setState({planSaved:true});
+  setProjectFilter = (f) => () => this.setState({projectFilter:f});
+
+  setMilestoneProject = (e) => this.setState({milestoneProjectId: e.target.value? Number(e.target.value): null, selectedMilestoneId:null});
+  selectMilestone = (id) => () => this.setState({selectedMilestoneId:id});
+  openNewMilestone = () => this.setState({activeDialog:'milestoneForm', editingMilestoneId:null, milestoneDraft:{description:'',status:'backlog',target_date:'',notes:''}, milestoneFormError:null});
+  openEditMilestone = (m) => () => this.setState({activeDialog:'milestoneForm', editingMilestoneId:m.id, milestoneDraft:{description:m.description,status:m.status,target_date:m.target_date||'',notes:m.notes}, milestoneFormError:null});
+  setMilestoneField = (field) => (e) => this.setState(s=>({milestoneDraft:{...s.milestoneDraft,[field]:e.target.value}}));
+  setMilestoneTargetToday = () => this.setState(s=>({milestoneDraft:{...s.milestoneDraft,target_date:toISO(TODAY)}}));
+  clearMilestoneTarget = () => this.setState(s=>({milestoneDraft:{...s.milestoneDraft,target_date:''}}));
+  saveMilestone = () => this.setState(s=>{
+    const d = s.milestoneDraft;
+    if(!d.description.trim()) return {milestoneFormError:'Milestone description is required.'};
+    let milestones;
+    if(s.editingMilestoneId==null){
+      const id = s.milestones.length? Math.max(...s.milestones.map(m=>m.id))+1 : 1;
+      milestones = [...s.milestones, {id, project_id:s.milestoneProjectId, description:d.description.trim(), status:d.status, target_date:d.target_date||null, notes:d.notes.trim(), total_session_minutes:0}];
+    } else {
+      milestones = s.milestones.map(m=> m.id===s.editingMilestoneId ? {...m, description:d.description.trim(), status:d.status, target_date:d.target_date||null, notes:d.notes.trim()} : m);
+    }
+    return {milestones, activeDialog:null, milestoneFormError:null};
+  });
+  askDeleteMilestone = (m) => () => this.setState({activeDialog:'confirmDeleteMilestone', confirmDeleteMilestoneId:m.id});
+  confirmDeleteMilestone = () => this.setState(s=>({milestones:s.milestones.filter(m=>m.id!==s.confirmDeleteMilestoneId), selectedMilestoneId:null, activeDialog:null}));
+  setBulkMilestoneStatus = (e) => this.setState({bulkMilestoneStatus:e.target.value});
+  applyMilestoneBulkStatus = () => this.setState(s=> s.selectedMilestoneId==null? s : ({milestones:s.milestones.map(m=>m.id===s.selectedMilestoneId?{...m,status:s.bulkMilestoneStatus}:m)}));
+  cycleMilestoneSort = () => this.setState(s=>({milestoneSort:NEXT_SORT[s.milestoneSort]}));
+
+  selectSession = (id) => () => this.setState({selectedSessionId:id});
+  openNewSession = () => {
+    const info = weekInfoForKey(this.state.selectedWeekKey);
+    this.setState({activeDialog:'sessionForm', editingSessionId:null, sessionFormError:null, sessionDraft:{
+      project_id: this.state.projects[0]?.id ?? null, milestone_id:null,
+      scheduled_date: toISO(info.monday), duration_minutes: this.state.settings.default_duration_minutes,
+      status:'backlog', description:'', notes:'',
+    }});
+  };
+  openEditSession = (x) => () => this.setState({activeDialog:'sessionForm', editingSessionId:x.id, sessionFormError:null, sessionDraft:{project_id:x.project_id, milestone_id:x.milestone_id, scheduled_date:x.scheduled_date, duration_minutes:x.duration_minutes, status:x.status, description:x.description, notes:x.notes}});
+  setSessionField = (field) => (e) => {
+    let value = e.target.value;
+    if(field==='project_id') value = value? Number(value): null;
+    if(field==='milestone_id') value = value? Number(value): null;
+    if(field==='duration_minutes') value = Number(value);
+    this.setState(prev=>{ const draft = {...prev.sessionDraft,[field]:value}; if(field==='project_id') draft.milestone_id=null; return {sessionDraft:draft}; });
+  };
+  setSessionToday = () => this.setState(s=>({sessionDraft:{...s.sessionDraft, scheduled_date: toISO(TODAY)}}));
+  saveSession = () => this.setState(s=>{
+    const d=s.sessionDraft;
+    if(d.project_id==null) return {sessionFormError:'Please select a project.'};
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(d.scheduled_date)) return {sessionFormError:'Date must be YYYY-MM-DD.'};
+    const week_key = dateToKey(d.scheduled_date);
+    let sessions;
+    if(s.editingSessionId==null){
+      const id=s.sessions.length? Math.max(...s.sessions.map(x=>x.id))+1:1;
+      sessions=[...s.sessions,{id,project_id:d.project_id,milestone_id:d.milestone_id,scheduled_date:d.scheduled_date,week_key,duration_minutes:d.duration_minutes,status:d.status,description:d.description.trim(),notes:d.notes.trim()}];
+    } else {
+      sessions = s.sessions.map(x=> x.id===s.editingSessionId ? {...x, project_id:d.project_id, milestone_id:d.milestone_id, scheduled_date:d.scheduled_date, week_key, duration_minutes:d.duration_minutes, status:d.status, description:d.description.trim(), notes:d.notes.trim()} : x);
+    }
+    return {sessions, activeDialog:null, sessionFormError:null};
+  });
+  askDeleteSession = (x) => () => this.setState({activeDialog:'confirmDeleteSession', confirmDeleteSessionId:x.id});
+  confirmDeleteSession = () => this.setState(s=>({sessions:s.sessions.filter(x=>x.id!==s.confirmDeleteSessionId), selectedSessionId:null, activeDialog:null}));
+  setBulkSessionStatus = (e) => this.setState({bulkSessionStatus:e.target.value});
+  applySessionBulkStatus = () => this.setState(s=> s.selectedSessionId==null? s : ({sessions:s.sessions.map(x=>x.id===s.selectedSessionId?{...x,status:s.bulkSessionStatus}:x)}));
+
+  currentReview(){
+    const s=this.state;
+    if(s.reviews[s.selectedWeekKey]) return s.reviews[s.selectedWeekKey];
+    const info=weekInfoForKey(s.selectedWeekKey);
+    return {week_key:s.selectedWeekKey,date_from:toISO(info.monday),date_to:toISO(info.sunday),hours_invested:0,sessions_completed:0,what_moved:'',what_stalled:'',signals:'',decision_next_week:'',primary_focus:'',project_to_deprioritize:'',risk_to_watch:'',first_session_target:'',written_to_repo:false};
+  }
+  setReviewField = (field) => (e) => {
+    const value = field==='written_to_repo'? e.target.checked : (field==='hours_invested'||field==='sessions_completed'? Number(e.target.value): e.target.value);
+    this.setState(s=>({reviews:{...s.reviews,[s.selectedWeekKey]:{...this.currentReview(),[field]:value}}, reviewSaved:false}));
+  };
+  saveReview = () => this.setState({reviewSaved:true});
+  openExpand = (key,label) => () => this.setState({activeDialog:'expandReview', expandedReviewKey:key, expandedReviewLabel:label, expandDraft: this.currentReview()[key] || ''});
+  setExpandDraft = (e) => this.setState({expandDraft:e.target.value});
+  doneExpand = () => this.setState(s=>({reviews:{...s.reviews,[s.selectedWeekKey]:{...this.currentReview(),[s.expandedReviewKey]:s.expandDraft}}, activeDialog:null}));
+
+  setSettingsField = (field) => (e) => { const value = (field==='default_duration_minutes'||field==='weekly_budget_hours')? Number(e.target.value): e.target.value; this.setState(s=>({settingsDraft:{...s.settingsDraft,[field]:value}})); };
+  saveSettings = () => this.setState(s=>({settings:{...s.settings,...s.settingsDraft, resolved_database_path:s.settingsDraft.database_path, active_database_path:s.settingsDraft.database_path}, settingsSaved:true}));
+
+  renderVals() {
+    const s = this.state;
+    const sidecarState = this.props.sidecarState ?? 'ready';
+    const density = this.props.tableDensity ?? 'comfortable';
+    const densityVars = 'display:block;'+(density==='compact' ? '--space-2:4px' : '--space-2:8px');
+    const sidecarMeta = sidecarState==='ready'? {cls:'tag tag-neutral',label:'Sidecar ready'} : sidecarState==='degraded'? {cls:'tag tag-outline',label:'Sidecar degraded'} : {cls:'tag tag-accent',label:'Sidecar failed'};
+    const isDegraded = sidecarState !== 'ready';
+    const weekInfoSel = weekInfoForKey(s.selectedWeekKey);
+
+    const tabStyle = (id) => {
+      const active = s.view===id;
+      return 'display:flex;align-items:center;gap:8px;padding:10px 16px;cursor:pointer;border:none;background:'+(active?'var(--color-accent)':'transparent')+';color:'+(active?'var(--color-bg)':'var(--color-text)')+';font-family:var(--font-heading);font-weight:600;font-size:13px;white-space:nowrap;';
+    };
+
+    const weeks = weekRangeAround(TODAY, 12, s.futureWeeks).map(info => {
+      const active = info.key === s.selectedWeekKey;
+      const isNow = info.key === CURRENT_WEEK.key;
+      return {
+        key: info.key,
+        title: info.year+' · W'+pad2(info.week)+(isNow? ' · Now':''),
+        range: info.label,
+        onClick: this.selectWeek(info.key),
+        style: 'display:block;width:100%;text-align:left;border:none;cursor:pointer;padding:8px 10px;background:'+(active?'var(--color-accent)':'transparent')+';color:'+(active?'var(--color-bg)':'var(--color-text)')+';font-family:var(--font-body);font-size:12px;font-weight:500;',
+      };
+    });
+
+    const sessionsInSelectedWeek = s.sessions.filter(x=>x.week_key===s.selectedWeekKey);
+    const activeProjects = s.projects.filter(p=>p.status==='active');
+    const dashboardRows = activeProjects.map(p=>{
+      const psessions = sessionsInSelectedWeek.filter(x=>x.project_id===p.id && x.status!=='cancelled');
+      const planned = psessions.reduce((sum,x)=>sum+x.duration_minutes,0);
+      const completed = psessions.filter(x=>x.status==='done').reduce((sum,x)=>sum+x.duration_minutes,0);
+      const remaining = Math.max(0, planned-completed);
+      const score = planned===0? 50 : Math.round(Math.min(100,(completed/planned)*70+30));
+      const status = score>=70?'green':score>=45?'yellow':'red';
+      return {id:p.id, name:p.name, score, statusMeta:SCORE_META[status], planned:hoursLabel(planned), completed:hoursLabel(completed), remaining:hoursLabel(remaining)};
+    });
+    const portfolioScore = dashboardRows.length? Math.round(dashboardRows.reduce((sum,r)=>sum+r.score,0)/dashboardRows.length):0;
+    const portfolioStatus = portfolioScore>=70?'green':portfolioScore>=45?'yellow':'red';
+    const countedAll = sessionsInSelectedWeek.filter(x=>x.status!=='cancelled');
+    const weekTotalMinutes = countedAll.reduce((sum,x)=>sum+x.duration_minutes,0);
+    const weekDoneMinutes = countedAll.filter(x=>x.status==='done').reduce((sum,x)=>sum+x.duration_minutes,0);
+    const budgetMinutes = s.settings.weekly_budget_hours*60;
+    const weekRemainingMinutes = Math.max(0, budgetMinutes-weekDoneMinutes);
+
+    const projectNameById = new Map(s.projects.map(p=>[p.id,p.name]));
+    const upcomingMilestones = s.milestones
+      .filter(m=>m.target_date && m.status!=='done' && m.status!=='cancelled' && m.target_date>=toISO(TODAY))
+      .sort((a,b)=> a.target_date.localeCompare(b.target_date))
+      .slice(0,5)
+      .map(m=>({id:m.id, target_date:m.target_date, description:m.description, projectName:projectNameById.get(m.project_id) ?? ''}));
+
+    const milestoneNameById = new Map(s.milestones.map(m=>[m.id,m.description]));
+    const sessionRows = sessionsInSelectedWeek.slice().sort((a,b)=> a.scheduled_date.localeCompare(b.scheduled_date) || a.id-b.id).map(x=>{
+      const meta = WORK_META[x.status];
+      const selected = x.id===s.selectedSessionId;
+      return {
+        id:x.id, projectName: projectNameById.get(x.project_id) ?? ('#'+x.project_id),
+        milestoneName: x.milestone_id? (milestoneNameById.get(x.milestone_id) ?? ('#'+x.milestone_id)) : '—',
+        date:x.scheduled_date, minutes:x.duration_minutes, statusCls:meta.cls, statusStyle:meta.style, statusLabel:meta.label,
+        description:x.description || '—',
+        rowStyle: 'cursor:pointer;background:'+(selected? 'var(--color-accent-100)':'transparent')+';',
+        onSelect: this.selectSession(x.id),
+        onEdit: this.openEditSession(x),
+      };
+    });
+    const selectedSession = s.sessions.find(x=>x.id===s.selectedSessionId) ?? null;
+    const sessionsCounted = sessionsInSelectedWeek.filter(x=>x.status!=='cancelled');
+    const sessionsTotalMinutes = sessionsCounted.reduce((sum,x)=>sum+x.duration_minutes,0);
+    const sessionsDoneMinutes = sessionsCounted.filter(x=>x.status==='done').reduce((sum,x)=>sum+x.duration_minutes,0);
+    const sessionsRemainingMinutes = Math.max(0, budgetMinutes - sessionsDoneMinutes);
+
+    const filteredProjects = (s.projectFilter==='all'? s.projects : s.projects.filter(p=>p.status===s.projectFilter));
+    const projectRows = filteredProjects.map(p=>{
+      const meta = PROJECT_META[p.status];
+      const archived = p.status==='archive';
+      const squares = [0,1,2,3,4].map(i=>({style: 'display:inline-block;margin-right:3px;width:7px;height:7px;'+(i<p.priority? 'background:var(--color-accent);' : 'border:1px solid var(--color-divider);')}));
+      return {
+        id:p.id, name:p.name, statusCls:meta.cls, statusLabel:meta.label, squares,
+        started: p.started_date || '—', showArchive: !archived, editLabel: archived? 'View':'Edit',
+        onPlan: this.openPlan(p), onEdit: this.openEditProject(p), onArchive: this.askArchiveProject(p), onDelete: this.askDeleteProject(p),
+      };
+    });
+
+    let milestoneRowsBase = s.milestones.filter(m=>m.project_id===s.milestoneProjectId);
+    if(s.milestoneSort!=='none'){
+      milestoneRowsBase = milestoneRowsBase.slice().sort((a,b)=>a.description.localeCompare(b.description, undefined, {sensitivity:'base'}));
+      if(s.milestoneSort==='desc') milestoneRowsBase.reverse();
+    }
+    const milestoneRows = milestoneRowsBase.map(m=>{
+      const meta = WORK_META[m.status];
+      const selected = m.id===s.selectedMilestoneId;
+      return {
+        id:m.id, description:m.description, target: m.target_date || '—', week: m.target_date? dateToKey(m.target_date) : '—',
+        totalMin: m.total_session_minutes || '—', statusCls:meta.cls, statusStyle:meta.style, statusLabel:meta.label,
+        rowStyle: 'cursor:pointer;background:'+(selected? 'var(--color-accent-100)':'transparent')+';',
+        onSelect: this.selectMilestone(m.id), onEdit: this.openEditMilestone(m),
+      };
+    });
+    const selectedMilestone = s.milestones.find(m=>m.id===s.selectedMilestoneId) ?? null;
+    const sortIndicator = s.milestoneSort==='asc'?' ▲': s.milestoneSort==='desc'?' ▼':'';
+
+    const review = this.currentReview();
+    const reviewFields = REVIEW_FIELD_DEFS.map(f=>({key:f.key,label:f.label,value:review[f.key]||'', onChange:this.setReviewField(f.key), onExpand:this.openExpand(f.key,f.label)}));
+    const reviewHistoryRows = REVIEW_HISTORY.map(r=>({key:r.week_key, label:r.week_key+' — '+r.hours_invested+'h, '+r.sessions_completed+' sessions'}));
+
+    const planContent = s.planDrafts[s.planProjectId] ?? '';
+    const planLines = planContent.split('\n').map((line,i)=>{
+      const isH2 = line.startsWith('## ');
+      const isH1 = !isH2 && line.startsWith('# ');
+      const isLi = line.startsWith('- ');
+      const blank = line.trim()==='';
+      const isP = !isH1 && !isH2 && !isLi && !blank;
+      const text = isH2? line.slice(3) : isH1? line.slice(2) : isLi? line.slice(2) : line;
+      return {key:i, isH1, isH2, isLi, isP, text};
+    });
+    const planProject = s.projects.find(p=>p.id===s.planProjectId);
+
+    const sessionMilestoneOptions = s.sessionDraft ? s.milestones.filter(m=>m.project_id===s.sessionDraft.project_id) : [];
+
+    return {
+      sidecarTagClass: sidecarMeta.cls, sidecarLabel: sidecarMeta.label, isDegraded,
+      degradedMessage: sidecarState==='degraded' ? 'The backend is degraded. Data may be stale and changes may fail.' : 'The backend is unavailable. Data may be stale and changes are disabled.',
+      tabDashboardStyle: tabStyle('dashboard'), tabSessionsStyle: tabStyle('sessions'), tabProjectsStyle: tabStyle('projects'),
+      tabMilestonesStyle: tabStyle('milestones'), tabReviewsStyle: tabStyle('reviews'), tabSettingsStyle: tabStyle('settings'),
+      goDashboard: this.goTo('dashboard'), goSessions: this.goTo('sessions'), goProjects: this.goTo('projects'), goMilestones: this.goTo('milestones'), goReviews: this.goTo('reviews'), goSettings: this.goTo('settings'),
+      isDashboard: s.view==='dashboard', isSessions: s.view==='sessions', isProjects: s.view==='projects', isMilestones: s.view==='milestones', isReviews: s.view==='reviews', isSettings: s.view==='settings',
+
+      weeks, loadMoreWeeks: this.loadMoreWeeks,
+      selectedWeekKey: s.selectedWeekKey, selectedWeekLabel: weekInfoSel.label,
+      densityVars,
+
+      portfolioScore, portfolioStatusMeta: SCORE_META[portfolioStatus],
+      weekDoneHours: hoursLabel(weekDoneMinutes), weekPlannedHours: hoursLabel(weekTotalMinutes), weekBudgetHours: hoursLabel(budgetMinutes), weekRemainingHours: hoursLabel(weekRemainingMinutes),
+      activeProjectCount: activeProjects.length, backlogProjectCount: s.projects.filter(p=>p.status==='backlog').length, archiveProjectCount: s.projects.filter(p=>p.status==='archive').length,
+      dashboardRows, upcomingMilestones, noUpcomingMilestones: upcomingMilestones.length===0,
+
+      sessionRows, noSessionsThisWeek: sessionRows.length===0,
+      sessionsPlannedHours: hoursLabel(sessionsTotalMinutes), sessionsDoneHours: hoursLabel(sessionsDoneMinutes), sessionsRemainingHours: hoursLabel(sessionsRemainingMinutes), sessionsBudgetHours: hoursLabel(budgetMinutes),
+      openNewSession: this.openNewSession, bulkSessionStatus: s.bulkSessionStatus, setBulkSessionStatus: this.setBulkSessionStatus, applySessionBulkStatus: this.applySessionBulkStatus,
+      sessionActionsDisabled: !selectedSession,
+      editSelectedSession: selectedSession? this.openEditSession(selectedSession): ()=>{}, deleteSelectedSession: selectedSession? this.askDeleteSession(selectedSession): ()=>{},
+
+      projectFilter: s.projectFilter, setFilterActive: this.setProjectFilter('active'), setFilterBacklog: this.setProjectFilter('backlog'), setFilterArchive: this.setProjectFilter('archive'), setFilterAll: this.setProjectFilter('all'),
+      filterActiveStyle: this.segStyle(s.projectFilter==='active'), filterBacklogStyle: this.segStyle(s.projectFilter==='backlog'), filterArchiveStyle: this.segStyle(s.projectFilter==='archive'), filterAllStyle: this.segStyle(s.projectFilter==='all'),
+      projectRows, openNewProject: this.openNewProject,
+
+      milestoneProjectId: s.milestoneProjectId ?? '', setMilestoneProject: this.setMilestoneProject, projectOptions: s.projects.map(p=>({id:p.id,name:p.name})),
+      hasMilestoneProject: s.milestoneProjectId!=null, milestoneProjectMissing: s.milestoneProjectId==null,
+      milestoneRows, noMilestonesForProject: milestoneRows.length===0, sortIndicator, cycleMilestoneSort: this.cycleMilestoneSort,
+      openNewMilestone: this.openNewMilestone, bulkMilestoneStatus: s.bulkMilestoneStatus, setBulkMilestoneStatus: this.setBulkMilestoneStatus, applyMilestoneBulkStatus: this.applyMilestoneBulkStatus,
+      milestoneActionsDisabled: !selectedMilestone, editSelectedMilestone: selectedMilestone? this.openEditMilestone(selectedMilestone): ()=>{}, deleteSelectedMilestone: selectedMilestone? this.askDeleteMilestone(selectedMilestone): ()=>{},
+
+      reviewWeekLabel: s.selectedWeekKey, reviewDateFrom: review.date_from, reviewDateTo: review.date_to,
+      reviewHours: review.hours_invested, reviewSessions: review.sessions_completed,
+      setReviewHours: this.setReviewField('hours_invested'), setReviewSessions: this.setReviewField('sessions_completed'),
+      reviewFields, reviewWrittenToRepo: review.written_to_repo, setReviewWritten: this.setReviewField('written_to_repo'),
+      saveReview: this.saveReview, reviewSaved: !!s.reviewSaved, reviewHistoryRows,
+
+      settingsDraft: s.settingsDraft, setLogLevel: this.setSettingsField('log_level'), setTheme: this.setSettingsField('theme'),
+      setDefaultDuration: this.setSettingsField('default_duration_minutes'), setWeeklyBudget: this.setSettingsField('weekly_budget_hours'), setDbPath: this.setSettingsField('database_path'),
+      saveSettings: this.saveSettings, settingsSaved: !!s.settingsSaved,
+
+      isDialogProjectForm: s.activeDialog==='projectForm', isDialogConfirmArchiveProject: s.activeDialog==='confirmArchiveProject', isDialogConfirmDeleteProject: s.activeDialog==='confirmDeleteProject', isDialogPlan: s.activeDialog==='planEditor',
+      isDialogMilestoneForm: s.activeDialog==='milestoneForm', isDialogConfirmDeleteMilestone: s.activeDialog==='confirmDeleteMilestone',
+      isDialogSessionForm: s.activeDialog==='sessionForm', isDialogConfirmDeleteSession: s.activeDialog==='confirmDeleteSession', isDialogExpandReview: s.activeDialog==='expandReview',
+      closeDialog: this.closeDialog, stop: this.stop,
+
+      projectDialogTitle: s.editingProjectId==null? 'New project' : ((s.projects.find(p=>p.id===s.editingProjectId)||{}).status==='archive' ? 'Project (read-only)' : 'Edit project'),
+      projectIsReadOnly: s.editingProjectId!=null && (s.projects.find(p=>p.id===s.editingProjectId)||{}).status==='archive',
+      projectIsEditable: s.editingProjectId==null || (s.projects.find(p=>p.id===s.editingProjectId)||{}).status!=='archive',
+      projectReadOnlyName: s.editingProjectId!=null ? (s.projects.find(p=>p.id===s.editingProjectId)||{}).name : '',
+      projectReadOnlyDescription: s.editingProjectId!=null ? (s.projects.find(p=>p.id===s.editingProjectId)||{}).description : '',
+      projectDraft: s.projectDraft ?? {name:'',status:'active',priority:3,description:''},
+      setProjectName: this.setProjectField('name'), setProjectStatus: this.setProjectField('status'), setProjectPriority: this.setProjectField('priority'), setProjectDescription: this.setProjectField('description'),
+      saveProject: this.saveProject,
+
+      confirmArchiveMessage: (()=>{ const p=s.projects.find(x=>x.id===s.confirmArchiveProjectId); return p? ('Move "'+p.name+'" to Archive? Archived projects become read-only.') : ''; })(),
+      confirmArchiveProject: this.confirmArchiveProject,
+      confirmDeleteProjectMessage: (()=>{ const p=s.projects.find(x=>x.id===s.confirmDeleteProjectId); return p? ('Permanently delete "'+p.name+'" and all its sessions and milestones? This cannot be undone.') : ''; })(),
+      confirmDeleteProject: this.confirmDeleteProject,
+
+      planProjectName: planProject? planProject.name : '', planContent, planLines, planMode: s.planMode,
+      setPlanEdit: this.setPlanMode('edit'), setPlanPreview: this.setPlanMode('preview'), setPlanSplit: this.setPlanMode('split'),
+      planModeEditStyle: this.segStyle(s.planMode==='edit'), planModePreviewStyle: this.segStyle(s.planMode==='preview'), planModeSplitStyle: this.segStyle(s.planMode==='split'),
+      showPlanEdit: s.planMode==='edit'||s.planMode==='split', showPlanPreview: s.planMode==='preview'||s.planMode==='split',
+      updatePlanDraft: this.updatePlanDraft, savePlan: this.savePlan, planSaved: !!s.planSaved,
+      planEditable: !(planProject && planProject.status==='archive'),
+
+      milestoneDialogTitle: s.editingMilestoneId==null? 'New milestone' : 'Edit milestone',
+      milestoneDraft: s.milestoneDraft ?? {description:'',status:'backlog',target_date:'',notes:''},
+      milestoneFormError: s.milestoneFormError,
+      setMilestoneDescription: this.setMilestoneField('description'), setMilestoneTarget: this.setMilestoneField('target_date'), setMilestoneStatus: this.setMilestoneField('status'), setMilestoneNotes: this.setMilestoneField('notes'),
+      setMilestoneTargetToday: this.setMilestoneTargetToday, clearMilestoneTarget: this.clearMilestoneTarget, saveMilestone: this.saveMilestone,
+      milestoneWeekHint: (s.milestoneDraft && s.milestoneDraft.target_date)? dateToKey(s.milestoneDraft.target_date) : '—',
+      milestoneTotalMinHint: (s.editingMilestoneId!=null? ((s.milestones.find(m=>m.id===s.editingMilestoneId)||{}).total_session_minutes || '—') : '—'),
+
+      confirmDeleteMilestoneMessage: (()=>{ const m=s.milestones.find(x=>x.id===s.confirmDeleteMilestoneId); return m? ('Delete "'+m.description+'"? This cannot be undone.') : ''; })(),
+      confirmDeleteMilestone: this.confirmDeleteMilestone,
+
+      sessionDialogTitle: s.editingSessionId==null? 'New session' : 'Edit session',
+      sessionDraft: s.sessionDraft ?? {project_id:null,milestone_id:null,scheduled_date:'',duration_minutes:90,status:'backlog',description:'',notes:''},
+      sessionFormError: s.sessionFormError,
+      projectSelectOptions: s.projects.map(p=>({id:p.id,name:p.name})),
+      sessionMilestoneOptions,
+      setSessionProject: this.setSessionField('project_id'), setSessionMilestone: this.setSessionField('milestone_id'), setSessionDescription: this.setSessionField('description'),
+      setSessionDate: this.setSessionField('scheduled_date'), setSessionToday: this.setSessionToday, setSessionStatus: this.setSessionField('status'), setSessionDuration: this.setSessionField('duration_minutes'), setSessionNotes: this.setSessionField('notes'),
+      saveSession: this.saveSession,
+
+      confirmDeleteSessionMessage: 'Delete this session? This cannot be undone.',
+      confirmDeleteSession: this.confirmDeleteSession,
+
+      expandLabel: s.expandedReviewLabel || '', expandDraft: s.expandDraft, setExpandDraft: this.setExpandDraft, doneExpand: this.doneExpand,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

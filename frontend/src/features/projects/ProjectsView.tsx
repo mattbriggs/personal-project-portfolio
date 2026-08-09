@@ -4,6 +4,7 @@ import { projects as api } from "@/command-client";
 import type { Project, ProjectStatus } from "@/contracts";
 import { Dialog } from "@/components/dialogs/Dialog";
 import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
+import { ProjectStatusTag, PriorityDots } from "@/components/status/StatusTag";
 import { useInvalidate } from "@/hooks/useInvalidate";
 import { ProjectForm, type ProjectFormValues } from "./ProjectForm";
 import { PlanEditor } from "@/features/plans/PlanEditor";
@@ -46,19 +47,23 @@ export function ProjectsView() {
   return (
     <section aria-label="Projects">
       <h2>Projects</h2>
-      <div role="group" aria-label="Project filters" style={{ marginBottom: 12 }}>
-        {filters.map((f) => (
-          <button
-            key={f}
-            aria-current={filter === f}
-            className="tab-btn"
-            onClick={() => setFilter(f)}
-          >
-            {f[0].toUpperCase() + f.slice(1)}
-          </button>
-        ))}
-        <button className="primary" onClick={() => setEditing("new")}>
-          New project
+      <div className="toolbar">
+        <div className="seg" role="group" aria-label="Project filters">
+          {filters.map((f) => (
+            <button
+              key={f}
+              type="button"
+              className="seg-opt"
+              aria-pressed={filter === f}
+              onClick={() => setFilter(f)}
+            >
+              {f[0].toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+        </div>
+        <span className="spacer" />
+        <button className="btn btn-primary" onClick={() => setEditing("new")}>
+          + New project
         </button>
       </div>
 
@@ -66,7 +71,7 @@ export function ProjectsView() {
         <p>Loading…</p>
       ) : (
         <div className="table-scroll">
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -82,20 +87,34 @@ export function ProjectsView() {
               return (
                 <tr key={p.id}>
                   <td>{p.name}</td>
-                  <td>{p.status}</td>
-                  <td>{p.priority}</td>
-                  <td>{p.started_date ?? ""}</td>
                   <td>
-                    <button onClick={() => setPlanFor(p)}>Plan</button>{" "}
-                    <button onClick={() => setEditing(p)} disabled={archived}>
-                      {archived ? "View" : "Edit"}
-                    </button>{" "}
-                    {!archived && (
-                      <button onClick={() => setConfirmArchive(p)}>Archive</button>
-                    )}{" "}
-                    <button className="danger" onClick={() => setConfirmDelete(p)}>
-                      Delete
-                    </button>
+                    <ProjectStatusTag status={p.status} />
+                  </td>
+                  <td>
+                    <PriorityDots priority={p.priority} />
+                  </td>
+                  <td>{p.started_date ?? "—"}</td>
+                  <td>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button className="btn btn-ghost btn-sm" onClick={() => setPlanFor(p)}>
+                        Plan
+                      </button>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => setEditing(p)}
+                        disabled={archived}
+                      >
+                        {archived ? "View" : "Edit"}
+                      </button>
+                      {!archived && (
+                        <button className="btn btn-ghost btn-sm" onClick={() => setConfirmArchive(p)}>
+                          Archive
+                        </button>
+                      )}
+                      <button className="btn btn-ghost btn-sm" onClick={() => setConfirmDelete(p)}>
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
@@ -128,8 +147,12 @@ export function ProjectsView() {
               <p>
                 <strong>{editing.name}</strong> is archived and read-only.
               </p>
-              <p>{editing.description}</p>
-              <button onClick={() => setEditing(null)}>Close</button>
+              <p className="dialog-body">{editing.description}</p>
+              <div className="dialog-actions">
+                <button className="btn btn-secondary" onClick={() => setEditing(null)}>
+                  Close
+                </button>
+              </div>
             </div>
           ) : (
             <ProjectForm

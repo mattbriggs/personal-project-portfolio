@@ -96,11 +96,11 @@ export function ProjectForm({ initial, submitLabel, onSubmit, onCancel }: Projec
           onChange={(e) => setValues({ ...values, description: e.target.value })}
         />
       </div>
-      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-        <button type="button" onClick={onCancel}>
+      <div className="dialog-actions">
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Cancel
         </button>
-        <button type="submit" className="primary" disabled={busy}>
+        <button type="submit" className="btn btn-primary" disabled={busy}>
           {submitLabel}
         </button>
       </div>

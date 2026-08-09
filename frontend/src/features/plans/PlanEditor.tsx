@@ -46,11 +46,17 @@ export function PlanEditor({
   if (isLoading) return <p>Loading plan…</p>;
 
   return (
-    <div style={{ minWidth: 640 }}>
-      <div role="group" aria-label="Preview mode" style={{ marginBottom: 8 }}>
+    <div style={{ minWidth: 640, display: "flex", flexDirection: "column", gap: 12 }}>
+      <div className="seg" role="group" aria-label="Preview mode" style={{ alignSelf: "flex-start" }}>
         {(["edit", "preview", "split"] as Mode[]).map((m) => (
-          <button key={m} aria-current={mode === m} className="tab-btn" onClick={() => setMode(m)}>
-            {m}
+          <button
+            key={m}
+            type="button"
+            className="seg-opt"
+            aria-pressed={mode === m}
+            onClick={() => setMode(m)}
+          >
+            {m[0].toUpperCase() + m.slice(1)}
           </button>
         ))}
       </div>
@@ -60,13 +66,17 @@ export function PlanEditor({
           {saveError} — your draft has been kept.
         </p>
       )}
-      {saved && <p role="status">Plan saved.</p>}
+      {saved && (
+        <p role="status" className="dialog-body">
+          Plan saved.
+        </p>
+      )}
 
-      <div style={{ display: "flex", gap: 12 }}>
+      <div style={{ display: "flex", gap: 16, minHeight: 280 }}>
         {(mode === "edit" || mode === "split") && (
           <textarea
             aria-label="Plan Markdown"
-            style={{ flex: 1, minHeight: 320, fontFamily: "monospace" }}
+            style={{ flex: 1, minHeight: 280, fontFamily: "monospace", fontSize: 13 }}
             value={draft}
             readOnly={readOnly}
             onChange={(e) => {
@@ -76,17 +86,26 @@ export function PlanEditor({
           />
         )}
         {(mode === "preview" || mode === "split") && (
-          <div style={{ flex: 1, borderLeft: "1px solid var(--border)", paddingLeft: 12 }}>
+          <div
+            style={{
+              flex: 1,
+              borderLeft: "2px solid var(--color-divider)",
+              paddingLeft: 16,
+              overflowY: "auto",
+            }}
+          >
             <PlanPreview content={draft} />
           </div>
         )}
       </div>
 
-      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 12 }}>
-        <button onClick={onClose}>Close</button>
+      <div className="dialog-actions">
+        <button type="button" className="btn btn-secondary" onClick={onClose}>
+          Close
+        </button>
         {!readOnly && (
           <button
-            className="primary"
+            className="btn btn-primary"
             disabled={saveMut.isPending}
             onClick={() => saveMut.mutate(draft)}
           >
