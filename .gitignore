@@ -220,3 +220,4 @@ node_modules/.vite/
 node_modules/
 
 _notes/
+.DS_Store
