@@ -155,7 +155,11 @@ export function SessionForm({
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
-          <button type="button" onClick={() => setDate(new Date().toLocaleDateString("en-CA"))}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setDate(new Date().toLocaleDateString("en-CA"))}
+          >
             Today
           </button>
         </div>
@@ -201,11 +205,11 @@ export function SessionForm({
       </div>
 
       <div className="dialog-actions">
-        <button type="submit" className="primary">
-          {submitLabel}
-        </button>
-        <button type="button" onClick={onCancel}>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Cancel
+        </button>
+        <button type="submit" className="btn btn-primary">
+          {submitLabel}
         </button>
       </div>
     </form>

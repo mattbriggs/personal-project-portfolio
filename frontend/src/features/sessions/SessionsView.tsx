@@ -10,6 +10,7 @@ import type { Session, SessionStatus } from "@/contracts";
 import { isCommandError, type CommandError } from "@/command-client";
 import { Dialog } from "@/components/dialogs/Dialog";
 import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
+import { WorkStatusTag } from "@/components/status/StatusTag";
 import { useInvalidate } from "@/hooks/useInvalidate";
 import { useWorkspace } from "@/state/workspace";
 import { weekInfo } from "@/utils/week";
@@ -118,25 +119,26 @@ export function SessionsView() {
 
   return (
     <section aria-label="Sessions">
-      <h2>
-        Sessions — {selectedWeek} <small>({info.label})</small>
-      </h2>
+      <h2>Sessions</h2>
+      <p className="view-sub">
+        {selectedWeek} · {info.label}
+      </p>
 
       <div className="toolbar">
         <span className="spacer" />
         <button
-          className="primary"
+          className="btn btn-primary"
           onClick={() => {
             setFormError(null);
             setEditing("new");
           }}
         >
-          New Session
+          + New session
         </button>
       </div>
 
       <div className="table-scroll">
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>Project</th>
@@ -163,12 +165,14 @@ export function SessionsView() {
                 <td>
                   {s.milestone_id
                     ? (milestoneNames.get(s.milestone_id) ?? `#${s.milestone_id}`)
-                    : ""}
+                    : "—"}
                 </td>
                 <td>{s.scheduled_date}</td>
                 <td>{s.duration_minutes}</td>
-                <td className={`status-${s.status}`}>{s.status}</td>
-                <td>{s.description}</td>
+                <td>
+                  <WorkStatusTag status={s.status} />
+                </td>
+                <td>{s.description || "—"}</td>
               </tr>
             ))}
             {sessionList.length === 0 && (
@@ -181,9 +185,10 @@ export function SessionsView() {
       </div>
 
       <div className="action-bar">
-        <label htmlFor="s-bulk-status">Set Status:</label>
+        <label htmlFor="s-bulk-status">Set status</label>
         <select
           id="s-bulk-status"
+          className="input-auto"
           value={bulkStatus}
           onChange={(e) => setBulkStatus(e.target.value as SessionStatus)}
         >
@@ -194,19 +199,21 @@ export function SessionsView() {
           ))}
         </select>
         <button
+          className="btn btn-secondary"
           disabled={!selected}
           onClick={() => selected && statusMut.mutate({ id: selected.id, status: bulkStatus })}
         >
           Apply
         </button>
         <button
+          className="btn btn-secondary"
           disabled={!selected}
           onClick={() => selected && setEditing(selected)}
         >
           Edit
         </button>
         <button
-          className="danger"
+          className="btn btn-ghost"
           disabled={!selected}
           onClick={() => selected && setConfirmDelete(selected)}
         >
@@ -214,9 +221,17 @@ export function SessionsView() {
         </button>
       </div>
 
-      <p className="budget-bar">
-        Planned {hours(totalMinutes)} · Done {hours(doneMinutes)} · Remaining{" "}
-        {hours(Math.max(0, budgetMinutes - doneMinutes))} of {hours(budgetMinutes)} budget
+      <p
+        className="card"
+        style={{ display: "inline-flex", flexDirection: "row", gap: 14, fontSize: 13, alignItems: "center" }}
+      >
+        <span>Planned {hours(totalMinutes)}</span>
+        <span>·</span>
+        <span>Done {hours(doneMinutes)}</span>
+        <span>·</span>
+        <span>
+          Remaining {hours(Math.max(0, budgetMinutes - doneMinutes))} of {hours(budgetMinutes)} budget
+        </span>
       </p>
 
       {editing === "new" && (

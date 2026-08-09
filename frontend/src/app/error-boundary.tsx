@@ -24,7 +24,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
         <div className="main-view" role="alert">
           <h2>Something went wrong</h2>
           <p>The view failed to render. Try reloading the window.</p>
-          <button className="primary" onClick={() => this.setState({ error: null })}>
+          <button className="btn btn-primary" onClick={() => this.setState({ error: null })}>
             Dismiss
           </button>
         </div>

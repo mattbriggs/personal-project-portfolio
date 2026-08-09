@@ -87,11 +87,12 @@ export function MilestoneForm({
           />
           <button
             type="button"
+            className="btn btn-secondary"
             onClick={() => setTarget(new Date().toLocaleDateString("en-CA"))}
           >
             Today
           </button>
-          <button type="button" onClick={() => setTarget("")}>
+          <button type="button" className="btn btn-secondary" onClick={() => setTarget("")}>
             Clear
           </button>
         </div>
@@ -128,11 +129,11 @@ export function MilestoneForm({
       </div>
 
       <div className="dialog-actions">
-        <button type="submit" className="primary">
-          {submitLabel}
-        </button>
-        <button type="button" onClick={onCancel}>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Cancel
+        </button>
+        <button type="submit" className="btn btn-primary">
+          {submitLabel}
         </button>
       </div>
     </form>

@@ -19,10 +19,12 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <Dialog title={title} onClose={onCancel}>
-      <p>{message}</p>
-      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-        <button onClick={onCancel}>Cancel</button>
-        <button className="danger" onClick={onConfirm}>
+      <p className="dialog-body">{message}</p>
+      <div className="dialog-actions">
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
+          Cancel
+        </button>
+        <button type="button" className="btn btn-primary" onClick={onConfirm}>
           {confirmLabel}
         </button>
       </div>
