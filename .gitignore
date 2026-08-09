@@ -218,3 +218,5 @@ src-tauri/gen/
 src-tauri/target/
 node_modules/.vite/
 node_modules/
+
+_notes/
