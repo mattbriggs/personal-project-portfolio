@@ -118,6 +118,10 @@ MAIN_EXE="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' \
 # before anything that contains it.
 nested=()
 while IFS= read -r -d '' f; do
+  [ -L "$f" ] && continue
+  case "$f" in
+    */Python.framework/Python) continue ;;
+  esac
   [ -n "$MAIN_EXE" ] && [ "$f" = "$BUNDLE_PATH/Contents/MacOS/$MAIN_EXE" ] && continue
   if file -b "$f" 2>/dev/null | grep -q 'Mach-O'; then
     nested+=("$f")

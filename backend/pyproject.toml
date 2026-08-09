@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "portfolio-manager-backend"
-version = "2.0.0"
+version = "2.1.0"
 description = "FastAPI sidecar backend for Portfolio Manager (Tauri refactor)"
 readme = "README.md"
 requires-python = ">=3.11"

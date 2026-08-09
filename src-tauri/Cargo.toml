@@ -1,6 +1,6 @@
 [package]
 name = "portfolio-manager"
-version = "2.0.0"
+version = "2.1.0"
 description = "Portfolio Manager desktop shell (Tauri)"
 authors = ["Matt Briggs"]
 edition = "2021"

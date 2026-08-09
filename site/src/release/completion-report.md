@@ -7,7 +7,7 @@ could not be verified say so explicitly._
 
 | Field | Value |
 | --- | --- |
-| Release version | 2.0.0 (in progress) |
+| Release version | 2.1.0 |
 | Primary platform | macOS (Apple Silicon verified) |
 | Sidecar Python version | 3.11+ (validated on 3.12) |
 | Tauri version | 2.x (requires Rust ≥ 1.85; verified on 1.97.1) |
