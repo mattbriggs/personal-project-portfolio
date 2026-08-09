@@ -6,6 +6,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Added a README dashboard screenshot using `_design/Portfolio-Manager-Dashboard.png`.
+- Added README badges for the current pre-release status and app stack: macOS,
+  local-first data, time-boxed workflow, Tauri, React, FastAPI, SQLite, Rust,
+  Python, CI, and license.
+- Added a concise explanation of the core loop: choose active projects, set a
+  weekly time budget, define milestones, plan sessions, execute, review, and
+  adjust the portfolio.
+
+### Changed
+
+- Reframed the README around the GitHub pitch: a single-user desktop app for
+  managing, scheduling, and executing creative and technical work through
+  time-boxed sessions.
+- Clarified that Portfolio Manager is pre-release software and does not yet
+  have a public packaged download.
+- Repositioned the project for systems thinkers, programmers, math-minded
+  planners, and solo builders rather than broad productivity-tool adoption.
+- Documented the repository as both a usable personal app and a macOS
+  release-stack rehearsal for Tauri, React, FastAPI, Python, Rust, SQLite,
+  GitHub Actions, and GitHub Releases.
+
+### Removed
+
+- Removed release/download badge emphasis from the README until a public GitHub
+  release exists.
+
+---
+
 ## [2.1.0] — 2026-04-09
 
 ### Added
