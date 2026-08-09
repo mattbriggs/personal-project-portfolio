@@ -34,21 +34,23 @@ religion, or a broadly adopted SaaS product.
 <img width="960px" src="./_design/Portfolio-Manager-Dashboard.png" alt="Portfolio Manager dashboard showing weekly project scores, budget, active projects, and upcoming milestones" />
 
 <!-- vim-markdown-toc GFM -->
-* [Why](#why)
-* [Features](#features)
-* [The Loop](#the-loop)
-* [Install](#install)
-* [Developer Build](#developer-build)
-* [Data and Configuration](#data-and-configuration)
-* [FAQ](#faq)
-  * [Is there a downloadable release?](#is-there-a-downloadable-release)
-  * [Who is this for?](#who-is-this-for)
-  * [Where is my data stored?](#where-is-my-data-stored)
-  * [Will updating remove my projects?](#will-updating-remove-my-projects)
-  * [Why does macOS warn about opening the app?](#why-does-macos-warn-about-opening-the-app)
-  * [Which app version should I use?](#which-app-version-should-i-use)
-* [Motivation](#motivation)
-* [License](#license)
+- [Portfolio Manager](#portfolio-manager)
+  - [Why](#why)
+  - [Features](#features)
+  - [The Loop](#the-loop)
+  - [Install](#install)
+  - [Developer Build](#developer-build)
+  - [Data and Configuration](#data-and-configuration)
+  - [Changelog](#changelog)
+  - [FAQ](#faq)
+    - [Is there a downloadable release?](#is-there-a-downloadable-release)
+    - [Who is this for?](#who-is-this-for)
+    - [Where is my data stored?](#where-is-my-data-stored)
+    - [Will updating remove my projects?](#will-updating-remove-my-projects)
+    - [Why does macOS warn about opening the app?](#why-does-macos-warn-about-opening-the-app)
+    - [Which app version should I use?](#which-app-version-should-i-use)
+  - [Motivation](#motivation)
+  - [License](#license)
 <!-- vim-markdown-toc -->
 
 ## Why
@@ -159,6 +161,10 @@ Before trying pre-release builds, make a copy of:
 ```text
 ~/.portfolio_manager/portfolio.db
 ```
+
+## Changelog
+
+[CHANGELOG.md](CHANGELOG.md)
 
 ## FAQ
 
