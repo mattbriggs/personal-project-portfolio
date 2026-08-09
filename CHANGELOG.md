@@ -10,6 +10,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Tauri/React desktop application as the current app target, replacing
+  the legacy Tkinter UI path for daily use.
+- Added a modern React interface with dashboard, sessions, projects,
+  milestones, weekly review, settings, tab navigation, and week navigation.
 - Added a README dashboard screenshot using `_design/Portfolio-Manager-Dashboard.png`.
 - Added README badges for the current pre-release status and app stack: macOS,
   local-first data, time-boxed workflow, Tauri, React, FastAPI, SQLite, Rust,
@@ -20,6 +24,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Refactored the app from the original Python/Tkinter desktop architecture into
+  a Tauri shell with a React frontend and bundled FastAPI/Python sidecar.
+- Updated the product design from the legacy Tkinter feel to a cleaner,
+  denser, modern desktop UI suited to technical solo-project management.
 - Reframed the README around the GitHub pitch: a single-user desktop app for
   managing, scheduling, and executing creative and technical work through
   time-boxed sessions.
