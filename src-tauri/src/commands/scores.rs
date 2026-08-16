@@ -13,5 +13,11 @@ pub async fn score_override(
     state: State<'_, AppState>,
     payload: Value,
 ) -> Result<Value, CommandError> {
-    forwarder::forward(&state, Method::POST, "/api/v1/scores/override", Some(&payload)).await
+    forwarder::forward(
+        &state,
+        Method::POST,
+        "/api/v1/scores/override",
+        Some(&payload),
+    )
+    .await
 }

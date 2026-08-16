@@ -47,9 +47,6 @@ pub async fn forward<B: Serialize, T: DeserializeOwned>(
 }
 
 /// Forward a request that has no request body.
-pub async fn get<T: DeserializeOwned>(
-    state: &AppState,
-    path: &str,
-) -> Result<T, CommandError> {
+pub async fn get<T: DeserializeOwned>(state: &AppState, path: &str) -> Result<T, CommandError> {
     forward::<(), T>(state, Method::GET, path, None).await
 }

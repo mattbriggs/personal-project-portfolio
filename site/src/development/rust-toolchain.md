@@ -1,35 +1,39 @@
 # Rust toolchain requirement
 
 The Tauri 2.x dependency tree now transitively requires crates built with
-**edition2024** (`toml` 1.x, `serde_spanned` 1.x, `zeroize` 1.9). Those require a
-**Rust toolchain ≥ 1.85**.
+**edition2024** (`toml` 1.x, `serde_spanned` 1.x, `zeroize` 1.9). The current
+resolved dependency graph also includes crates with a newer minimum supported
+Rust version, so this repository uses a **Rust toolchain ≥ 1.88**.
 
 ## Install
 
-If `rustup` is not already present, install it and put Cargo on your `PATH`.
-A Rust installed from a source tarball or a package manager is not managed by
-rustup and will not upgrade with `rustup update`.
+This repository pins Rust 1.88.0 in `rust-toolchain.toml`. If `rustup` is not
+already present, install it and put Cargo on your `PATH`. A Rust installed from
+a source tarball or a package manager is not managed by rustup and will not
+upgrade with `rustup update`.
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 . "$HOME/.cargo/env"          # add to your shell profile to make it permanent
-rustc --version               # expect >= 1.85
+rustc --version               # expect >= 1.88
 ```
 
 ## Build / test
 
 ```bash
-rustup update stable          # ensure >= 1.85
+rustup toolchain install      # installs the pinned rust-toolchain.toml version
 cd src-tauri
 cargo test                    # security/http/sidecar unit tests
 cargo build                   # debug shell build
 ```
 
-Previously verified on **Rust 1.97.1**: the shell compiles and 10 unit tests run
+Previously verified on **Rust 1.88.0**: the shell compiles and 10 unit tests run
 (`security::token`, `security::port`, `sidecar::readiness`, `sidecar::launcher`,
 `sidecar::shutdown`, `sidecar::supervisor`, `logging`). On Rust 1.83 the build
 fails while parsing the `serde_spanned 1.1.1` manifest with "feature
-`edition2024` is required" — a toolchain-version limitation, not a code error.
+`edition2024` is required"; on Rust 1.85 the current lockfile reports newer
+crate-level MSRV requirements. Both are toolchain-version limitations, not code
+errors.
 
 ### Two prerequisites that are not Rust
 

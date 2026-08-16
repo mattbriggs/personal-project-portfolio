@@ -3062,7 +3062,7 @@ comparison, but new desktop work should target the Tauri stack.</p>
 python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 .<span class="w"> </span>.venv/bin/activate
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;backend[dev,package]&quot;</span>
-npm<span class="w"> </span>install
+npm<span class="w"> </span>ci
 .venv/bin/python<span class="w"> </span>scripts/build_sidecar.py
 npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build
 scripts/install_macos_app.sh

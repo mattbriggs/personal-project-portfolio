@@ -3,9 +3,9 @@ name: Frontend
 on:
   push:
     branches: ["main", "mdb_*"]
-    paths: ["frontend/**", "package.json", ".github/workflows/frontend.yml"]
+    paths: ["frontend/**", "package.json", "package-lock.json", ".github/workflows/frontend.yml"]
   pull_request:
-    paths: ["frontend/**", "package.json", ".github/workflows/frontend.yml"]
+    paths: ["frontend/**", "package.json", "package-lock.json", ".github/workflows/frontend.yml"]
 
 jobs:
   test:
@@ -20,7 +20,7 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm ci || npm install --no-audit --no-fund
+        run: npm ci
 
       - name: Type-check
         run: npm run typecheck

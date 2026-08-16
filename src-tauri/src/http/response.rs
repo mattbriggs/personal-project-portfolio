@@ -21,9 +21,7 @@ struct ApiError {
 /// On a 2xx status the body is deserialized into `T`. Otherwise the structured
 /// error body is mapped into a [`CommandError`], preserving the code,
 /// field errors, correlation ID, and retryable flag.
-pub async fn parse<T: DeserializeOwned>(
-    resp: reqwest::Response,
-) -> Result<T, CommandError> {
+pub async fn parse<T: DeserializeOwned>(resp: reqwest::Response) -> Result<T, CommandError> {
     let status = resp.status();
     let bytes = resp
         .bytes()
@@ -37,15 +35,16 @@ pub async fn parse<T: DeserializeOwned>(
                 CommandError::new(codes::INTERNAL_ERROR, format!("decode failed: {e}"))
             });
         }
-        return serde_json::from_slice::<T>(&bytes).map_err(|e| {
-            CommandError::new(codes::INTERNAL_ERROR, format!("decode failed: {e}"))
-        });
+        return serde_json::from_slice::<T>(&bytes)
+            .map_err(|e| CommandError::new(codes::INTERNAL_ERROR, format!("decode failed: {e}")));
     }
 
     // Error path: try to parse the structured body.
     match serde_json::from_slice::<ApiError>(&bytes) {
         Ok(api) => Err(CommandError {
-            code: api.code.unwrap_or_else(|| codes::INTERNAL_ERROR.to_string()),
+            code: api
+                .code
+                .unwrap_or_else(|| codes::INTERNAL_ERROR.to_string()),
             message: api.message.unwrap_or_else(|| "Request failed.".into()),
             field_errors: api.field_errors,
             correlation_id: api.correlation_id,

@@ -23,8 +23,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: npm
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@1.88.0
 
       - name: Install backend + PyInstaller
         run: pip install -e "./backend[dev,package]"
@@ -33,7 +34,7 @@ jobs:
         run: python scripts/build_sidecar.py --target-triple $(rustc -Vv | grep host | cut -d' ' -f2)
 
       - name: Install frontend deps
-        run: npm install --no-audit --no-fund
+        run: npm ci
 
       - name: Build Tauri app
         run: npm run tauri build

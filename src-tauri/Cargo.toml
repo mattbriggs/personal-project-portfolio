@@ -4,16 +4,16 @@ version = "2.1.0"
 description = "Portfolio Manager desktop shell (Tauri)"
 authors = ["Matt Briggs"]
 edition = "2021"
-rust-version = "1.77"
+rust-version = "1.88"
 
 [lib]
 name = "portfolio_manager_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 # NOTE: The current Tauri 2.x transitive tree (toml 1.x, serde_spanned 1.x,
-# zeroize 1.9) requires Rust >= 1.85 (edition2024). Build with a Rust toolchain
-# >= 1.85 (`rustup update`). The Rust sources and unit tests compile cleanly on
-# such a toolchain; see docs/development/rust-toolchain.md.
+# zeroize 1.9) requires Rust >= 1.85 (edition2024), and the current resolved
+# dependency graph requires Rust >= 1.88. The repository pins that minimum in
+# rust-toolchain.toml; see site/src/development/rust-toolchain.md.
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
