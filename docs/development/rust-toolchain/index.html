@@ -2941,27 +2941,31 @@
 
 <h1 id="rust-toolchain-requirement">Rust toolchain requirement<a class="headerlink" href="#rust-toolchain-requirement" title="Permanent link">&para;</a></h1>
 <p>The Tauri 2.x dependency tree now transitively requires crates built with
-<strong>edition2024</strong> (<code>toml</code> 1.x, <code>serde_spanned</code> 1.x, <code>zeroize</code> 1.9). Those require a
-<strong>Rust toolchain ≥ 1.85</strong>.</p>
+<strong>edition2024</strong> (<code>toml</code> 1.x, <code>serde_spanned</code> 1.x, <code>zeroize</code> 1.9). The current
+resolved dependency graph also includes crates with a newer minimum supported
+Rust version, so this repository uses a <strong>Rust toolchain ≥ 1.88</strong>.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
-<p>If <code>rustup</code> is not already present, install it and put Cargo on your <code>PATH</code>.
-A Rust installed from a source tarball or a package manager is not managed by
-rustup and will not upgrade with <code>rustup update</code>.</p>
+<p>This repository pins Rust 1.88.0 in <code>rust-toolchain.toml</code>. If <code>rustup</code> is not
+already present, install it and put Cargo on your <code>PATH</code>. A Rust installed from
+a source tarball or a package manager is not managed by rustup and will not
+upgrade with <code>rustup update</code>.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>--proto<span class="w"> </span><span class="s1">&#39;=https&#39;</span><span class="w"> </span>--tlsv1.2<span class="w"> </span>-sSf<span class="w"> </span>https://sh.rustup.rs<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 .<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.cargo/env&quot;</span><span class="w">          </span><span class="c1"># add to your shell profile to make it permanent</span>
-rustc<span class="w"> </span>--version<span class="w">               </span><span class="c1"># expect &gt;= 1.85</span>
+rustc<span class="w"> </span>--version<span class="w">               </span><span class="c1"># expect &gt;= 1.88</span>
 </code></pre></div>
 <h2 id="build-test">Build / test<a class="headerlink" href="#build-test" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>rustup<span class="w"> </span>update<span class="w"> </span>stable<span class="w">          </span><span class="c1"># ensure &gt;= 1.85</span>
+<div class="highlight"><pre><span></span><code>rustup<span class="w"> </span>toolchain<span class="w"> </span>install<span class="w">      </span><span class="c1"># installs the pinned rust-toolchain.toml version</span>
 <span class="nb">cd</span><span class="w"> </span>src-tauri
 cargo<span class="w"> </span><span class="nb">test</span><span class="w">                    </span><span class="c1"># security/http/sidecar unit tests</span>
 cargo<span class="w"> </span>build<span class="w">                   </span><span class="c1"># debug shell build</span>
 </code></pre></div>
-<p>Previously verified on <strong>Rust 1.97.1</strong>: the shell compiles and 10 unit tests run
+<p>Previously verified on <strong>Rust 1.88.0</strong>: the shell compiles and 10 unit tests run
 (<code>security::token</code>, <code>security::port</code>, <code>sidecar::readiness</code>, <code>sidecar::launcher</code>,
 <code>sidecar::shutdown</code>, <code>sidecar::supervisor</code>, <code>logging</code>). On Rust 1.83 the build
 fails while parsing the <code>serde_spanned 1.1.1</code> manifest with "feature
-<code>edition2024</code> is required" — a toolchain-version limitation, not a code error.</p>
+<code>edition2024</code> is required"; on Rust 1.85 the current lockfile reports newer
+crate-level MSRV requirements. Both are toolchain-version limitations, not code
+errors.</p>
 <h3 id="two-prerequisites-that-are-not-rust">Two prerequisites that are not Rust<a class="headerlink" href="#two-prerequisites-that-are-not-rust" title="Permanent link">&para;</a></h3>
 <p><code>cargo test</code> compiles the Tauri context, so the build fails before reaching any
 test unless both of these exist:</p>

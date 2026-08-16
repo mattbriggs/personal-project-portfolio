@@ -35,7 +35,10 @@ mod tests {
     #[test]
     fn terminate_kills_a_long_running_child() {
         // `sleep 30` is a cheap long-running child on Unix.
-        let mut child = Command::new("sleep").arg("30").spawn().expect("spawn sleep");
+        let mut child = Command::new("sleep")
+            .arg("30")
+            .spawn()
+            .expect("spawn sleep");
         assert!(exited(&mut child).is_none());
         assert!(terminate(&mut child));
         let _ = child.wait();

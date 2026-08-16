@@ -103,7 +103,7 @@ page as macOS app builds.
 For now, build and install locally:
 
 ```sh
-npm install
+npm ci
 python3 -m venv .venv
 .venv/bin/python -m pip install -e "backend[dev,package]"
 .venv/bin/python scripts/build_sidecar.py
@@ -124,6 +124,7 @@ Expected local toolchain:
 ```sh
 xcode-select --install
 rustup update
+rustc --version # expect >= 1.88
 node --version
 npm --version
 ```

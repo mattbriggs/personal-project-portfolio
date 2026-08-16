@@ -30,7 +30,10 @@ impl SidecarCommand {
         if production {
             args.push("--production".into());
         }
-        Self { program: binary, args }
+        Self {
+            program: binary,
+            args,
+        }
     }
 
     /// Assemble the argument vector actually passed to the OS (token excluded).
@@ -48,6 +51,7 @@ impl SidecarCommand {
 /// # Errors
 /// Returns `SIDECAR_STARTUP_FAILED` if the process cannot be spawned (e.g. the
 /// binary is missing).
+#[allow(clippy::result_large_err)]
 pub fn spawn(cmd: &SidecarCommand, token: &str) -> Result<Child, CommandError> {
     Command::new(&cmd.program)
         .args(&cmd.args)
@@ -56,9 +60,7 @@ pub fn spawn(cmd: &SidecarCommand, token: &str) -> Result<Child, CommandError> {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .map_err(|e| {
-            CommandError::sidecar_startup_failed(format!("failed to spawn sidecar: {e}"))
-        })
+        .map_err(|e| CommandError::sidecar_startup_failed(format!("failed to spawn sidecar: {e}")))
 }
 
 #[cfg(test)]

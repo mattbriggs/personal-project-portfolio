@@ -51,7 +51,7 @@ cd /Users/mattbriggs/Git/personal-project-portfolio
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e "backend[dev,package]"
-npm install
+npm ci
 .venv/bin/python scripts/build_sidecar.py
 npm run tauri build
 scripts/install_macos_app.sh
